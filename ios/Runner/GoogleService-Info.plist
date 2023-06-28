@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>871833501459-4hn0vjschn8uflvo44s958n7bss94m2e.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.871833501459-4hn0vjschn8uflvo44s958n7bss94m2e</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>871833501459-po83sagi4pej5l45rcfq3ks9c68kig87.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBB_simUXqVrM4dNp_G8R-HyC-2Fw4aUh4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>871833501459</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.fhi360.apps.lamvax</string>
+	<key>PROJECT_ID</key>
+	<string>lamvax</string>
+	<key>STORAGE_BUCKET</key>
+	<string>lamvax.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:871833501459:ios:858e02afd08af27c2b24e6</string>
+</dict>
+</plist>
