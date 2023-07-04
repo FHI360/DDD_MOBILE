@@ -3428,3 +3428,5 @@
 /.dart_tool/version
 /ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 /ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+/.dart_tool/build/generated/DDD/lib/backend/floor/database.floor.g.part
+/.dart_tool/pub/bin/build_runner/build_runner.dart-2.19.2.snapshot
