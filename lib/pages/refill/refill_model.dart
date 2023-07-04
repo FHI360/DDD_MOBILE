@@ -48,6 +48,8 @@ class RefillModel extends FlutterFlowModel {
   // State field(s) for tbRefer widget.
   String? tbReferValue;
 
+  String? regimenValue;
+
   // State field(s) for qtyPrescribed widget.
   TextEditingController? qtyPrescribedController;
 
