@@ -27,17 +27,14 @@ class LastRefill {
 
 @dao
 abstract class PatientDao {
-  @Query(
-      '''SELECT * FROM Patient where siteCode = :siteCode and serviceDiscontinued = 0
-        order by givenName, familyName limit 10''')
-  Future<List<Patient>> findAll(String siteCode);
-
-  @Query(
-      '''SELECT * FROM Patient where siteCode = :siteCode and serviceDiscontinued = 0 
-      and (lower(givenName) like lower(:keyword) or lower(familyName) like 
-      lower(:keyword) or lower(hospitalNo) like lower(:keyword)) order by givenName, 
-      familyName limit 10''')
-  Future<List<Patient>> findByKeyword(String siteCode, String keyword);
+  @Query('''
+      SELECT * FROM Patient WHERE (outletCode = :activationCode OR facilityCode = 
+        :activationCode) AND serviceDiscontinued = 0 AND (LOWER(givenName) LIKE 
+        LOWER(:keyword) OR LOWER(familyName) LIKE LOWER(:keyword) OR 
+        LOWER(hospitalNo) LIKE LOWER(:keyword)) ORDER BY givenName, 
+      familyName LIMIT 10
+      ''')
+  Future<List<Patient>> findByKeyword(String activationCode, String keyword);
 
   @Query(
       'SELECT * FROM Patient where siteCode = :siteCode and serviceDiscontinued = 1')
@@ -55,8 +52,11 @@ abstract class PatientDao {
   @update
   Future<void> updateRecord(Patient patient);
 
-  @Query("UPDATE Patient set synced = true WHERE id = :id")
+  @Query("UPDATE Patient SET synced = true WHERE id = :id")
   Future<void> updateSynced(int id);
+
+  @Query('SELECT * FROM Patient WHERE synced = false')
+  Future<List<Patient>> findUnSynced();
 
   @Query(
       '''SELECT * FROM LastRefill WHERE siteCode = :siteCode AND dateNextRefill 
@@ -76,30 +76,33 @@ abstract class PatientDao {
 @DatabaseView('''
 WITH Estimated AS (
 	SELECT * FROM (
-		SELECT quantityDispensed, regimen, dateNextRefill, patientId, siteCode,
-			ROW_NUMBER() OVER(PARTITION BY patientId ORDER BY dateNextRefill DESC) rn 
-		FROM Refill JOIN Patient p ON patientId = p.id	
+		SELECT quantityDispensed, regimen, dateNextRefill, patientId, outletCode,
+		  facilityCode, ROW_NUMBER() OVER(PARTITION BY patientId ORDER BY dateNextRefill DESC) rn 
+		FROM Refill JOIN Patient p ON patientId = p.uuid	
 	) e WHERE rn = 1
 )
-SELECT regimen, siteCode, SUM(quantityDispensed) qty, dateNextRefill 
-  FROM Estimated GROUP BY regimen, siteCode, dateNextRefill
+SELECT regimen, outletCode, facilityCode, SUM(quantityDispensed) qty, dateNextRefill 
+  FROM Estimated GROUP BY regimen, outletCode, facilityCode, dateNextRefill
 ''', viewName: 'EstimatedRefill')
 class EstimatedRefill {
-  final String siteCode;
+  final String outletCode;
+  final String facilityCode;
   final String regimen;
   final int qty;
   final DateTime dateNextRefill;
 
-  EstimatedRefill(this.siteCode, this.regimen, this.qty, this.dateNextRefill);
+  EstimatedRefill(this.outletCode, this.facilityCode, this.regimen, this.qty,
+      this.dateNextRefill);
 }
 
 @DatabaseView('''
   SELECT givenName, familyName, sex, dateOfBirth, quantityDispensed quantity, 
-    hospitalNo, regimen, siteCode, dateNextRefill, date FROM Refill JOIN Patient 
-    p ON patientId = p.id ORDER BY givenName, familyName, sex    
+    hospitalNo, regimen, outletCode, facilityCode dateNextRefill, date FROM Refill 
+    JOIN Patient p ON patientId = p.uuid ORDER BY givenName, familyName, sex    
 ''', viewName: 'RefillInfo')
 class RefillInfo {
-  final String siteCode;
+  final String outletCode;
+  final String facilityCode;
   final String familyName;
   final String givenName;
   final int quantity;
@@ -111,7 +114,8 @@ class RefillInfo {
   final String hospitalNo;
 
   RefillInfo(
-      this.siteCode,
+      this.outletCode,
+      this.facilityCode,
       this.familyName,
       this.givenName,
       this.quantity,
@@ -123,19 +127,6 @@ class RefillInfo {
       this.hospitalNo);
 }
 
-@DatabaseView(
-    '''SELECT SUM(quantityDispensed) AS quantity, regimen, barcode, siteCode FROM Refill
-      JOIN patient p ON p.ID = patientId GROUP BY regimen, barcode, siteCode''',
-    viewName: 'BarcodeDispense')
-class BarcodeDispense {
-  final int quantity;
-  final String siteCode;
-  final String regimen;
-  final String barcode;
-
-  BarcodeDispense(this.quantity, this.siteCode, this.regimen, this.barcode);
-}
-
 @dao
 abstract class RefillDao {
   @Query('SELECT * FROM Refill')
@@ -144,14 +135,14 @@ abstract class RefillDao {
   @Query('SELECT * FROM Refill WHERE id = :id')
   Stream<Refill?> findById(int id);
 
-  @Query('SELECT * FROM Refill where synced = false')
+  @Query('SELECT * FROM Refill WHERE synced = false')
   Future<List<Refill>> findUnSynced();
 
   @Query('SELECT * FROM Refill WHERE patientId = :patientId')
-  Future<List<Refill>> findByPatient(int patientId);
+  Future<List<Refill>> findByPatient(String patientId);
 
   @Query('SELECT * FROM Refill WHERE patientId = :patientId AND date = :date')
-  Future<List<Refill>> findByPatientAndDate(int patientId, DateTime date);
+  Future<List<Refill>> findByPatientAndDate(String patientId, DateTime date);
 
   @insert
   Future<void> insertRecord(Refill refill);
@@ -173,13 +164,6 @@ abstract class RefillDao {
         :start and :end ORDER BY givenName, familyName''')
   Future<List<RefillInfo>> listRefillInfo(
       String siteCode, DateTime start, DateTime end);
-
-  @Query('''
-    SELECT * FROM BarcodeDispense WHERE siteCode = :siteCode AND regimen = :regimen
-    AND barcode = :barcode
-  ''')
-  Future<BarcodeDispense?> barcodeQuantity(
-      String siteCode, String regimen, String barcode);
 }
 
 @dao
@@ -187,14 +171,14 @@ abstract class ClinicDao {
   @Query('SELECT * FROM Clinic')
   Future<List<ClinicData>> findAll();
 
-  @Query('SELECT * FROM Clinic where synced = false')
+  @Query('SELECT * FROM Clinic WHERE synced = false')
   Future<List<ClinicData>> findUnSynced();
 
   @Query('SELECT * FROM Clinic WHERE id = :id')
   Stream<ClinicData?> findById(int id);
 
   @Query('SELECT * FROM Clinic WHERE patientId = :patientId')
-  Future<List<ClinicData>> findByPatient(int patientId);
+  Future<List<ClinicData>> findByPatient(String patientId);
 
   @insert
   Future<void> insertRecord(ClinicData clinic);

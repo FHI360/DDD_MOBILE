@@ -12,5 +12,6 @@ Future<List<Patient>> filterPatients(String keyword) async {
   // Add your function code here!
   var _database = await database;
   keyword = '%$keyword%';
-  return _database.patientDao.findByKeyword(FFAppState().siteCode, keyword);
+  return _database.patientDao
+      .findByKeyword(FFAppState().activationCode, keyword);
 }

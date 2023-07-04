@@ -35,13 +35,13 @@ class FFAppState extends ChangeNotifier {
     secureStorage.setString('ff_accessToken', _value);
   }
 
-  String _siteCode = '';
+  String _activationCode = '';
 
-  String get siteCode => _siteCode;
+  String get activationCode => _activationCode;
 
-  set siteCode(String _value) {
-    _siteCode = _value;
-    secureStorage.setString('ff_siteCode', _value);
+  set activationCode(String _value) {
+    _activationCode = _value;
+    secureStorage.setString('ff_activationCode', _value);
   }
 
   String _refreshToken = '';

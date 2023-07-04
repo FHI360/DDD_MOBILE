@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
-as smooth_page_indicator;
+    as smooth_page_indicator;
 
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -2257,9 +2257,9 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                 ),
                                               ),
                                               if (int.tryParse(_model
-                                                          .qtyDispensedController
-                                                          .text) !=
-                                                      null )
+                                                      .qtyDispensedController
+                                                      .text) !=
+                                                  null)
                                                 Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -2571,43 +2571,40 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                             8.0),
                                                   ),
                                                   child: InkWell(
-                                                    onTap:
-                                                        () async {
+                                                    onTap: () async {
                                                       DateTime nrd = DateTime(
                                                           getCurrentTimestamp
                                                               .year,
                                                           getCurrentTimestamp
                                                               .month,
-                                                          getCurrentTimestamp.day +
-                                                              (int.tryParse(_model.qtyDispensedController.text) ??
+                                                          getCurrentTimestamp
+                                                                  .day +
+                                                              (int.tryParse(_model
+                                                                      .qtyDispensedController
+                                                                      .text) ??
                                                                   0));
                                                       final _datePickedDate =
-                                                      await showDatePicker(
-                                                        context:
-                                                        context,
-                                                        initialDate:
-                                                        nrd,
+                                                          await showDatePicker(
+                                                        context: context,
+                                                        initialDate: nrd,
                                                         firstDate:
-                                                        getCurrentTimestamp,
+                                                            getCurrentTimestamp,
                                                         lastDate:
-                                                        DateTime(
-                                                            2050),
+                                                            DateTime(2050),
                                                       );
 
                                                       if (_datePickedDate !=
                                                           null) {
-                                                        setState(
-                                                                () {
-                                                              _model.datePicked =
-                                                                  DateTime(
-                                                                    _datePickedDate
-                                                                        .year,
-                                                                    _datePickedDate
-                                                                        .month,
-                                                                    _datePickedDate
-                                                                        .day,
-                                                                  );
-                                                            });
+                                                        setState(() {
+                                                          _model.datePicked =
+                                                              DateTime(
+                                                            _datePickedDate
+                                                                .year,
+                                                            _datePickedDate
+                                                                .month,
+                                                            _datePickedDate.day,
+                                                          );
+                                                        });
                                                       }
                                                     },
                                                     child: Row(
@@ -2662,24 +2659,22 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                     ],
                                                                   ),
                                                                 ),
-                                                  Padding(
-                                                    padding:
-                                                    EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                        1.0,
-                                                        0.0,
-                                                        5.0,
-                                                        0.0),
-                                                    child:
-                                                                Icon(
-                                                                  Icons
-                                                                      .date_range,
-                                                                  color: FlutterFlowTheme.of(
-                                                                      context)
-                                                                      .secondaryText,
-                                                                  size: 24.0,
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          1.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .date_range,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    size: 24.0,
+                                                                  ),
                                                                 ),
-                                                  ),
                                                               ],
                                                             ),
                                                           ),
@@ -2787,95 +2782,93 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                       ),
                                                     ),
                                                     FFButtonWidget(
-                                                      onPressed: ((int.tryParse(_model
-                                                                          .qtyDispensedController
-                                                                          .text) !=
-                                                                      null))
-                                                          ? null
-                                                          : () async {
-                                                              if (_model.formKey
-                                                                          .currentState ==
-                                                                      null ||
-                                                                  !_model
-                                                                      .formKey
-                                                                      .currentState!
-                                                                      .validate()) {
-                                                                return;
-                                                              }
-                                                              var clinic = ClinicData(
-                                                                  null,
-                                                                  int.tryParse(_model
-                                                                      .systolicController
-                                                                      .text),
-                                                                  int.tryParse(_model
-                                                                      .diastolicController
-                                                                      .text),
-                                                                  double.tryParse(_model
-                                                                      .weightController
-                                                                      .text),
-                                                                  double.tryParse(_model
-                                                                      .temperatureController
-                                                                      .text),
-                                                                  _model.patient?.id ??
-                                                                      0,
-                                                                  getCurrentTimestamp,
-                                                                  functions.booleanFromYesNo(_model
-                                                                      .coughingValue),
-                                                                  functions.booleanFromYesNo(
+                                                      onPressed:
+                                                          ((int.tryParse(_model
+                                                                      .qtyDispensedController
+                                                                      .text) !=
+                                                                  null))
+                                                              ? null
+                                                              : () async {
+                                                                  if (_model.formKey
+                                                                              .currentState ==
+                                                                          null ||
+                                                                      !_model
+                                                                          .formKey
+                                                                          .currentState!
+                                                                          .validate()) {
+                                                                    return;
+                                                                  }
+                                                                  var clinic = ClinicData(
+                                                                      null,
+                                                                      int.tryParse(_model
+                                                                          .systolicController
+                                                                          .text),
+                                                                      int.tryParse(_model
+                                                                          .diastolicController
+                                                                          .text),
+                                                                      double.tryParse(_model
+                                                                          .weightController
+                                                                          .text),
+                                                                      double.tryParse(_model
+                                                                          .temperatureController
+                                                                          .text),
                                                                       _model
-                                                                          .swellingsValue),
-                                                                  functions.booleanFromYesNo(
-                                                                      _model.nightSweatValue),
-                                                                  functions.booleanFromYesNo(_model.feverValue),
-                                                                  functions.booleanFromYesNo(_model.weightLossValue),
-                                                                  functions.booleanFromYesNo(_model.tbReferValue),
-                                                                  false);
-                                                              database.then(
-                                                                  (value) => value
+                                                                          .patient!
+                                                                          .uuid,
+                                                                      getCurrentTimestamp,
+                                                                      functions.booleanFromYesNo(
+                                                                          _model
+                                                                              .coughingValue),
+                                                                      functions.booleanFromYesNo(
+                                                                          _model
+                                                                              .swellingsValue),
+                                                                      functions
+                                                                          .booleanFromYesNo(
+                                                                              _model.nightSweatValue),
+                                                                      functions.booleanFromYesNo(_model.feverValue),
+                                                                      functions.booleanFromYesNo(_model.weightLossValue),
+                                                                      functions.booleanFromYesNo(_model.tbReferValue),
+                                                                      '',
+                                                                      false);
+                                                                  database.then((value) => value
                                                                       .clinicDao
                                                                       .insertRecord(
                                                                           clinic));
-                                                              var refill = Refill(
-                                                                  null,
-                                                                  getCurrentTimestamp,
-                                                                  _model.patient
-                                                                          ?.givenName ??
-                                                                      '',
-                                                                  _model.patient
-                                                                          ?.id ??
-                                                                      0,
-                                                                  int.tryParse(_model.qtyPrescribedController.text) ??
-                                                                      0,
-                                                                  int.tryParse(
-                                                                          _model
+                                                                  var refill = Refill(
+                                                                      null,
+                                                                      getCurrentTimestamp,
+                                                                      _model
+                                                                          .regimenValue!,
+                                                                      _model
+                                                                          .patient!
+                                                                          .uuid,
+                                                                      int.tryParse(_model.qtyPrescribedController.text) ??
+                                                                          0,
+                                                                      int.tryParse(_model
                                                                               .qtyDispensedController
                                                                               .text) ??
-                                                                      0,
-                                                                  _model
-                                                                      .datePicked!,
-                                                                  functions
-                                                                      .booleanFromYesNo(
+                                                                          0,
+                                                                      _model
+                                                                          .datePicked!,
+                                                                      functions.booleanFromYesNo(
                                                                           _model
                                                                               .missedDosesValue),
-                                                                  functions
-                                                                      .booleanFromYesNo(
+                                                                      functions.booleanFromYesNo(
                                                                           _model
                                                                               .adverseIssuesValue),
-                                                                  _model
-                                                                      .barcode,
-                                                                  false);
-                                                              database.then(
-                                                                  (value) => value
+                                                                      false,
+                                                                      '');
+                                                                  database.then((value) => value
                                                                       .refillDao
                                                                       .insertRecord(
                                                                           refill));
-                                                              var quantity =
-                                                                  double.tryParse(_model
-                                                                          .qtyDispensedController
-                                                                          .text) ??
-                                                                      0;
-                                                              context.pop();
-                                                            },
+                                                                  var quantity =
+                                                                      double.tryParse(_model
+                                                                              .qtyDispensedController
+                                                                              .text) ??
+                                                                          0;
+                                                                  context.pop();
+                                                                },
                                                       text: 'Save',
                                                       options: FFButtonOptions(
                                                         width: 130,

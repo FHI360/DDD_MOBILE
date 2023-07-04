@@ -53,7 +53,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
-  Future<List<Refill>> getRefill(int patientId) async {
+  Future<List<Refill>> getRefill(String patientId) async {
     var _database = await database;
     return _database.refillDao.findByPatient(patientId);
   }
@@ -274,7 +274,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                       ),
                                     ),
                                     Text(
-                                      _model.patient?.phoneNumber ?? '',
+                                      _model.patient?.phone ?? '',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1,
                                     ),
@@ -638,7 +638,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               FutureBuilder<List<Refill>>(
-                                future: getRefill(_model.patient?.id ?? 0),
+                                future: getRefill(_model.patient!.uuid),
                                 builder: (context, snapshot) {
                                   // Customize what your widget looks like when it's loading.
                                   if (!snapshot.hasData) {
