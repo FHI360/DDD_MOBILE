@@ -15,8 +15,14 @@ class FFAppState extends ChangeNotifier {
 
   Future initializePersistedState() async {
     secureStorage = FlutterSecureStorage();
-    _refreshToken = await secureStorage.getString('ff_refreshToken') ?? _refreshToken;
-    _accessToken = await secureStorage.getString('ff_accessToken') ?? _accessToken;
+    _refreshToken =
+        await secureStorage.getString('ff_refreshToken') ?? _refreshToken;
+    _accessToken =
+        await secureStorage.getString('ff_accessToken') ?? _accessToken;
+    _activationCode =
+        await secureStorage.getString('ff_activationCode') ?? _activationCode;
+    _outlet = await secureStorage.getBool('ff_outlet') ?? _outlet;
+    _facility = await secureStorage.getString('ff_facility') ?? _facility;
   }
 
   void update(VoidCallback callback) {
@@ -51,6 +57,24 @@ class FFAppState extends ChangeNotifier {
   set refreshToken(String _value) {
     _refreshToken = _value;
     secureStorage.setString('ff_refreshToken', _value);
+  }
+
+  String _facility = '';
+
+  String get facility => _facility;
+
+  set facility(String _value) {
+    _facility = _value;
+    secureStorage.setString('ff_facility', _value);
+  }
+
+  bool _outlet = false;
+
+  bool get outlet => _outlet;
+
+  set outlet(bool _value) {
+    _outlet = _value;
+    secureStorage.setBool('ff_outlet', _outlet);
   }
 }
 
