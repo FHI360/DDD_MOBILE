@@ -67,6 +67,12 @@ class _$AppDatabase extends AppDatabase {
 
   PatientDao? _patientDaoInstance;
 
+  RegimenDao? _regimenDaoInstance;
+
+  OutletDao? _outletDaoInstance;
+
+  FacilityDao? _facilityDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -91,9 +97,15 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `clinic` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `systolic` INTEGER, `diastolic` INTEGER, `weight` REAL, `temperature` REAL, `patientId` TEXT NOT NULL, `date` INTEGER NOT NULL, `coughing` INTEGER, `swelling` INTEGER, `sweating` INTEGER, `fever` INTEGER, `weightLoss` INTEGER, `tbReferred` INTEGER, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Refill` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `regimen` TEXT NOT NULL, `patientId` TEXT NOT NULL, `quantityPrescribed` INTEGER NOT NULL, `quantityDispensed` INTEGER NOT NULL, `dateNextRefill` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `missedDoses` INTEGER, `adverseIssues` INTEGER, `uuid` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Facility` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `level1AD` INTEGER NOT NULL, `level2AD` INTEGER NOT NULL, `code` TEXT NOT NULL, `synced` INTEGER, `deleted` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT NOT NULL, `facility` TEXT NOT NULL, `outletCode` TEXT NOT NULL, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `serviceDiscontinued` INTEGER NOT NULL, `reasonDiscontinued` TEXT NOT NULL, `dateDiscontinued` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Outlet` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `phone` TEXT NOT NULL, `email` TEXT NOT NULL, `type` TEXT NOT NULL, `code` TEXT NOT NULL, `facilityCode` TEXT, `synced` INTEGER, `deleted` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT NOT NULL, `facility` TEXT NOT NULL, `outletCode` TEXT NOT NULL, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `serviceDiscontinued` INTEGER NOT NULL, `reasonDiscontinued` TEXT NOT NULL, `dateDiscontinued` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT, `deleted` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Regimen` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `regimenType` TEXT NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Refill` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `regimen` TEXT NOT NULL, `patientId` TEXT NOT NULL, `quantityPrescribed` INTEGER NOT NULL, `quantityDispensed` INTEGER NOT NULL, `dateNextRefill` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `missedDoses` INTEGER, `adverseIssues` INTEGER, `uuid` TEXT NOT NULL)');
 
         await database.execute(
             'CREATE VIEW IF NOT EXISTS `EstimatedRefill` AS WITH Estimated AS (\n\tSELECT * FROM (\n\t\tSELECT quantityDispensed, regimen, dateNextRefill, patientId, outletCode,\n\t\t  facilityCode, ROW_NUMBER() OVER(PARTITION BY patientId ORDER BY dateNextRefill DESC) rn \n\t\tFROM Refill JOIN Patient p ON patientId = p.uuid\t\n\t) e WHERE rn = 1\n)\nSELECT regimen, outletCode, facilityCode, SUM(quantityDispensed) qty, dateNextRefill \n  FROM Estimated GROUP BY regimen, outletCode, facilityCode, dateNextRefill\n');
@@ -121,6 +133,21 @@ class _$AppDatabase extends AppDatabase {
   @override
   PatientDao get patientDao {
     return _patientDaoInstance ??= _$PatientDao(database, changeListener);
+  }
+
+  @override
+  RegimenDao get regimenDao {
+    return _regimenDaoInstance ??= _$RegimenDao(database, changeListener);
+  }
+
+  @override
+  OutletDao get outletDao {
+    return _outletDaoInstance ??= _$OutletDao(database, changeListener);
+  }
+
+  @override
+  FacilityDao get facilityDao {
+    return _facilityDaoInstance ??= _$FacilityDao(database, changeListener);
   }
 }
 
@@ -252,12 +279,6 @@ class _$ClinicDao extends ClinicDao {
             row['uuid'] as String,
             (row['synced'] as int) != 0),
         arguments: [patientId]);
-  }
-
-  @override
-  Future<void> deleteById(int id) async {
-    await _queryAdapter
-        .queryNoReturn('delete from Clinic where id = ?1', arguments: [id]);
   }
 
   @override
@@ -442,12 +463,6 @@ class _$RefillDao extends RefillDao {
   }
 
   @override
-  Future<void> deleteById(int id) async {
-    await _queryAdapter
-        .queryNoReturn('delete from Refill where id = ?1', arguments: [id]);
-  }
-
-  @override
   Future<List<EstimatedRefill>> estimatedRefill(
     String siteCode,
     DateTime start,
@@ -526,7 +541,9 @@ class _$PatientDao extends PatientDao {
                   'dateStarted': _dateTimeConverter.encode(item.dateStarted),
                   'uuid': item.uuid,
                   'synced': item.synced ? 1 : 0,
-                  'lastClinicStage': item.lastClinicStage
+                  'lastClinicStage': item.lastClinicStage,
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
                 }),
         _patientUpdateAdapter = UpdateAdapter(
             database,
@@ -559,7 +576,9 @@ class _$PatientDao extends PatientDao {
                   'dateStarted': _dateTimeConverter.encode(item.dateStarted),
                   'uuid': item.uuid,
                   'synced': item.synced ? 1 : 0,
-                  'lastClinicStage': item.lastClinicStage
+                  'lastClinicStage': item.lastClinicStage,
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -738,12 +757,6 @@ class _$PatientDao extends PatientDao {
   }
 
   @override
-  Future<void> deleteById(int id) async {
-    await _queryAdapter
-        .queryNoReturn('delete from Patient where id = ?1', arguments: [id]);
-  }
-
-  @override
   Future<int> insertRecord(Patient patient) {
     return _patientInsertionAdapter.insertAndReturnId(
         patient, OnConflictStrategy.abort);
@@ -752,6 +765,252 @@ class _$PatientDao extends PatientDao {
   @override
   Future<void> updateRecord(Patient patient) async {
     await _patientUpdateAdapter.update(patient, OnConflictStrategy.abort);
+  }
+}
+
+class _$RegimenDao extends RegimenDao {
+  _$RegimenDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _regimenInsertionAdapter = InsertionAdapter(
+            database,
+            'Regimen',
+            (Regimen item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'regimenType': item.regimenType
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Regimen> _regimenInsertionAdapter;
+
+  @override
+  Future<List<Regimen>> findAll() async {
+    return _queryAdapter.queryList('SELECT * Regimen Outlet',
+        mapper: (Map<String, Object?> row) => Regimen(row['id'] as int,
+            row['name'] as String, row['regimenType'] as String));
+  }
+
+  @override
+  Stream<Regimen?> findById(int id) {
+    return _queryAdapter.queryStream('SELECT * FROM Regimen WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Regimen(row['id'] as int,
+            row['name'] as String, row['regimenType'] as String),
+        arguments: [id],
+        queryableName: 'Regimen',
+        isView: false);
+  }
+
+  @override
+  Future<void> deleteById(int id) async {
+    await _queryAdapter
+        .queryNoReturn('DELETE from Regimen WHERE id = ?1', arguments: [id]);
+  }
+
+  @override
+  Future<void> insertRecord(Regimen regimen) async {
+    await _regimenInsertionAdapter.insert(regimen, OnConflictStrategy.abort);
+  }
+}
+
+class _$OutletDao extends OutletDao {
+  _$OutletDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _outletInsertionAdapter = InsertionAdapter(
+            database,
+            'Outlet',
+            (Outlet item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'address': item.address,
+                  'phone': item.phone,
+                  'email': item.email,
+                  'type': item.type,
+                  'code': item.code,
+                  'facilityCode': item.facilityCode,
+                  'synced': item.synced == null ? null : (item.synced! ? 1 : 0),
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                },
+            changeListener),
+        _outletUpdateAdapter = UpdateAdapter(
+            database,
+            'Outlet',
+            ['id'],
+            (Outlet item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'address': item.address,
+                  'phone': item.phone,
+                  'email': item.email,
+                  'type': item.type,
+                  'code': item.code,
+                  'facilityCode': item.facilityCode,
+                  'synced': item.synced == null ? null : (item.synced! ? 1 : 0),
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Outlet> _outletInsertionAdapter;
+
+  final UpdateAdapter<Outlet> _outletUpdateAdapter;
+
+  @override
+  Future<List<Outlet>> findAll() async {
+    return _queryAdapter.queryList('SELECT * FROM Outlet',
+        mapper: (Map<String, Object?> row) => Outlet(
+            row['name'] as String,
+            row['address'] as String,
+            row['phone'] as String,
+            row['email'] as String,
+            row['type'] as String,
+            row['code'] as String,
+            row['facilityCode'] as String?));
+  }
+
+  @override
+  Future<List<Outlet>> findUnSynced() async {
+    return _queryAdapter.queryList('SELECT * FROM Outlet WHERE synced = false',
+        mapper: (Map<String, Object?> row) => Outlet(
+            row['name'] as String,
+            row['address'] as String,
+            row['phone'] as String,
+            row['email'] as String,
+            row['type'] as String,
+            row['code'] as String,
+            row['facilityCode'] as String?));
+  }
+
+  @override
+  Stream<Outlet?> findById(int id) {
+    return _queryAdapter.queryStream('SELECT * FROM Outlet WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Outlet(
+            row['name'] as String,
+            row['address'] as String,
+            row['phone'] as String,
+            row['email'] as String,
+            row['type'] as String,
+            row['code'] as String,
+            row['facilityCode'] as String?),
+        arguments: [id],
+        queryableName: 'Outlet',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertRecord(Outlet outlet) async {
+    await _outletInsertionAdapter.insert(outlet, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateRecord(Outlet outlet) async {
+    await _outletUpdateAdapter.update(outlet, OnConflictStrategy.abort);
+  }
+}
+
+class _$FacilityDao extends FacilityDao {
+  _$FacilityDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _facilityInsertionAdapter = InsertionAdapter(
+            database,
+            'Facility',
+            (Facility item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'level1AD': item.level1AD,
+                  'level2AD': item.level2AD,
+                  'code': item.code,
+                  'synced': item.synced == null ? null : (item.synced! ? 1 : 0),
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                },
+            changeListener),
+        _facilityUpdateAdapter = UpdateAdapter(
+            database,
+            'Facility',
+            ['id'],
+            (Facility item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'level1AD': item.level1AD,
+                  'level2AD': item.level2AD,
+                  'code': item.code,
+                  'synced': item.synced == null ? null : (item.synced! ? 1 : 0),
+                  'deleted':
+                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Facility> _facilityInsertionAdapter;
+
+  final UpdateAdapter<Facility> _facilityUpdateAdapter;
+
+  @override
+  Future<List<Facility>> findAll() async {
+    return _queryAdapter.queryList('SELECT * FROM Facility',
+        mapper: (Map<String, Object?> row) => Facility(
+            row['name'] as String,
+            row['level1AD'] as int,
+            row['level2AD'] as int,
+            row['code'] as String));
+  }
+
+  @override
+  Future<List<Facility>> findUnSynced() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Facility WHERE synced = false',
+        mapper: (Map<String, Object?> row) => Facility(
+            row['name'] as String,
+            row['level1AD'] as int,
+            row['level2AD'] as int,
+            row['code'] as String));
+  }
+
+  @override
+  Stream<Facility?> findById(int id) {
+    return _queryAdapter.queryStream('SELECT * FROM Facility WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Facility(
+            row['name'] as String,
+            row['level1AD'] as int,
+            row['level2AD'] as int,
+            row['code'] as String),
+        arguments: [id],
+        queryableName: 'Facility',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertRecord(Facility facility) async {
+    await _facilityInsertionAdapter.insert(facility, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateRecord(Facility facility) async {
+    await _facilityUpdateAdapter.update(facility, OnConflictStrategy.abort);
   }
 }
 

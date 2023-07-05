@@ -25,6 +25,7 @@ class Patient {
   String uuid;
   bool synced;
   String? lastClinicStage;
+  bool? deleted = false;
 
   Patient(
       this.id,
@@ -94,7 +95,8 @@ class Patient {
         'serviceDiscontinued': serviceDiscontinued,
         'reasonDiscontinued': reasonDiscontinued,
         'dateDiscontinued': dateDiscontinued.toIso8601String().substring(0, 10),
-        'dateStarted': dateDiscontinued.toIso8601String().substring(0, 10)
+        'dateStarted': dateDiscontinued.toIso8601String().substring(0, 10),
+        'deleted': deleted
       };
 }
 
@@ -218,5 +220,81 @@ class Clinic {
         'fever': fever,
         'weightLoss': weightLoss,
         'tbReferred': tbReferred
+      };
+}
+
+@entity
+class Regimen {
+  @PrimaryKey(autoGenerate: true)
+  final int id;
+  final String name;
+  final String regimenType;
+
+  Regimen(this.id, this.name, this.regimenType);
+
+  factory Regimen.fromJson(Map<String, dynamic> row) =>
+      Regimen(row['id'], row['name'], row['regimenType']);
+}
+
+@entity
+class Facility {
+  @PrimaryKey(autoGenerate: true)
+  int? id;
+  final String name;
+  final int level1AD;
+  final int level2AD;
+  final String code;
+  bool? synced = false;
+  bool? deleted = false;
+
+  Facility(this.name, this.level1AD, this.level2AD, this.code);
+
+  factory Facility.fromJson(Map<String, dynamic> row) =>
+      Facility(row['name'], row['level1AD'], row['level2AD'], row['code']);
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'level1AD': level1AD,
+        'level2AD': level2AD,
+        'code': code,
+        'deleted': deleted
+      };
+}
+
+@entity
+class Outlet {
+  @PrimaryKey(autoGenerate: true)
+  int? id;
+  final String name;
+  final String address;
+  final String phone;
+  final String email;
+  final String type;
+  final String code;
+  String? facilityCode;
+  bool? synced = false;
+  bool? deleted = false;
+
+  Outlet(this.name, this.address, this.phone, this.email, this.type, this.code,
+      this.facilityCode);
+
+  factory Outlet.fromJson(Map<String, dynamic> row) => Outlet(
+      row['name'],
+      row['address'],
+      row['phone'],
+      row['email'],
+      row['type'],
+      row['code'],
+      row['facilityCode']);
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'address': address,
+        'phone': phone,
+        'code': code,
+        'email': email,
+        'type': type,
+        'facilityCode': facilityCode,
+        'deleted': deleted
       };
 }

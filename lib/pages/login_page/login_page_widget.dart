@@ -64,17 +64,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                FlutterFlowTheme.of(context).primaryColor,
-                Color(0xFFF5F5F5)
-              ],
-              stops: [0.0, 1.0],
-              begin: AlignmentDirectional(0.0, -1.0),
-              end: AlignmentDirectional(0, 1.0),
-            ),
-          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,

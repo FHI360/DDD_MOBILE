@@ -68,9 +68,6 @@ abstract class PatientDao {
       :dateDiscontinued, reasonDiscontinued = :reasonDiscontinued where id = :id''')
   Future<void> discontinueService(
       int id, DateTime dateDiscontinued, String reasonDiscontinued);
-
-  @Query("delete from Patient where id = :id")
-  Future<void> deleteById(int id);
 }
 
 @DatabaseView('''
@@ -150,9 +147,6 @@ abstract class RefillDao {
   @update
   Future<int> updateRecord(Refill refill);
 
-  @Query("delete from Refill where id = :id")
-  Future<void> deleteById(int id);
-
   @Query('''SELECT regimen, siteCode, SUM(qty) qty, 1 AS dateNextRefill FROM 
           EstimatedRefill WHERE siteCode = :siteCode AND dateNextRefill BETWEEN 
           :start and :end GROUP BY regimen ORDER BY regimen, siteCode''')
@@ -182,7 +176,55 @@ abstract class ClinicDao {
 
   @insert
   Future<void> insertRecord(Clinic clinic);
+}
 
-  @Query("delete from Clinic where id = :id")
+@dao
+abstract class FacilityDao {
+  @Query('SELECT * FROM Facility')
+  Future<List<Facility>> findAll();
+
+  @Query('SELECT * FROM Facility WHERE synced = false')
+  Future<List<Facility>> findUnSynced();
+
+  @Query('SELECT * FROM Facility WHERE id = :id')
+  Stream<Facility?> findById(int id);
+
+  @insert
+  Future<void> insertRecord(Facility facility);
+
+  @update
+  Future<void> updateRecord(Facility facility);
+}
+
+@dao
+abstract class OutletDao {
+  @Query('SELECT * FROM Outlet')
+  Future<List<Outlet>> findAll();
+
+  @Query('SELECT * FROM Outlet WHERE synced = false')
+  Future<List<Outlet>> findUnSynced();
+
+  @Query('SELECT * FROM Outlet WHERE id = :id')
+  Stream<Outlet?> findById(int id);
+
+  @insert
+  Future<void> insertRecord(Outlet outlet);
+
+  @update
+  Future<void> updateRecord(Outlet outlet);
+}
+
+@dao
+abstract class RegimenDao {
+  @Query('SELECT * Regimen Outlet')
+  Future<List<Regimen>> findAll();
+
+  @Query('SELECT * FROM Regimen WHERE id = :id')
+  Stream<Regimen?> findById(int id);
+
+  @insert
+  Future<void> insertRecord(Regimen regimen);
+
+  @Query("DELETE from Regimen WHERE id = :id")
   Future<void> deleteById(int id);
 }
