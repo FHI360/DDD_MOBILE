@@ -12,7 +12,7 @@ part 'database.g.dart';
 @TypeConverters([DateTimeConverter])
 @Database(
     version: 9,
-    entities: [ClinicData, Refill, Patient],
+    entities: [Clinic, Refill, Patient],
     views: [EstimatedRefill, LastRefill, RefillInfo])
 abstract class AppDatabase extends FloorDatabase {
   ClinicDao get clinicDao;

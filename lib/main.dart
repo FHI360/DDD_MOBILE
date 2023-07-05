@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return OKToast(
       child: MaterialApp.router(
-        title: '360VAX',
+        title: 'DDD',
         localizationsDelegates: [
           FFLocalizationsDelegate(),
           GlobalMaterialLocalizations.delegate,

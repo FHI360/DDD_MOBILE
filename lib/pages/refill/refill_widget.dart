@@ -2798,7 +2798,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           .validate()) {
                                                                     return;
                                                                   }
-                                                                  var clinic = ClinicData(
+                                                                  var clinic = Clinic(
                                                                       null,
                                                                       int.tryParse(_model
                                                                           .systolicController

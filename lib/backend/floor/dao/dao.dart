@@ -169,19 +169,19 @@ abstract class RefillDao {
 @dao
 abstract class ClinicDao {
   @Query('SELECT * FROM Clinic')
-  Future<List<ClinicData>> findAll();
+  Future<List<Clinic>> findAll();
 
   @Query('SELECT * FROM Clinic WHERE synced = false')
-  Future<List<ClinicData>> findUnSynced();
+  Future<List<Clinic>> findUnSynced();
 
   @Query('SELECT * FROM Clinic WHERE id = :id')
-  Stream<ClinicData?> findById(int id);
+  Stream<Clinic?> findById(int id);
 
   @Query('SELECT * FROM Clinic WHERE patientId = :patientId')
-  Future<List<ClinicData>> findByPatient(String patientId);
+  Future<List<Clinic>> findByPatient(String patientId);
 
   @insert
-  Future<void> insertRecord(ClinicData clinic);
+  Future<void> insertRecord(Clinic clinic);
 
   @Query("delete from Clinic where id = :id")
   Future<void> deleteById(int id);

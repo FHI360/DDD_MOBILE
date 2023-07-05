@@ -62,8 +62,6 @@ class RefillModel extends FlutterFlowModel {
   // State field(s) for adverseIssues widget.
   String? adverseIssuesValue;
 
-  String? regimenValue;
-
   String? _numericControllerValidator(BuildContext context, String? val) {
     if (val != null && val.isNotEmpty && int.tryParse(val) == null) {
       return 'Please input a number.';

@@ -24,6 +24,7 @@ class Patient {
   DateTime dateStarted;
   String uuid;
   bool synced;
+  String? lastClinicStage;
 
   Patient(
       this.id,
@@ -45,6 +46,7 @@ class Patient {
       this.reasonDiscontinued,
       this.dateDiscontinued,
       this.dateStarted,
+      this.lastClinicStage,
       this.uuid,
       this.synced);
 
@@ -68,8 +70,9 @@ class Patient {
       row['reasonDiscontinued'],
       row['dateDiscontinued'],
       row['dateStarted'],
+      row['lastClinicStage'],
       row['id'],
-      row['synced']);
+      true);
 
   Map<String, dynamic> toJson() => {
         'id': uuid,
@@ -122,10 +125,35 @@ class Refill {
       this.adverseIssues,
       this.synced,
       this.uuid);
+
+  factory Refill.fromJson(Map<String, dynamic> row) => Refill(
+      null,
+      row['date'],
+      row['regimen'],
+      row['patientId'],
+      row['quantityPrescribed'],
+      row['quantityDispensed'],
+      row['dateNextRefill'],
+      row['missedDoses'],
+      row['adverseIssues'],
+      true,
+      row['id']);
+
+  Map<String, dynamic> toJson() => {
+        'id': uuid,
+        'date': date.toIso8601String().substring(0, 10),
+        'regimen': regimen,
+        'patientId': patientId,
+        'quantityPrescribed': quantityPrescribed,
+        'quantityDispensed': quantityDispensed,
+        'dateNextRefill': dateNextRefill.toIso8601String().substring(0, 10),
+        'missedDoses': missedDoses,
+        'adverseIssues': adverseIssues
+      };
 }
 
 @Entity(tableName: 'clinic')
-class ClinicData {
+class Clinic {
   @PrimaryKey(autoGenerate: true)
   int? id;
   int? systolic;
@@ -143,7 +171,7 @@ class ClinicData {
   String uuid;
   final bool synced;
 
-  ClinicData(
+  Clinic(
       this.id,
       this.systolic,
       this.diastolic,
@@ -159,4 +187,36 @@ class ClinicData {
       this.tbReferred,
       this.uuid,
       this.synced);
+
+  factory Clinic.fromJson(Map<String, dynamic> row) => Clinic(
+      null,
+      row['systolic'],
+      row['diastolic'],
+      row['weight'],
+      row['temperature'],
+      row['patientId'],
+      row['date'],
+      row['coughing'],
+      row['swelling'],
+      row['sweating'],
+      row['fever'],
+      row['weightLoss'],
+      row['tbReferred'],
+      row['id'],
+      true);
+
+  Map<String, dynamic> toJson() => {
+        'id': uuid,
+        'systolic': systolic,
+        'diastolic': diastolic,
+        'weight': weight,
+        'temperature': temperature,
+        'patientId': patientId,
+        'date': date.toIso8601String().substring(0, 10),
+        'coughing': coughing,
+        'swelling': swelling,
+        'fever': fever,
+        'weightLoss': weightLoss,
+        'tbReferred': tbReferred
+      };
 }

@@ -93,7 +93,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Refill` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `regimen` TEXT NOT NULL, `patientId` TEXT NOT NULL, `quantityPrescribed` INTEGER NOT NULL, `quantityDispensed` INTEGER NOT NULL, `dateNextRefill` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `missedDoses` INTEGER, `adverseIssues` INTEGER, `uuid` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT NOT NULL, `facility` TEXT NOT NULL, `outletCode` TEXT NOT NULL, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `serviceDiscontinued` INTEGER NOT NULL, `reasonDiscontinued` TEXT NOT NULL, `dateDiscontinued` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT NOT NULL, `facility` TEXT NOT NULL, `outletCode` TEXT NOT NULL, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `serviceDiscontinued` INTEGER NOT NULL, `reasonDiscontinued` TEXT NOT NULL, `dateDiscontinued` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT)');
 
         await database.execute(
             'CREATE VIEW IF NOT EXISTS `EstimatedRefill` AS WITH Estimated AS (\n\tSELECT * FROM (\n\t\tSELECT quantityDispensed, regimen, dateNextRefill, patientId, outletCode,\n\t\t  facilityCode, ROW_NUMBER() OVER(PARTITION BY patientId ORDER BY dateNextRefill DESC) rn \n\t\tFROM Refill JOIN Patient p ON patientId = p.uuid\t\n\t) e WHERE rn = 1\n)\nSELECT regimen, outletCode, facilityCode, SUM(quantityDispensed) qty, dateNextRefill \n  FROM Estimated GROUP BY regimen, outletCode, facilityCode, dateNextRefill\n');
@@ -129,10 +129,10 @@ class _$ClinicDao extends ClinicDao {
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database, changeListener),
-        _clinicDataInsertionAdapter = InsertionAdapter(
+        _clinicInsertionAdapter = InsertionAdapter(
             database,
             'clinic',
-            (ClinicData item) => <String, Object?>{
+            (Clinic item) => <String, Object?>{
                   'id': item.id,
                   'systolic': item.systolic,
                   'diastolic': item.diastolic,
@@ -164,12 +164,12 @@ class _$ClinicDao extends ClinicDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<ClinicData> _clinicDataInsertionAdapter;
+  final InsertionAdapter<Clinic> _clinicInsertionAdapter;
 
   @override
-  Future<List<ClinicData>> findAll() async {
+  Future<List<Clinic>> findAll() async {
     return _queryAdapter.queryList('SELECT * FROM Clinic',
-        mapper: (Map<String, Object?> row) => ClinicData(
+        mapper: (Map<String, Object?> row) => Clinic(
             row['id'] as int?,
             row['systolic'] as int?,
             row['diastolic'] as int?,
@@ -188,9 +188,9 @@ class _$ClinicDao extends ClinicDao {
   }
 
   @override
-  Future<List<ClinicData>> findUnSynced() async {
+  Future<List<Clinic>> findUnSynced() async {
     return _queryAdapter.queryList('SELECT * FROM Clinic WHERE synced = false',
-        mapper: (Map<String, Object?> row) => ClinicData(
+        mapper: (Map<String, Object?> row) => Clinic(
             row['id'] as int?,
             row['systolic'] as int?,
             row['diastolic'] as int?,
@@ -209,9 +209,9 @@ class _$ClinicDao extends ClinicDao {
   }
 
   @override
-  Stream<ClinicData?> findById(int id) {
+  Stream<Clinic?> findById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Clinic WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => ClinicData(
+        mapper: (Map<String, Object?> row) => Clinic(
             row['id'] as int?,
             row['systolic'] as int?,
             row['diastolic'] as int?,
@@ -233,9 +233,9 @@ class _$ClinicDao extends ClinicDao {
   }
 
   @override
-  Future<List<ClinicData>> findByPatient(String patientId) async {
+  Future<List<Clinic>> findByPatient(String patientId) async {
     return _queryAdapter.queryList('SELECT * FROM Clinic WHERE patientId = ?1',
-        mapper: (Map<String, Object?> row) => ClinicData(
+        mapper: (Map<String, Object?> row) => Clinic(
             row['id'] as int?,
             row['systolic'] as int?,
             row['diastolic'] as int?,
@@ -261,8 +261,8 @@ class _$ClinicDao extends ClinicDao {
   }
 
   @override
-  Future<void> insertRecord(ClinicData clinic) async {
-    await _clinicDataInsertionAdapter.insert(clinic, OnConflictStrategy.abort);
+  Future<void> insertRecord(Clinic clinic) async {
+    await _clinicInsertionAdapter.insert(clinic, OnConflictStrategy.abort);
   }
 }
 
@@ -525,7 +525,8 @@ class _$PatientDao extends PatientDao {
                       _dateTimeConverter.encode(item.dateDiscontinued),
                   'dateStarted': _dateTimeConverter.encode(item.dateStarted),
                   'uuid': item.uuid,
-                  'synced': item.synced ? 1 : 0
+                  'synced': item.synced ? 1 : 0,
+                  'lastClinicStage': item.lastClinicStage
                 }),
         _patientUpdateAdapter = UpdateAdapter(
             database,
@@ -557,7 +558,8 @@ class _$PatientDao extends PatientDao {
                       _dateTimeConverter.encode(item.dateDiscontinued),
                   'dateStarted': _dateTimeConverter.encode(item.dateStarted),
                   'uuid': item.uuid,
-                  'synced': item.synced ? 1 : 0
+                  'synced': item.synced ? 1 : 0,
+                  'lastClinicStage': item.lastClinicStage
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -577,7 +579,7 @@ class _$PatientDao extends PatientDao {
   ) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Patient WHERE (outletCode = ?1 OR facilityCode =          ?1) AND serviceDiscontinued = 0 AND (LOWER(givenName) LIKE          LOWER(?2) OR LOWER(familyName) LIKE LOWER(?2) OR          LOWER(hospitalNo) LIKE LOWER(?2)) ORDER BY givenName,        familyName LIMIT 10',
-        mapper: (Map<String, Object?> row) => Patient(row['id'] as int?, row['givenName'] as String, row['familyName'] as String, row['hospitalNo'] as String, _dateTimeConverter.decode(row['dateOfBirth'] as int), row['sex'] as String, row['phone'] as String, row['facility'] as String, row['outletCode'] as String, row['facilityCode'] as String, row['address'] as String, _dateTimeConverter.decode(row['lastClinicVisit'] as int), _dateTimeConverter.decode(row['lastRefillDate'] as int), _dateTimeConverter.decode(row['nextAppointmentDate'] as int), _dateTimeConverter.decode(row['nextVisitDate'] as int), (row['serviceDiscontinued'] as int) != 0, row['reasonDiscontinued'] as String, _dateTimeConverter.decode(row['dateDiscontinued'] as int), _dateTimeConverter.decode(row['dateStarted'] as int), row['uuid'] as String, (row['synced'] as int) != 0),
+        mapper: (Map<String, Object?> row) => Patient(row['id'] as int?, row['givenName'] as String, row['familyName'] as String, row['hospitalNo'] as String, _dateTimeConverter.decode(row['dateOfBirth'] as int), row['sex'] as String, row['phone'] as String, row['facility'] as String, row['outletCode'] as String, row['facilityCode'] as String, row['address'] as String, _dateTimeConverter.decode(row['lastClinicVisit'] as int), _dateTimeConverter.decode(row['lastRefillDate'] as int), _dateTimeConverter.decode(row['nextAppointmentDate'] as int), _dateTimeConverter.decode(row['nextVisitDate'] as int), (row['serviceDiscontinued'] as int) != 0, row['reasonDiscontinued'] as String, _dateTimeConverter.decode(row['dateDiscontinued'] as int), _dateTimeConverter.decode(row['dateStarted'] as int), row['lastClinicStage'] as String?, row['uuid'] as String, (row['synced'] as int) != 0),
         arguments: [activationCode, keyword]);
   }
 
@@ -605,6 +607,7 @@ class _$PatientDao extends PatientDao {
             row['reasonDiscontinued'] as String,
             _dateTimeConverter.decode(row['dateDiscontinued'] as int),
             _dateTimeConverter.decode(row['dateStarted'] as int),
+            row['lastClinicStage'] as String?,
             row['uuid'] as String,
             (row['synced'] as int) != 0),
         arguments: [siteCode]);
@@ -633,6 +636,7 @@ class _$PatientDao extends PatientDao {
             row['reasonDiscontinued'] as String,
             _dateTimeConverter.decode(row['dateDiscontinued'] as int),
             _dateTimeConverter.decode(row['dateStarted'] as int),
+            row['lastClinicStage'] as String?,
             row['uuid'] as String,
             (row['synced'] as int) != 0),
         arguments: [id]);
@@ -661,6 +665,7 @@ class _$PatientDao extends PatientDao {
             row['reasonDiscontinued'] as String,
             _dateTimeConverter.decode(row['dateDiscontinued'] as int),
             _dateTimeConverter.decode(row['dateStarted'] as int),
+            row['lastClinicStage'] as String?,
             row['uuid'] as String,
             (row['synced'] as int) != 0),
         arguments: [uniqueId]);
@@ -696,6 +701,7 @@ class _$PatientDao extends PatientDao {
             row['reasonDiscontinued'] as String,
             _dateTimeConverter.decode(row['dateDiscontinued'] as int),
             _dateTimeConverter.decode(row['dateStarted'] as int),
+            row['lastClinicStage'] as String?,
             row['uuid'] as String,
             (row['synced'] as int) != 0));
   }
