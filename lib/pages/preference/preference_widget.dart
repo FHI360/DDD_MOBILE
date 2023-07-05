@@ -3,6 +3,7 @@ import 'package:DDD/flutter_flow/flutter_flow_drop_down.dart';
 import 'package:DDD/flutter_flow/flutter_flow_model.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
+import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:DDD/pages/preference/preference_model.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,19 @@ class PreferenceWidget extends StatefulWidget {
 class _PreferenceWidgetState extends State<PreferenceWidget> {
   late PreferenceModel _model;
 
+  Future<void> initialize() async {
+    final _database = await database;
+    _model.facilities = await _database.facilityDao.findAll();
+    _model.facilities.sort((f1, f2) => f1.name.compareTo(f2.name));
+  }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => PreferenceModel());
     _model.facilityValue = FFAppState().activationCode;
+
+    initialize();
   }
 
   @override
@@ -61,7 +70,7 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                   ),
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 10.0),
+                        EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 30.0),
                     child: Text(
                       'Edit facility preference',
                       style: FlutterFlowTheme.of(context).title3,
@@ -69,7 +78,7 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                   ),
                   Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 20.0),
                     child: Container(
                       width: double.infinity,
                       height: 60.0,
@@ -131,8 +140,12 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                                             child: FlutterFlowDropDown<String>(
                                               initialOption:
                                                   _model.facilityValue ??= '',
-                                              options: ['FEMALE', 'MALE'],
-                                              optionLabels: ['Female', 'Male'],
+                                              options: _model.facilities
+                                                  .map((e) => e.code)
+                                                  .toList(),
+                                              optionLabels: _model.facilities
+                                                  .map((e) => e.name)
+                                                  .toList(),
                                               onChanged: (val) => setState(() {
                                                 if (val != null) {
                                                   _model.facilityValue = val;
