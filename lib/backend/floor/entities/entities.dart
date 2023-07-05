@@ -1,4 +1,6 @@
+import 'package:DDD/app_state.dart';
 import 'package:floor/floor.dart';
+import 'package:uuid/uuid.dart';
 
 @entity
 class Patient {
@@ -7,24 +9,26 @@ class Patient {
   String givenName;
   String familyName;
   String hospitalNo;
+  String? uniqueId;
   DateTime dateOfBirth;
   String sex;
-  String phone;
-  String facility;
-  String outletCode;
+  String? phone;
+  String? facility;
+  String? outletCode;
   String facilityCode;
   String address;
   DateTime lastClinicVisit;
   DateTime lastRefillDate;
   DateTime nextAppointmentDate;
   DateTime nextVisitDate;
-  bool serviceDiscontinued;
-  String reasonDiscontinued;
+  bool? serviceDiscontinued;
+  String? reasonDiscontinued;
   DateTime dateDiscontinued;
   DateTime dateStarted;
   String uuid;
   bool synced;
   String? lastClinicStage;
+  String? lastViralLoad;
   bool? deleted = false;
 
   Patient(
@@ -49,6 +53,7 @@ class Patient {
       this.dateStarted,
       this.lastClinicStage,
       this.uuid,
+      this.lastViralLoad,
       this.synced);
 
   factory Patient.fromJson(Map<String, dynamic> row) => Patient(
@@ -73,6 +78,7 @@ class Patient {
       row['dateStarted'],
       row['lastClinicStage'],
       row['id'],
+      row['lastViralLoad'],
       true);
 
   Map<String, dynamic> toJson() => {
@@ -96,8 +102,37 @@ class Patient {
         'reasonDiscontinued': reasonDiscontinued,
         'dateDiscontinued': dateDiscontinued.toIso8601String().substring(0, 10),
         'dateStarted': dateDiscontinued.toIso8601String().substring(0, 10),
-        'deleted': deleted
+        'deleted': deleted,
+        'lastViralLoad': lastViralLoad
       };
+
+  factory Patient.instance() {
+    var uuid = Uuid();
+    return Patient(
+        null,
+        '',
+        '',
+        '',
+        DateTime(1900),
+        '',
+        '',
+        '',
+        null,
+        FFAppState().activationCode,
+        '',
+        DateTime(1900),
+        DateTime(1900),
+        DateTime(1900),
+        DateTime(1900),
+        null,
+        null,
+        DateTime(1900),
+        DateTime(1900),
+        null,
+        uuid.v4(),
+        null,
+        false);
+  }
 }
 
 @entity

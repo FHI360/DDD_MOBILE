@@ -1,8 +1,8 @@
 import 'package:DDD/custom_code/actions/filter_patients.dart';
+import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -12,8 +12,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'patient_list_model.dart';
 
 export 'patient_list_model.dart';
-
-final log = Logger('ExampleLogger');
 
 class PatientListWidget extends StatefulWidget {
   const PatientListWidget({Key? key}) : super(key: key);
@@ -50,50 +48,38 @@ class _PatientListWidgetState extends State<PatientListWidget> {
     context.watch<FFAppState>();
 
     return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        leading: FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30.0,
-          borderWidth: 1.0,
-          buttonSize: 60.0,
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: Colors.white,
-            size: 30.0,
-          ),
+      drawer: DDDDrawer(),
+      floatingActionButton: Visibility(
+        visible: true,
+        child: FloatingActionButton(
           onPressed: () async {
-            print('Pressed');
-            context.goNamed('siteHome');
+            context.pushNamed('patientEdit',queryParams: {
+              'patientId': serializeParam(
+                0,
+                ParamType.int,
+              ),
+            }.withoutNulls,);
           },
+          backgroundColor: const Color(0xccdf6f3e),
+          elevation: 8.0,
+          child: Icon(
+            Icons.add,
+            color: FlutterFlowTheme.of(context).textColor,
+            size: 24.0,
+          ),
         ),
-        title: Text(
-          'Patients',
-          style: FlutterFlowTheme.of(context).title3,
-        ),
-        actions: [],
-        centerTitle: true,
-        elevation: 2.0,
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
-        child: Container(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          'Patients',
+        ),
+        backgroundColor: const Color(0xccdf6f3e),
+      ),
+      body: Center(
+        child:  Container(
           width: double.infinity,
           height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                FlutterFlowTheme.of(context).primaryColor,
-                Color(0xFFF5F5F5)
-              ],
-              stops: [0.0, 1.0],
-              begin: AlignmentDirectional(0.0, -1.0),
-              end: AlignmentDirectional(0, 1.0),
-            ),
-          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -101,7 +87,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
               children: [
                 Padding(
                   padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 12.0),
+                  EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 12.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -111,7 +97,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                           onChanged: (_) => EasyDebounce.debounce(
                             '_model.keywordController',
                             Duration(milliseconds: 2000),
-                            () => setState(() {}),
+                                () => setState(() {}),
                           ),
                           autofocus: true,
                           obscureText: false,
@@ -147,7 +133,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             filled: true,
-                            fillColor: Color(0xFF747550),
+                            fillColor: Colors.white,
                           ),
                           style: FlutterFlowTheme.of(context).bodyText1,
                           maxLines: null,
@@ -157,7 +143,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                       ),
                       Padding(
                         padding:
-                            EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+                        EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
                         child: FlutterFlowIconButton(
                           borderColor: Colors.transparent,
                           borderRadius: 30.0,
@@ -221,12 +207,12 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       patientListItem.givenName
-                                              .substring(0, 1)
-                                              .toUpperCase() +
+                                          .substring(0, 1)
+                                          .toUpperCase() +
                                           patientListItem.familyName
                                               .substring(0, 1)
                                               .toUpperCase(),
@@ -240,15 +226,15 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               '${patientListItem.givenName} ${patientListItem.familyName}',
                                               style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .subtitle1,
+                                              FlutterFlowTheme.of(context)
+                                                  .subtitle1,
                                             ),
                                             Row(
                                               mainAxisSize: MainAxisSize.max,
@@ -256,7 +242,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                                 Text(
                                                   patientListItem.hospitalNo,
                                                   style: FlutterFlowTheme.of(
-                                                          context)
+                                                      context)
                                                       .bodyText2,
                                                 ),
                                               ],
@@ -267,16 +253,16 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                                 Padding(
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(
-                                                          0.0, 0.0, 5.0, 0.0),
+                                                      0.0, 0.0, 5.0, 0.0),
                                                   child: Text(
                                                     'Last Refill',
                                                     style: FlutterFlowTheme.of(
-                                                            context)
+                                                        context)
                                                         .bodyText1,
                                                   ),
                                                 ),
                                                 if (patientListItem
-                                                        .lastRefillDate !=
+                                                    .lastRefillDate !=
                                                     DateTime(1900))
                                                   Text(
                                                     dateTimeFormat(
@@ -284,7 +270,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                                         patientListItem
                                                             .lastRefillDate!),
                                                     style: FlutterFlowTheme.of(
-                                                            context)
+                                                        context)
                                                         .bodyText1,
                                                   ),
                                               ],
@@ -296,7 +282,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                     FFButtonWidget(
                                       onPressed: () async {
                                         context.pushNamed(
-                                          'patientProfile',
+                                          'patientEdit',
                                           queryParams: {
                                             'patientId': serializeParam(
                                               patientListItem.id,
@@ -312,24 +298,24 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 0.0, 0.0, 0.0),
                                         iconPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0.0, 0.0, 0.0, 0.0),
+                                        EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 0.0, 0.0, 0.0),
                                         color: FlutterFlowTheme.of(context)
                                             .primaryColor,
                                         textStyle: FlutterFlowTheme.of(context)
                                             .bodyText1
                                             .override(
-                                              fontFamily: 'Outfit',
-                                              color: Colors.white,
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.normal,
-                                              useGoogleFonts:
-                                                  GoogleFonts.asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
-                                            ),
+                                          fontFamily: 'Outfit',
+                                          color: Colors.white,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.normal,
+                                          useGoogleFonts:
+                                          GoogleFonts.asMap()
+                                              .containsKey(
+                                              FlutterFlowTheme.of(
+                                                  context)
+                                                  .bodyText1Family),
+                                        ),
                                         borderSide: BorderSide(
                                           color: Colors.transparent,
                                           width: 1.0,

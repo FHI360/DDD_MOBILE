@@ -1,5 +1,6 @@
 import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:DDD/main.dart';
+import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:DDD/widget/discontinue_service_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,7 +10,6 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/custom_functions.dart' as functions;
-import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'patient_profile_model.dart';
@@ -71,56 +71,19 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
     context.watch<FFAppState>();
 
     return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      drawer: DDDDrawer(),
       appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        leading: FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30,
-          borderWidth: 1,
-          buttonSize: 60,
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: Colors.white,
-            size: 30,
-          ),
-          onPressed: () async {
-            context.pushNamed('patientList');
-          },
-        ),
-        title: Text(
-          'Patient profile',
-          style: FlutterFlowTheme.of(context).title2.override(
-                fontFamily: FlutterFlowTheme.of(context).title2Family,
-                color: Colors.white,
-                fontSize: 22,
-                useGoogleFonts: GoogleFonts.asMap()
-                    .containsKey(FlutterFlowTheme.of(context).title2Family),
-              ),
-        ),
-        actions: [],
         centerTitle: true,
-        elevation: 2,
+        title: const Text(
+          'Patient Profile',
+        ),
+        backgroundColor: const Color(0xccdf6f3e),
       ),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  FlutterFlowTheme.of(context).primaryColor,
-                  Color(0xFFF5F5F5)
-                ],
-                stops: [0, 1],
-                begin: AlignmentDirectional(0, -1),
-                end: AlignmentDirectional(0, 1),
-              ),
-            ),
+      body: Center(
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: SingleChildScrollView(
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -283,6 +246,76 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                               ],
                             ),
                           ),
+                          if (!(_model.patient?.serviceDiscontinued ?? false))
+                            InkWell(
+                              onTap: () async {
+                                context.pushNamed(
+                                  'patientEdit',
+                                  queryParams: {
+                                    'patientId': serializeParam(
+                                      _model.patient!.id,
+                                      ParamType.int,
+                                    ),
+                                  }.withoutNulls,
+                                );
+                              },
+                              child: Container(
+                                height: 32,
+                                constraints: BoxConstraints(
+                                  maxHeight: 32,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4,
+                                      color: Color(0x32171717),
+                                      offset: Offset(0, 2),
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8, 0, 8, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 12, 0),
+                                        child: Text(
+                                          'Discontinue',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyText1Family,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryBtnText,
+                                                useGoogleFonts: GoogleFonts
+                                                        .asMap()
+                                                    .containsKey(
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyText1Family),
+                                              ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.cancel_outlined,
+                                        color: Colors.white,
+                                        size: 12,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                           if (!(_model.patient?.serviceDiscontinued ?? false))
                             InkWell(
                               onTap: () async {

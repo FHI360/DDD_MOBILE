@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:DDD/app_state.dart';
 import 'package:DDD/pages/home_page/home_page_widget.dart';
 import 'package:DDD/pages/login_page/login_page_widget.dart';
+import 'package:DDD/pages/patient-edit/patient_edit_widget.dart';
+import 'package:DDD/pages/patient_list/patient_list_widget.dart';
+import 'package:DDD/pages/preference/preference_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
@@ -75,6 +78,26 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               path: 'home',
               requireAuth: true,
               builder: (context, params) => HomePageWidget(),
+            ),
+            FFRoute(
+              name: 'patientList',
+              path: 'patients',
+              requireAuth: true,
+              builder: (context, params) => PatientListWidget(),
+            ),
+            FFRoute(
+              name: 'patientEdit',
+              path: 'patient-edit',
+              requireAuth: true,
+              builder: (context, params) => PatientEditWidget(
+                patientId: params.getParam<int>('patientId', ParamType.int),
+              ),
+            ),
+            FFRoute(
+              name: 'preferences',
+              path: 'preferences',
+              requireAuth: true,
+              builder: (context, params) => PreferenceWidget(),
             ),
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ).toRoute(appStateNotifier),

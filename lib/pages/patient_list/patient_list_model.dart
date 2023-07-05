@@ -33,7 +33,7 @@ class PatientListModel extends FlutterFlowModel {
   TextEditingController? keywordController;
   String? Function(BuildContext, String?)? keywordControllerValidator;
   // Stores action output result for [Custom Action - filterPatients] action in IconButton widget.
-  List<Patient>? patients;
+  List<Patient>? patients = [];
 
   /// Initialization and disposal methods.
 
