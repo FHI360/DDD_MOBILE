@@ -45,6 +45,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
       var patient = await _database.patientDao.findById(widget.patientId!);
       setState(() {
         _model.patient = patient;
+        print("Initialized");
       });
     });
 
@@ -252,7 +253,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                 EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                             child: Container(
                               width: double.infinity,
-                              height: 100,
+                              height: 50,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).alternate,
                                 boxShadow: [
@@ -559,11 +560,28 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                       children: [
                         Text(
                           'Appointments',
-                          style: FlutterFlowTheme.of(context).subtitle2,
+                          style: FlutterFlowTheme.of(context)
+                              .subtitle2
+                              .override(
+                            fontFamily:
+                            FlutterFlowTheme.of(
+                                context)
+                                .bodyText1Family,
+                            fontWeight: FontWeight.w300,
+                            color:  FlutterFlowTheme.of(context).secondaryColor,
+                            useGoogleFonts: GoogleFonts
+                                .asMap()
+                                .containsKey(
+                                FlutterFlowTheme.of(
+                                    context)
+                                    .bodyText1Family),
+                          ),
+
                         ),
                       ],
                     ),
                   ),
+                  if(_model.patient != null)
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
                     child: Row(
@@ -829,6 +847,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                         ],
                       ),
                     ),
+                  if(_model.patient != null)
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
                     child: Row(
@@ -837,11 +856,27 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                       children: [
                         Text(
                           'Refill history',
-                          style: FlutterFlowTheme.of(context).subtitle2,
+                          style: FlutterFlowTheme.of(context)
+                              .subtitle2
+                              .override(
+                            fontFamily:
+                            FlutterFlowTheme.of(
+                                context)
+                                .bodyText1Family,
+                            fontWeight: FontWeight.w300,
+                            color:  FlutterFlowTheme.of(context).secondaryColor,
+                            useGoogleFonts: GoogleFonts
+                                .asMap()
+                                .containsKey(
+                                FlutterFlowTheme.of(
+                                    context)
+                                    .bodyText1Family),
+                          ),
                         ),
                       ],
                     ),
                   ),
+                  if(_model.patient != null)
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
