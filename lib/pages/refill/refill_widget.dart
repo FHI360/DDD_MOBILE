@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
+import 'package:uuid/uuid.dart';
 
 import '/flutter_flow/custom_functions.dart' as functions;
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -33,6 +34,11 @@ class _RefillWidgetState extends State<RefillWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
+
+  Future<void> initialize() async {
+    final _database = await database;
+    _model.regimen = await _database.regimenDao.findAll();
+  }
 
   @override
   void initState() {
@@ -108,17 +114,6 @@ class _RefillWidgetState extends State<RefillWidget> {
           child: Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  FlutterFlowTheme.of(context).primaryColor,
-                  Color(0xFFF5F5F5)
-                ],
-                stops: [0, 1],
-                begin: AlignmentDirectional(0, -1),
-                end: AlignmentDirectional(0, 1),
-              ),
-            ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -1856,55 +1851,55 @@ class _RefillWidgetState extends State<RefillWidget> {
                                               Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
-                                                        12.0, 12.0, 12.0, 0.0),
+                                                    12.0, 12.0, 12.0, 0.0),
                                                 child: Container(
                                                   width: double.infinity,
                                                   height: 60.0,
                                                   decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
-                                                            context)
+                                                        context)
                                                         .secondaryBackground,
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
+                                                    BorderRadius.circular(
+                                                        8.0),
                                                   ),
                                                   child: Row(
                                                     mainAxisSize:
-                                                        MainAxisSize.max,
+                                                    MainAxisSize.max,
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                     children: [
                                                       Expanded(
                                                         child: Container(
                                                           width: 100.0,
                                                           height: 100.0,
                                                           decoration:
-                                                              BoxDecoration(
+                                                          BoxDecoration(
                                                             color: FlutterFlowTheme
-                                                                    .of(context)
+                                                                .of(context)
                                                                 .secondaryBackground,
                                                             borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
+                                                            BorderRadius
+                                                                .circular(
+                                                                8.0),
                                                           ),
                                                           child: Row(
                                                             mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
+                                                            MainAxisSize
+                                                                .max,
                                                             children: [
                                                               Expanded(
                                                                 child: Column(
                                                                   mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
+                                                                  MainAxisSize
+                                                                      .max,
                                                                   mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
+                                                                  MainAxisAlignment
+                                                                      .center,
                                                                   crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
+                                                                  CrossAxisAlignment
+                                                                      .start,
                                                                   children: [
                                                                     Padding(
                                                                       padding: EdgeInsetsDirectional.fromSTEB(
@@ -1913,36 +1908,61 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0,
                                                                           0.0),
                                                                       child:
-                                                                          Text(
-                                                                        'ARV Drug',
+                                                                      Text(
+                                                                        'Regimen',
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
-                                                                              fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
-                                                                              fontSize: 12.0,
-                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
-                                                                            ),
+                                                                          fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                                                                          fontSize: 12.0,
+                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                     Expanded(
                                                                       child:
-                                                                          Padding(
+                                                                      Padding(
                                                                         padding: EdgeInsetsDirectional.fromSTEB(
                                                                             10.0,
                                                                             0.0,
                                                                             10.0,
                                                                             0.0),
-                                                                        child:
-                                                                            Text(
-                                                                          _model.patient?.givenName ??
-                                                                              '',
-                                                                          style: FlutterFlowTheme.of(context)
+                                                                        child: FlutterFlowDropDown<
+                                                                            Regimen>(
+                                                                          initialOption:
+                                                                          null,
+                                                                          options: _model.regimen,
+                                                                          optionLabels: _model.regimen.map((r)=>r.name).toList(),
+                                                                          onChanged: (val) =>
+                                                                              setState(() => _model.regimenValue = val),
+                                                                          width:
+                                                                          double.infinity,
+                                                                          height:
+                                                                          50.0,
+                                                                          textStyle: FlutterFlowTheme.of(context)
                                                                               .bodyText1
                                                                               .override(
-                                                                                fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
-                                                                                fontSize: 14.0,
-                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
-                                                                              ),
+                                                                            fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                                                                            color: FlutterFlowTheme.of(context).primaryText,
+                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
+                                                                          ),
+                                                                          fillColor:
+                                                                          FlutterFlowTheme.of(context).secondaryBackground,
+                                                                          elevation:
+                                                                          2.0,
+                                                                          borderColor:
+                                                                          Colors.transparent,
+                                                                          borderWidth:
+                                                                          0.0,
+                                                                          borderRadius:
+                                                                          0.0,
+                                                                          margin: EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0),
+                                                                          hidesUnderline:
+                                                                          true,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2786,7 +2806,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                           ((int.tryParse(_model
                                                                       .qtyDispensedController
                                                                       .text) !=
-                                                                  null))
+                                                                  null) || _model.regimenValue == null)
                                                               ? null
                                                               : () async {
                                                                   if (_model.formKey
@@ -2798,6 +2818,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           .validate()) {
                                                                     return;
                                                                   }
+                                                                  final uuid = Uuid();
                                                                   var clinic = Clinic(
                                                                       null,
                                                                       int.tryParse(_model
@@ -2828,7 +2849,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                       functions.booleanFromYesNo(_model.feverValue),
                                                                       functions.booleanFromYesNo(_model.weightLossValue),
                                                                       functions.booleanFromYesNo(_model.tbReferValue),
-                                                                      '',
+                                                                      uuid.v4(),
                                                                       false);
                                                                   database.then((value) => value
                                                                       .clinicDao
@@ -2838,7 +2859,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                       null,
                                                                       getCurrentTimestamp,
                                                                       _model
-                                                                          .regimenValue!,
+                                                                          .regimenValue!.name,
+                                                                      _model.regimenValue!.id,
                                                                       _model
                                                                           .patient!
                                                                           .uuid,
@@ -2857,7 +2879,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           _model
                                                                               .adverseIssuesValue),
                                                                       false,
-                                                                      '');
+                                                                      uuid.v4());
                                                                   database.then((value) => value
                                                                       .refillDao
                                                                       .insertRecord(

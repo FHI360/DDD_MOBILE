@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:DDD/main.dart';
+import 'package:DDD/widget/devolve_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
@@ -15,10 +16,9 @@ import 'discontinue_service_model.dart';
 
 export 'discontinue_service_model.dart';
 
-final log = Logger('DiscontinueServiceWidget');
 
-class DiscontinueServiceWidget extends StatefulWidget {
-  const DiscontinueServiceWidget({
+class DevolveWidget extends StatefulWidget {
+  const DevolveWidget({
     Key? key,
     this.patient,
   }) : super(key: key);
@@ -26,12 +26,18 @@ class DiscontinueServiceWidget extends StatefulWidget {
   final Patient? patient;
 
   @override
-  _DiscontinueServiceWidgetState createState() =>
-      _DiscontinueServiceWidgetState();
+  _DevolveWidgetWidgetState createState() =>
+      _DevolveWidgetWidgetState();
 }
 
-class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
-  late DiscontinueServiceModel _model;
+class _DevolveWidgetWidgetState extends State<DevolveWidget> {
+  late DevolveModel _model;
+
+  Future<void> initialize() async {
+    final _database =await database;
+    _model.outlets = await _database.outletDao.findAll();
+    _model.outlets.sort((o1,o2)=>o1.name.compareTo(o2.name));
+  }
 
   @override
   void setState(VoidCallback callback) {
@@ -42,7 +48,7 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DiscontinueServiceModel());
+    _model = createModel(context, () => DevolveModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -162,7 +168,7 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        'Date discontinued',
+                                                        'Date devolved',
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -250,7 +256,7 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                                   0.0,
                                                                   0.0),
                                                       child: Text(
-                                                        'Reason for discontinuing',
+                                                        'Outlet',
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -279,22 +285,13 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                                     10.0,
                                                                     0.0),
                                                         child:
-                                                            FlutterFlowDropDown<
-                                                                String>(
+                                                            FlutterFlowDropDown<Outlet>(
                                                           initialOption: null,
-                                                          options: [
-                                                            'Becomes pregnant',
-                                                            'Develops comorbidity',
-                                                            'Loss of Viral suppression',
-                                                            'Decides to go back to the hospital',
-                                                            'Becomes non-adherent',
-                                                            'Missed VL Test',
-                                                            'Missed TPT Test',
-                                                            'Missed Cervical Cancer Screening'
-                                                          ],
+                                                          options: _model.outlets,
+                                                          optionLabels: _model.outlets.map((e) => e.name).toList(),
                                                           onChanged: (val) =>
                                                               setState(() =>
-                                                                  _model.reasonValue =
+                                                                  _model.outletValue =
                                                                       val),
                                                           width:
                                                               double.infinity,
@@ -391,8 +388,7 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                     ),
                                     FFButtonWidget(
                                       onPressed: (_model.datePicked == null) ||
-                                              (_model.reasonValue == null ||
-                                                  _model.reasonValue == '')
+                                              (_model.outletValue == null )
                                           ? null
                                           : () async {
                                               if (_model.formKey.currentState ==
@@ -417,12 +413,12 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                 );
                                                 return;
                                               }
-                                              if (_model.reasonValue == null) {
+                                              if (_model.outletValue == null) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      'Select reason',
+                                                      'Please select outlet',
                                                       style: TextStyle(),
                                                     ),
                                                     duration: Duration(
@@ -435,10 +431,10 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                               }
                                               database.then((value) => value
                                                   .patientDao
-                                                  .discontinueService(
+                                                  .devolvePatient(
                                                       widget.patient!.id!,
-                                                      _model.datePicked!,
-                                                      _model.reasonValue!));
+                                                      _model.outletValue!.code,
+                                                      _model.datePicked!));
 
                                               Navigator.pop(context, true);
                                             },

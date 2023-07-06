@@ -8,6 +8,7 @@ class RefillModel extends FlutterFlowModel {
 
   final formKey = GlobalKey<FormState>();
   Patient? patient;
+  List<Regimen> regimen = [];
 
   // State field(s) for PageView widget.
   PageController? pageViewController;
@@ -48,7 +49,7 @@ class RefillModel extends FlutterFlowModel {
   // State field(s) for tbRefer widget.
   String? tbReferValue;
 
-  String? regimenValue;
+  Regimen? regimenValue;
 
   // State field(s) for qtyPrescribed widget.
   TextEditingController? qtyPrescribedController;

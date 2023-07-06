@@ -22,7 +22,7 @@ class FFAppState extends ChangeNotifier {
     _activationCode =
         await secureStorage.getString('ff_activationCode') ?? _activationCode;
     _outlet = await secureStorage.getBool('ff_outlet') ?? _outlet;
-    _facility = await secureStorage.getString('ff_facility') ?? _facility;
+    _name = await secureStorage.getString('ff_name') ?? _name;
   }
 
   void update(VoidCallback callback) {
@@ -59,13 +59,13 @@ class FFAppState extends ChangeNotifier {
     secureStorage.setString('ff_refreshToken', _value);
   }
 
-  String _facility = '';
+  String _name = '';
 
-  String get facility => _facility;
+  String get name => _name;
 
-  set facility(String _value) {
-    _facility = _value;
-    secureStorage.setString('ff_facility', _value);
+  set name(String _value) {
+    _name = _value;
+    secureStorage.setString('ff_name', _value);
   }
 
   bool _outlet = false;

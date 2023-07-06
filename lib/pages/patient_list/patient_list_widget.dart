@@ -87,7 +87,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
               children: [
                 Padding(
                   padding:
-                  EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 12.0),
+                  EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 16.0, 12.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -282,7 +282,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                     FFButtonWidget(
                                       onPressed: () async {
                                         context.pushNamed(
-                                          'patientEdit',
+                                          'patientProfile',
                                           queryParams: {
                                             'patientId': serializeParam(
                                               patientListItem.id,

@@ -1,12 +1,12 @@
 import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
+import 'package:DDD/widget/devolve_widget.dart';
 import 'package:DDD/widget/discontinue_service_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/custom_functions.dart' as functions;
@@ -15,8 +15,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 import 'patient_profile_model.dart';
 
 export 'patient_profile_model.dart';
-
-final log = Logger('PatientProfile');
 
 class PatientProfileWidget extends StatefulWidget {
   const PatientProfileWidget({
@@ -107,298 +105,450 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 0, 0, 8),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${_model.patient?.givenName} ${_model.patient?.familyName}',
-                                  style: FlutterFlowTheme.of(context).title3,
-                                ),
-                                Text(
-                                  _model.patient?.hospitalNo ?? '',
-                                  style: FlutterFlowTheme.of(context).bodyText1,
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 8, 0, 0),
-                                      child: Text(
-                                        _model.patient?.sex ?? '',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText1
-                                            .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText1Family,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              useGoogleFonts:
-                                                  GoogleFonts.asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
-                                            ),
+                          Expanded(
+                            child:
+                                Row(mainAxisSize: MainAxisSize.max, children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '${_model.patient?.givenName} ${_model.patient?.familyName}',
+                                        style:
+                                            FlutterFlowTheme.of(context).title3,
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 0, 0),
-                                      child: Text(
-                                        functions.formatAge(
-                                            _model.patient?.dateOfBirth),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText1
-                                            .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText1Family,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              useGoogleFonts:
-                                                  GoogleFonts.asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
-                                            ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 100,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                      ),
-                                      child: Wrap(
-                                        spacing: 0,
-                                        runSpacing: 0,
-                                        alignment: WrapAlignment.start,
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.start,
-                                        direction: Axis.horizontal,
-                                        runAlignment: WrapAlignment.start,
-                                        verticalDirection:
-                                            VerticalDirection.down,
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Wrap(
-                                            spacing: 0,
-                                            runSpacing: 0,
-                                            alignment: WrapAlignment.start,
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.start,
-                                            direction: Axis.horizontal,
-                                            runAlignment: WrapAlignment.start,
-                                            verticalDirection:
-                                                VerticalDirection.down,
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              Text(
-                                                _model.patient?.address ?? '',
-                                                style:
+                                    ],
+                                  ),
+                                  Text(
+                                    _model.patient?.hospitalNo ?? '',
+                                    style:
+                                        FlutterFlowTheme.of(context).bodyText1,
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 8, 0, 0),
+                                        child: Text(
+                                          _model.patient?.sex == 'MALE'
+                                              ? 'Male'
+                                              : 'Female',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily:
                                                     FlutterFlowTheme.of(context)
-                                                        .bodyText1
-                                                        .override(
-                                                          fontFamily:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyText1Family,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryColor,
-                                                          useGoogleFonts: GoogleFonts
-                                                                  .asMap()
-                                                              .containsKey(
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText1Family),
-                                                        ),
+                                                        .bodyText1Family,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                useGoogleFonts: GoogleFonts
+                                                        .asMap()
+                                                    .containsKey(
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyText1Family),
                                               ),
-                                            ],
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      _model.patient?.phone ?? '',
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            8, 8, 0, 0),
+                                        child: Text(
+                                          functions.formatAge(
+                                              _model.patient?.dateOfBirth),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyText1Family,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                useGoogleFonts: GoogleFonts
+                                                        .asMap()
+                                                    .containsKey(
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyText1Family),
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    _model.patient?.phone ?? '',
+                                    style:
+                                        FlutterFlowTheme.of(context).bodyText1,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        child: Wrap(
+                                          spacing: 0,
+                                          runSpacing: 0,
+                                          alignment: WrapAlignment.start,
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.start,
+                                          direction: Axis.horizontal,
+                                          runAlignment: WrapAlignment.start,
+                                          verticalDirection:
+                                              VerticalDirection.down,
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Text(
+                                              _model.patient?.address ?? '',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ]),
                           ),
-                          if (!(_model.patient?.serviceDiscontinued ?? false))
-                            InkWell(
-                              onTap: () async {
-                                context.pushNamed(
-                                  'patientEdit',
-                                  queryParams: {
-                                    'patientId': serializeParam(
-                                      _model.patient!.id,
-                                      ParamType.int,
-                                    ),
-                                  }.withoutNulls,
-                                );
-                              },
-                              child: Container(
-                                height: 32,
-                                constraints: BoxConstraints(
-                                  maxHeight: 32,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 4,
-                                      color: Color(0x32171717),
-                                      offset: Offset(0, 2),
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      8, 0, 8, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 12, 0),
-                                        child: Text(
-                                          'Discontinue',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyText1Family,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryBtnText,
-                                                useGoogleFonts: GoogleFonts
-                                                        .asMap()
-                                                    .containsKey(
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyText1Family),
-                                              ),
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.cancel_outlined,
-                                        color: Colors.white,
-                                        size: 12,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          if (!(_model.patient?.serviceDiscontinued ?? false))
-                            InkWell(
-                              onTap: () async {
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  enableDrag: false,
-                                  context: context,
-                                  builder: (context) {
-                                    return Padding(
-                                      padding:
-                                          MediaQuery.of(context).viewInsets,
-                                      child: DiscontinueServiceWidget(
-                                        patient: _model.patient,
-                                      ),
-                                    );
-                                  },
-                                ).then((value) => setState(() {
-                                      if (value != null && value ?? false) {
-                                        _model.patient!.serviceDiscontinued =
-                                            true;
-                                      }
-                                    }));
-                              },
-                              child: Container(
-                                height: 32,
-                                constraints: BoxConstraints(
-                                  maxHeight: 32,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 4,
-                                      color: Color(0x32171717),
-                                      offset: Offset(0, 2),
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      8, 0, 8, 0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 12, 0),
-                                        child: Text(
-                                          'Discontinue',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyText1Family,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryBtnText,
-                                                useGoogleFonts: GoogleFonts
-                                                        .asMap()
-                                                    .containsKey(
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyText1Family),
-                                              ),
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.cancel_outlined,
-                                        color: Colors.white,
-                                        size: 12,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
                         ],
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                            child: Container(
+                              width: double.infinity,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context).alternate,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 4,
+                                    color: Color(0x230F1113),
+                                    offset: Offset(0, 1),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    10, 10, 10, 10),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        if (!(_model
+                                                .patient?.serviceDiscontinued ??
+                                            false))
+                                          InkWell(
+                                            onTap: () async {
+                                              context.pushNamed(
+                                                'patientEdit',
+                                                queryParams: {
+                                                  'patientId': serializeParam(
+                                                    _model.patient!.id,
+                                                    ParamType.int,
+                                                  ),
+                                                }.withoutNulls,
+                                              );
+                                            },
+                                            child: Container(
+                                              height: 32,
+                                              constraints: BoxConstraints(
+                                                maxHeight: 32,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryColor,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 4,
+                                                    color: Color(0x32171717),
+                                                    offset: Offset(0, 2),
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(8, 0, 8, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0, 0, 12, 0),
+                                                      child: Text(
+                                                        'Edit',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .white,
+                                                                  useGoogleFonts: GoogleFonts
+                                                                          .asMap()
+                                                                      .containsKey(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyText1Family),
+                                                                ),
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                      Icons.edit,
+                                                      color: Colors.white,
+                                                      size: 12,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        if (_model
+                                            .patient?.outletCode == null)
+                                          InkWell(
+                                            onTap: () async {
+                                              await showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                Colors.transparent,
+                                                enableDrag: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return Padding(
+                                                    padding:
+                                                    MediaQuery.of(context)
+                                                        .viewInsets,
+                                                    child:
+                                                    DevolveWidget(
+                                                      patient: _model.patient,
+                                                    ),
+                                                  );
+                                                },
+                                              ).then((value) => setState(() {
+                                                if (value != null &&
+                                                    value ??
+                                                    false) {
+                                                  _model.patient!
+                                                      .serviceDiscontinued =
+                                                  true;
+                                                }
+                                              }));
+                                            },
+                                            child: Container(
+                                              height: 32,
+                                              constraints: BoxConstraints(
+                                                maxHeight: 32,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color:
+                                                FlutterFlowTheme.of(context)
+                                                    .primaryColor,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 4,
+                                                    color: Color(0x32171717),
+                                                    offset: Offset(0, 2),
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                BorderRadius.circular(30),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(8, 0, 8, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                          0, 0, 12, 0),
+                                                      child: Text(
+                                                        'Devolve',
+                                                        style:
+                                                        FlutterFlowTheme.of(
+                                                            context)
+                                                            .bodyText1
+                                                            .override(
+                                                          fontFamily: FlutterFlowTheme.of(
+                                                              context)
+                                                              .bodyText1Family,
+                                                          color: FlutterFlowTheme.of(
+                                                              context)
+                                                              .white,
+                                                          useGoogleFonts: GoogleFonts
+                                                              .asMap()
+                                                              .containsKey(
+                                                              FlutterFlowTheme.of(context)
+                                                                  .bodyText1Family),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                      Icons.arrow_circle_right_outlined,
+                                                      color: Colors.white,
+                                                      size: 12,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        if (!(_model
+                                                .patient?.serviceDiscontinued ??
+                                            false))
+                                          InkWell(
+                                            onTap: () async {
+                                              await showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                enableDrag: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return Padding(
+                                                    padding:
+                                                        MediaQuery.of(context)
+                                                            .viewInsets,
+                                                    child:
+                                                        DiscontinueServiceWidget(
+                                                      patient: _model.patient,
+                                                    ),
+                                                  );
+                                                },
+                                              ).then((value) => setState(() {
+                                                    if (value != null &&
+                                                            value ??
+                                                        false) {
+                                                      _model.patient!
+                                                              .serviceDiscontinued =
+                                                          true;
+                                                    }
+                                                  }));
+                                            },
+                                            child: Container(
+                                              height: 32,
+                                              constraints: BoxConstraints(
+                                                maxHeight: 32,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 4,
+                                                    color: Color(0x32171717),
+                                                    offset: Offset(0, 2),
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(8, 0, 8, 0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0, 0, 12, 0),
+                                                      child: Text(
+                                                        'Discontinue',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryBtnText,
+                                                                  useGoogleFonts: GoogleFonts
+                                                                          .asMap()
+                                                                      .containsKey(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyText1Family),
+                                                                ),
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                      Icons.cancel_outlined,
+                                                      color: Colors.white,
+                                                      size: 12,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Padding(
@@ -472,12 +622,14 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                 ),
                                           ),
                                         ),
-                                        Text(
-                                          dateTimeFormat('yMMMd',
-                                              _model.patient?.lastRefillDate),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1,
-                                        ),
+                                        if (_model.patient!.lastRefillDate !=
+                                            DateTime(1900))
+                                          Text(
+                                            dateTimeFormat('yMMMd',
+                                                _model.patient?.lastRefillDate),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1,
+                                          ),
                                       ],
                                     ),
                                     Row(
@@ -506,12 +658,16 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                 ),
                                           ),
                                         ),
-                                        Text(
-                                          dateTimeFormat('yMMMd',
-                                              _model.patient?.lastClinicVisit!),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1,
-                                        ),
+                                        if (_model.patient!.lastClinicVisit !=
+                                            DateTime(1900))
+                                          Text(
+                                            dateTimeFormat(
+                                                'yMMMd',
+                                                _model
+                                                    .patient?.lastClinicVisit!),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1,
+                                          ),
                                       ],
                                     ),
                                     Row(
@@ -604,49 +760,73 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                   ),
                   if (!(_model.patient?.serviceDiscontinued ?? false))
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                      child: InkWell(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                              child: Text(
-                                'Refill patient',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText1
-                                    .override(
-                                      fontFamily: FlutterFlowTheme.of(context)
-                                          .bodyText1Family,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBtnText,
-                                      useGoogleFonts: GoogleFonts.asMap()
-                                          .containsKey(
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyText1Family),
+                      padding: EdgeInsetsDirectional.fromSTEB(10, 12, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              context.pushNamed(
+                                'refill',
+                                queryParams: {
+                                  'patientId': serializeParam(
+                                    _model.patient!.id!,
+                                    ParamType.int,
+                                  ),
+                                }.withoutNulls,
+                              );
+                            },
+                            child: Container(
+                              height: 32,
+                              constraints: BoxConstraints(
+                                maxHeight: 32,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    FlutterFlowTheme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 12, 0),
+                                      child: Text(
+                                        'Refill',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText1
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1Family,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryBtnText,
+                                              useGoogleFonts:
+                                                  GoogleFonts.asMap()
+                                                      .containsKey(
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyText1Family),
+                                            ),
+                                      ),
                                     ),
+                                    Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 12,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            Icon(
-                              Icons.add,
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                        onTap: () async {
-                          context.pushNamed(
-                            'refill',
-                            queryParams: {
-                              'patientId': serializeParam(
-                                _model.patient!.id!,
-                                ParamType.int,
-                              ),
-                            }.withoutNulls,
-                          );
-                        },
+                          ),
+                        ],
                       ),
                     ),
                   Padding(

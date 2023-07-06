@@ -31,15 +31,6 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
     } else {
       _model.patient = Patient.instance();
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _model = createModel(context, () => PatientEditModel());
-
-    initialize();
 
     _model.givenNameController ??=
         TextEditingController(text: _model.patient?.givenName);
@@ -51,6 +42,10 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
         TextEditingController(text: _model.patient?.phone);
     _model.addressController ??=
         TextEditingController(text: _model.patient?.address);
+    _model.hospitalNoController ??=
+        TextEditingController(text: _model.patient?.hospitalNo);
+    _model.uniqueIdController ??=
+        TextEditingController(text: _model.patient?.uniqueId);
     _model.addressController ??=
         TextEditingController(text: _model.patient?.lastViralLoad);
     _model.datePicked1 = _model.patient!.dateOfBirth != DateTime(1900)
@@ -60,7 +55,17 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
         ? _model.patient!.dateStarted
         : null;
     _model.sexValue = _model.patient!.sex;
+
     _model.clinicStageValue = _model.patient!.lastClinicStage;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _model = createModel(context, () => PatientEditModel());
+
+    initialize();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setState(() {});
     });
@@ -409,10 +414,12 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                                 DateTime.now();
 
                                                             _model.datePicked1 =
-                                                                DateTime(now
-                                                                        .year -
-                                                                    int.parse(
-                                                                        val));
+                                                                DateTime(
+                                                                    now.year -
+                                                                        int.parse(
+                                                                            val),
+                                                                    now.month,
+                                                                    now.day);
                                                           }
                                                         },
                                                         keyboardType:
@@ -528,100 +535,189 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                           ),
                         ),
                       ),
-                    if (_model.ageEstimatedValue == false)
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            16.0, 12.0, 16.0, 0.0),
-                        child: Container(
-                          width: double.infinity,
-                          height: 60.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: InkWell(
-                            onTap: () async {
-                              DateTime now = DateTime.now();
-                              DateTime max =
-                                  DateTime(now.year - 1, now.month, now.day);
-                              final _datePicked2Date = await showDatePicker(
-                                context: context,
-                                initialDate: max,
-                                firstDate: DateTime(1940),
-                                lastDate: max,
-                              );
-
-                              if (_datePicked2Date != null) {
-                                setState(() {
-                                  _model.datePicked1 = DateTime(
-                                    _datePicked2Date.year,
-                                    _datePicked2Date.month,
-                                    _datePicked2Date.day,
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 60.0,
+                        decoration: BoxDecoration(
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: InkWell(
+                          onTap: (_model.ageEstimatedValue == true)
+                              ? null
+                              : () async {
+                                  DateTime now = DateTime.now();
+                                  DateTime max = DateTime(
+                                      now.year - 1, now.month - 1, now.day);
+                                  final _datePicked2Date = await showDatePicker(
+                                    context: context,
+                                    initialDate: max,
+                                    firstDate: DateTime(1940),
+                                    lastDate: max,
                                   );
-                                });
-                              }
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12.0, 5.0, 12.0, 5.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Date of Birth',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyText1,
+
+                                  if (_datePicked2Date != null) {
+                                    setState(() {
+                                      _model.datePicked1 = DateTime(
+                                        _datePicked2Date.year,
+                                        _datePicked2Date.month,
+                                        _datePicked2Date.day,
+                                      );
+                                    });
+                                  }
+                                },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      12.0, 5.0, 12.0, 5.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Date of Birth',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1,
+                                            ),
+                                            Text(
+                                              dateTimeFormat(
+                                                'yMMMd',
+                                                _model.datePicked1,
+                                                locale:
+                                                    FFLocalizations.of(context)
+                                                        .languageCode,
                                               ),
-                                              Text(
-                                                dateTimeFormat(
-                                                  'yMMMd',
-                                                  _model.datePicked1,
-                                                  locale: FFLocalizations.of(
-                                                          context)
-                                                      .languageCode,
-                                                ),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyText1,
-                                              ),
-                                            ],
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (_model.ageEstimatedValue == false)
+                                        InkWell(
+                                          child: Icon(
+                                            Icons.date_range,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
+                                            size: 24.0,
                                           ),
                                         ),
-                                        if (_model.ageEstimatedValue == false)
-                                          InkWell(
-                                            child: Icon(
-                                              Icons.date_range,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              size: 24.0,
-                                            ),
-                                          ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 60.0,
+                        decoration: BoxDecoration(
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            DateTime now = DateTime.now();
+                            final _datePicked2Date = await showDatePicker(
+                              context: context,
+                              initialDate: now,
+                              firstDate: DateTime(2010),
+                              lastDate: now,
+                            );
+
+                            if (_datePicked2Date != null) {
+                              setState(() {
+                                _model.datePicked2 = DateTime(
+                                  _datePicked2Date.year,
+                                  _datePicked2Date.month,
+                                  _datePicked2Date.day,
+                                );
+                              });
+                            }
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      12.0, 5.0, 12.0, 5.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Date of Registration',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1,
+                                            ),
+                                            Text(
+                                              dateTimeFormat(
+                                                'yMMMd',
+                                                _model.datePicked2,
+                                                locale:
+                                                    FFLocalizations.of(context)
+                                                        .languageCode,
+                                              ),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      InkWell(
+                                        child: Icon(
+                                          Icons.date_range,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
+                                          size: 24.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
@@ -1245,6 +1341,21 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                       return;
                                     }
 
+                                    if (_model.datePicked2 == null) {
+                                      showToast(
+                                        'Date of registration is required',
+                                        duration: Duration(seconds: 2),
+                                        position: ToastPosition.bottom,
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .errorRed,
+                                        radius: 3.0,
+                                        textStyle: TextStyle(fontSize: 15.0),
+                                      );
+
+                                      return;
+                                    }
+
                                     if (_model.clinicStageValue == null) {
                                       showToast(
                                         'Please select clinic stage',
@@ -1273,6 +1384,40 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                       );
 
                                       return;
+                                    }
+                                    _model.patient!.lastClinicStage =
+                                        _model.clinicStageValue;
+                                    _model.patient!.dateStarted =
+                                        _model.datePicked2!;
+                                    _model.patient!.dateOfBirth =
+                                        _model.datePicked1!;
+                                    _model.patient!.sex = _model.sexValue!;
+                                    _model.patient!.familyName =
+                                        _model.familyNameController.text;
+                                    _model.patient!.givenName =
+                                        _model.givenNameController.text;
+                                    _model.patient!.phone =
+                                        _model.phoneController.text;
+                                    _model.patient!.address =
+                                        _model.addressController.text;
+                                    _model.patient!.hospitalNo =
+                                        _model.hospitalNoController.text;
+                                    _model.patient!.uniqueId =
+                                        _model.uniqueIdController.text;
+                                    _model.patient!.lastViralLoad =
+                                        _model.viralLoadController.text;
+                                    _model.patient!.serviceDiscontinued = false;
+                                    _model.patient!.facilityCode =
+                                        FFAppState().activationCode;
+                                    _model.patient!.synced = false;
+
+                                    final _database = await database;
+                                    if (_model.patient!.id == null) {
+                                      await _database.patientDao
+                                          .insertRecord(_model.patient!);
+                                    } else {
+                                      await _database.patientDao
+                                          .updateRecord(_model.patient!);
                                     }
 
                                     Navigator.pop(context);

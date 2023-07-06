@@ -6,7 +6,6 @@ import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -69,7 +68,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         title: const Text(
           'Home',
         ),
-        backgroundColor: const Color(0xff764abc),
+        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
       ),
       drawer: DDDDrawer(),
       body: Center(

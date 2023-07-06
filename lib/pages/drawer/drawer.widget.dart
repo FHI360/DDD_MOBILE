@@ -2,17 +2,25 @@ import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 class DDDDrawer extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
+          DrawerHeader(
             decoration: BoxDecoration(
-              color: const Color(0xccdf6f3e),
+              color: const Color(0xFFF2A384),
             ),
-            child: Text('Drawer Header 1'),
+            child: UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: const Color(0xFFF2A384),
+              ),
+              accountName: Text(FFAppState().name),
+              accountEmail: Text(''),
+              currentAccountPicture: FlutterLogo(),
+            ),
           ),
           ListTile(
             leading: Icon(
@@ -20,7 +28,7 @@ class DDDDrawer extends StatelessWidget {
             ),
             title: const Text('Patients'),
             onTap: () {
-             context.pushNamed('patientList');
+              context.pushNamed('patientList');
             },
           ),
           ListTile(

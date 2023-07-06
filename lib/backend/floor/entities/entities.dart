@@ -15,6 +15,7 @@ class Patient {
   String? phone;
   String? facility;
   String? outletCode;
+  DateTime dateDevolved;
   String facilityCode;
   String address;
   DateTime lastClinicVisit;
@@ -41,6 +42,7 @@ class Patient {
       this.phone,
       this.facility,
       this.outletCode,
+      this.dateDevolved,
       this.facilityCode,
       this.address,
       this.lastClinicVisit,
@@ -54,6 +56,7 @@ class Patient {
       this.lastClinicStage,
       this.uuid,
       this.lastViralLoad,
+      this.uniqueId,
       this.synced);
 
   factory Patient.fromJson(Map<String, dynamic> row) => Patient(
@@ -66,6 +69,7 @@ class Patient {
       row['phone'],
       row['facility'],
       row['outletCode'],
+      row['dateDevolved'],
       row['facilityCode'],
       row['address'],
       row['lastClinicVisit'],
@@ -79,6 +83,7 @@ class Patient {
       row['lastClinicStage'],
       row['id'],
       row['lastViralLoad'],
+      row['uniqueId'],
       true);
 
   Map<String, dynamic> toJson() => {
@@ -103,7 +108,8 @@ class Patient {
         'dateDiscontinued': dateDiscontinued.toIso8601String().substring(0, 10),
         'dateStarted': dateDiscontinued.toIso8601String().substring(0, 10),
         'deleted': deleted,
-        'lastViralLoad': lastViralLoad
+        'lastViralLoad': lastViralLoad,
+        'dateDevolved': dateDevolved.toIso8601String().substring(0, 10)
       };
 
   factory Patient.instance() {
@@ -118,6 +124,7 @@ class Patient {
         '',
         '',
         null,
+        DateTime(1900),
         FFAppState().activationCode,
         '',
         DateTime(1900),
@@ -131,6 +138,7 @@ class Patient {
         null,
         uuid.v4(),
         null,
+        '',
         false);
   }
 }
@@ -141,6 +149,7 @@ class Refill {
   int? id;
   DateTime date;
   String regimen;
+  int regimenId;
   String patientId;
   int quantityPrescribed;
   int quantityDispensed;
@@ -154,6 +163,7 @@ class Refill {
       this.id,
       this.date,
       this.regimen,
+      this.regimenId,
       this.patientId,
       this.quantityPrescribed,
       this.quantityDispensed,
@@ -167,6 +177,7 @@ class Refill {
       null,
       row['date'],
       row['regimen'],
+      row['regimeId'],
       row['patientId'],
       row['quantityPrescribed'],
       row['quantityDispensed'],
@@ -179,7 +190,7 @@ class Refill {
   Map<String, dynamic> toJson() => {
         'id': uuid,
         'date': date.toIso8601String().substring(0, 10),
-        'regimen': regimen,
+        'regimenId': regimenId,
         'patientId': patientId,
         'quantityPrescribed': quantityPrescribed,
         'quantityDispensed': quantityDispensed,

@@ -64,10 +64,14 @@ abstract class PatientDao {
   Future<List<LastRefill>> listMissedRefill(
       String siteCode, DateTime start, DateTime end);
 
-  @Query('''Update Patient set serviceDiscontinued = true, dateDiscontinued = 
-      :dateDiscontinued, reasonDiscontinued = :reasonDiscontinued where id = :id''')
+  @Query('''Update Patient SET serviceDiscontinued = true, dateDiscontinued = 
+      :dateDiscontinued, reasonDiscontinued = :reasonDiscontinued WHERE id = :id''')
   Future<void> discontinueService(
       int id, DateTime dateDiscontinued, String reasonDiscontinued);
+
+  @Query('''Update Patient SET outletCode = :outletCode, dateDevolved = 
+      :dateDevolved WHERE id = :id''')
+  Future<void> devolvePatient(int id, String outletCode, DateTime dateDevolved);
 }
 
 @DatabaseView('''
