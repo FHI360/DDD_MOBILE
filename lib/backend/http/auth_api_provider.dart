@@ -1,10 +1,12 @@
+import 'package:DDD/app_state.dart';
+
 import 'api.dart';
 
 class AuthAPIProvider {
   Future<dynamic> authenticate(
       {required String username, required String password}) async {
     final response = await api.post(
-      '/api/authenticate',
+      '${FFAppState().baseUrl}/api/authenticate',
       data: {
         'username': username,
         'password': password,
@@ -15,7 +17,7 @@ class AuthAPIProvider {
 
   Future<void> processProfile() async {
     final response = await api.get(
-      '/api/360vax/me',
+      '${FFAppState().baseUrl}/api/360vax/me',
       options: Options(
         headers: {},
       ),

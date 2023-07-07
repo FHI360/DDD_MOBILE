@@ -23,6 +23,7 @@ class FFAppState extends ChangeNotifier {
         await secureStorage.getString('ff_activationCode') ?? _activationCode;
     _outlet = await secureStorage.getBool('ff_outlet') ?? _outlet;
     _name = await secureStorage.getString('ff_name') ?? _name;
+    _baseUrl = await secureStorage.getString('ff_baseUrl') ?? _baseUrl;
   }
 
   void update(VoidCallback callback) {
@@ -66,6 +67,15 @@ class FFAppState extends ChangeNotifier {
   set name(String _value) {
     _name = _value;
     secureStorage.setString('ff_name', _value);
+  }
+
+  String _baseUrl = '';
+
+  String get baseUrl => _baseUrl;
+
+  set baseUrl(String _value) {
+    _baseUrl = _value;
+    secureStorage.setString('ff_baseUrl', _value);
   }
 
   bool _outlet = false;

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:DDD/app_state.dart';
 import 'package:awesome_dio_interceptor/awesome_dio_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
@@ -13,7 +14,7 @@ export 'package:dio/dio.dart';
 Dio _createHttpClient() {
   final api = new Dio(
     new BaseOptions(
-      baseUrl: 'https://epicgvax.org',
+      baseUrl: FFAppState().baseUrl,
       contentType: Headers.jsonContentType,
       responseType: ResponseType.json,
     ),

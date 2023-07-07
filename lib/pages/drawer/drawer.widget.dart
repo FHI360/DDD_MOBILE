@@ -40,6 +40,19 @@ class DDDDrawer extends StatelessWidget {
               context.pushNamed('preferences');
             },
           ),
+          ListTile(
+            leading: Icon(
+              Icons.exit_to_app,
+            ),
+            title: const Text('Sign out'),
+            onTap: () {
+              FFAppState().refreshToken = '';
+              FFAppState().accessToken = '';
+              FFAppState().activationCode = '';
+              FFAppState().name = '';
+              context.pushNamed('loginPage');
+            },
+          ),
         ],
       ),
     );
