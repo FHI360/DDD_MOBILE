@@ -8,6 +8,8 @@ import 'package:DDD/pages/patient_list/patient_list_widget.dart';
 import 'package:DDD/pages/patient_profile/patient_profile_widget.dart';
 import 'package:DDD/pages/preference/preference_widget.dart';
 import 'package:DDD/pages/refill/refill_widget.dart';
+import 'package:DDD/pages/reports/report_widget.dart';
+import 'package:DDD/pages/synchronization/synchronization_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
@@ -116,6 +118,18 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               path: 'preferences',
               requireAuth: true,
               builder: (context, params) => PreferenceWidget(),
+            ),
+            FFRoute(
+              name: 'reportList',
+              path: 'report-list',
+              requireAuth: true,
+              builder: (context, params) => ReportWidget(),
+            ),
+            FFRoute(
+              name: 'synchronization',
+              path: 'synchronization',
+              requireAuth: true,
+              builder: (context, params) => SynchronizationWidget(),
             ),
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ).toRoute(appStateNotifier),

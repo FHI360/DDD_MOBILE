@@ -438,7 +438,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
 
                                               Navigator.pop(context, true);
                                             },
-                                      text: 'Discontinue',
+                                      text: 'Devolve',
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,

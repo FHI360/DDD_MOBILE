@@ -33,6 +33,24 @@ class DDDDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
+              Icons.report_sharp,
+            ),
+            title: const Text('Reports'),
+            onTap: () {
+              context.pushNamed('reportList');
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.sync,
+            ),
+            title: const Text('Synchronization'),
+            onTap: () {
+              context.pushNamed('synchronization');
+            },
+          ),
+          ListTile(
+            leading: Icon(
               Icons.settings,
             ),
             title: const Text('Preferences'),

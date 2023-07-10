@@ -2276,35 +2276,6 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                   ),
                                                 ),
                                               ),
-                                              if (int.tryParse(_model
-                                                      .qtyDispensedController
-                                                      .text) !=
-                                                  null)
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Text(
-                                                      'Not enough quantity to dispense',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1Family,
-                                                                color: Color(
-                                                                    0xFF965600),
-                                                                useGoogleFonts: GoogleFonts
-                                                                        .asMap()
-                                                                    .containsKey(
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyText1Family),
-                                                              ),
-                                                    ),
-                                                  ],
-                                                ),
                                               Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
