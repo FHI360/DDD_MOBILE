@@ -6,8 +6,8 @@ import '../main.dart';
 
 Future<String> refillInfoPdf(DateTime start, DateTime end) async {
   var _database = await database;
-  List<RefillInfo> rows =
-      await _database.refillDao.listRefillInfo(FFAppState().activationCode, start, end);
+  List<DispenseInfo> rows =
+      await _database.dispenseDao.listDispenseInfo(FFAppState().activationCode, start, end);
   String style = await rootBundle.loadString('assets/css/bootstrap.min.css');
   String content = '''
   <div class="row">

@@ -92,6 +92,7 @@ dependencies:
   uuid: ^3.0.7
   printing: ^5.9.3
   flutter_html_to_pdf: ^0.7.0
+  multilevel_drawer: ^2.0.0
 
 dependency_overrides:
   rxdart: 0.27.4

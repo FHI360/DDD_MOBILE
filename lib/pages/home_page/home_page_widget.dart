@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:DDD/backend/http/account_service.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:DDD/main.dart';
@@ -45,11 +46,16 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Future<void> initialize() async {
+    final service = AccountService();
+    await service.processAccount();
+  }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
-
+    initialize();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 

@@ -63,7 +63,7 @@ class _$AppDatabase extends AppDatabase {
 
   ClinicDao? _clinicDaoInstance;
 
-  RefillDao? _refillDaoInstance;
+  DispenseDao? _dispenseDaoInstance;
 
   PatientDao? _patientDaoInstance;
 
@@ -97,22 +97,20 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `clinic` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `systolic` INTEGER, `diastolic` INTEGER, `weight` REAL, `temperature` REAL, `patientId` TEXT NOT NULL, `date` INTEGER NOT NULL, `coughing` INTEGER, `swelling` INTEGER, `sweating` INTEGER, `fever` INTEGER, `weightLoss` INTEGER, `tbReferred` INTEGER, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Facility` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `level1AD` INTEGER NOT NULL, `level2AD` INTEGER NOT NULL, `code` TEXT NOT NULL, `synced` INTEGER, `deleted` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `Facility` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `level1AD` INTEGER NOT NULL, `level2AD` INTEGER NOT NULL, `code` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Outlet` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `phone` TEXT NOT NULL, `email` TEXT NOT NULL, `type` TEXT NOT NULL, `code` TEXT NOT NULL, `facilityCode` TEXT, `synced` INTEGER, `deleted` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `Outlet` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `phone` TEXT NOT NULL, `email` TEXT NOT NULL, `type` TEXT NOT NULL, `code` TEXT NOT NULL, `facilityCode` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `uniqueId` TEXT, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT, `facility` TEXT, `outletCode` TEXT, `dateDevolved` INTEGER NOT NULL, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `serviceDiscontinued` INTEGER, `reasonDiscontinued` TEXT, `dateDiscontinued` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT, `lastViralLoad` TEXT, `deleted` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Regimen` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `regimenType` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Regimen` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `regimenType` TEXT NOT NULL, `arv` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Refill` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `regimen` TEXT NOT NULL, `regimenId` INTEGER NOT NULL, `patientId` TEXT NOT NULL, `quantityPrescribed` INTEGER NOT NULL, `quantityDispensed` INTEGER NOT NULL, `dateNextRefill` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `missedDoses` INTEGER, `adverseIssues` INTEGER, `uuid` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Dispense` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `patientId` TEXT NOT NULL, `dateNextRefill` INTEGER NOT NULL, `medications` TEXT NOT NULL, `synced` INTEGER NOT NULL, `missedDoses` INTEGER, `adverseIssues` INTEGER, `uuid` TEXT NOT NULL)');
 
         await database.execute(
-            'CREATE VIEW IF NOT EXISTS `EstimatedRefill` AS WITH Estimated AS (\n\tSELECT * FROM (\n\t\tSELECT quantityDispensed, regimen, dateNextRefill, patientId, outletCode,\n\t\t  facilityCode, ROW_NUMBER() OVER(PARTITION BY patientId ORDER BY dateNextRefill DESC) rn \n\t\tFROM Refill JOIN Patient p ON patientId = p.uuid\t\n\t) e WHERE rn = 1\n)\nSELECT regimen, outletCode, facilityCode, SUM(quantityDispensed) qty, dateNextRefill \n  FROM Estimated GROUP BY regimen, outletCode, facilityCode, dateNextRefill\n');
+            'CREATE VIEW IF NOT EXISTS `LastDispense` AS   WITH last_Dispense AS ( \n      SELECT * FROM (\n            SELECT patientId, date, dateNextRefill, ROW_NUMBER() OVER (PARTITION BY patientId \n            ORDER BY date DESC) rn FROM Dispense\n      ) r WHERE rn = 1\n  )\n  SELECT outletCode, facilityCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, \n    dateNextRefill FROM LastDispense JOIN patient ON patientId = id ORDER BY givenName, familyName\n');
         await database.execute(
-            'CREATE VIEW IF NOT EXISTS `LastRefill` AS   WITH last_refill AS ( \n      SELECT * FROM (\n            SELECT patientId, date, dateNextRefill, ROW_NUMBER() OVER (PARTITION BY patientId \n            ORDER BY date DESC) rn FROM refill\n      ) r WHERE rn = 1\n  )\n  SELECT siteCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, \n    dateNextRefill FROM last_refill JOIN patient ON patientId = id ORDER BY givenName, familyName\n');
-        await database.execute(
-            'CREATE VIEW IF NOT EXISTS `RefillInfo` AS   SELECT givenName, familyName, sex, dateOfBirth, quantityDispensed quantity, \n    hospitalNo, regimen, outletCode, facilityCode dateNextRefill, date FROM Refill \n    JOIN Patient p ON patientId = p.uuid ORDER BY givenName, familyName, sex    \n');
+            'CREATE VIEW IF NOT EXISTS `DispenseInfo` AS   SELECT givenName, familyName, sex, dateOfBirth, quantityDispensed quantity, \n    hospitalNo, regimen, outletCode, facilityCode dateNextRefill, date FROM Dispense \n    JOIN Patient p ON patientId = p.uuid ORDER BY givenName, familyName, sex    \n');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -126,8 +124,8 @@ class _$AppDatabase extends AppDatabase {
   }
 
   @override
-  RefillDao get refillDao {
-    return _refillDaoInstance ??= _$RefillDao(database, changeListener);
+  DispenseDao get dispenseDao {
+    return _dispenseDaoInstance ??= _$DispenseDao(database, changeListener);
   }
 
   @override
@@ -282,29 +280,32 @@ class _$ClinicDao extends ClinicDao {
   }
 
   @override
+  Future<void> deleteAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Clinic');
+  }
+
+  @override
   Future<void> insertRecord(Clinic clinic) async {
     await _clinicInsertionAdapter.insert(clinic, OnConflictStrategy.abort);
   }
 }
 
-class _$RefillDao extends RefillDao {
-  _$RefillDao(
+class _$DispenseDao extends DispenseDao {
+  _$DispenseDao(
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database, changeListener),
-        _refillInsertionAdapter = InsertionAdapter(
+        _dispenseInsertionAdapter = InsertionAdapter(
             database,
-            'Refill',
-            (Refill item) => <String, Object?>{
+            'Dispense',
+            (Dispense item) => <String, Object?>{
                   'id': item.id,
                   'date': _dateTimeConverter.encode(item.date),
-                  'regimen': item.regimen,
-                  'regimenId': item.regimenId,
                   'patientId': item.patientId,
-                  'quantityPrescribed': item.quantityPrescribed,
-                  'quantityDispensed': item.quantityDispensed,
                   'dateNextRefill':
                       _dateTimeConverter.encode(item.dateNextRefill),
+                  'medications':
+                      _listMedicationConverter.encode(item.medications),
                   'synced': item.synced ? 1 : 0,
                   'missedDoses': item.missedDoses == null
                       ? null
@@ -315,20 +316,18 @@ class _$RefillDao extends RefillDao {
                   'uuid': item.uuid
                 },
             changeListener),
-        _refillUpdateAdapter = UpdateAdapter(
+        _dispenseUpdateAdapter = UpdateAdapter(
             database,
-            'Refill',
+            'Dispense',
             ['id'],
-            (Refill item) => <String, Object?>{
+            (Dispense item) => <String, Object?>{
                   'id': item.id,
                   'date': _dateTimeConverter.encode(item.date),
-                  'regimen': item.regimen,
-                  'regimenId': item.regimenId,
                   'patientId': item.patientId,
-                  'quantityPrescribed': item.quantityPrescribed,
-                  'quantityDispensed': item.quantityDispensed,
                   'dateNextRefill':
                       _dateTimeConverter.encode(item.dateNextRefill),
+                  'medications':
+                      _listMedicationConverter.encode(item.medications),
                   'synced': item.synced ? 1 : 0,
                   'missedDoses': item.missedDoses == null
                       ? null
@@ -346,170 +345,156 @@ class _$RefillDao extends RefillDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<Refill> _refillInsertionAdapter;
+  final InsertionAdapter<Dispense> _dispenseInsertionAdapter;
 
-  final UpdateAdapter<Refill> _refillUpdateAdapter;
+  final UpdateAdapter<Dispense> _dispenseUpdateAdapter;
 
   @override
-  Future<List<Refill>> findAll() async {
-    return _queryAdapter.queryList('SELECT * FROM Refill',
-        mapper: (Map<String, Object?> row) => Refill(
-            row['id'] as int?,
-            _dateTimeConverter.decode(row['date'] as int),
-            row['regimen'] as String,
-            row['regimenId'] as int,
-            row['patientId'] as String,
-            row['quantityPrescribed'] as int,
-            row['quantityDispensed'] as int,
-            _dateTimeConverter.decode(row['dateNextRefill'] as int),
-            row['missedDoses'] == null
+  Future<List<Dispense>> findAll() async {
+    return _queryAdapter.queryList('SELECT * FROM Dispense',
+        mapper: (Map<String, Object?> row) => Dispense(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            patientId: row['patientId'] as String,
+            dateNextRefill:
+                _dateTimeConverter.decode(row['dateNextRefill'] as int),
+            missedDoses: row['missedDoses'] == null
                 ? null
                 : (row['missedDoses'] as int) != 0,
-            row['adverseIssues'] == null
+            adverseIssues: row['adverseIssues'] == null
                 ? null
                 : (row['adverseIssues'] as int) != 0,
-            (row['synced'] as int) != 0,
-            row['uuid'] as String));
+            medications:
+                _listMedicationConverter.decode(row['medications'] as String),
+            synced: (row['synced'] as int) != 0,
+            uuid: row['uuid'] as String));
   }
 
   @override
-  Stream<Refill?> findById(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM Refill WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Refill(
-            row['id'] as int?,
-            _dateTimeConverter.decode(row['date'] as int),
-            row['regimen'] as String,
-            row['regimenId'] as int,
-            row['patientId'] as String,
-            row['quantityPrescribed'] as int,
-            row['quantityDispensed'] as int,
-            _dateTimeConverter.decode(row['dateNextRefill'] as int),
-            row['missedDoses'] == null
+  Stream<Dispense?> findById(int id) {
+    return _queryAdapter.queryStream('SELECT * FROM Dispense WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Dispense(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            patientId: row['patientId'] as String,
+            dateNextRefill:
+                _dateTimeConverter.decode(row['dateNextRefill'] as int),
+            missedDoses: row['missedDoses'] == null
                 ? null
                 : (row['missedDoses'] as int) != 0,
-            row['adverseIssues'] == null
+            adverseIssues: row['adverseIssues'] == null
                 ? null
                 : (row['adverseIssues'] as int) != 0,
-            (row['synced'] as int) != 0,
-            row['uuid'] as String),
+            medications:
+                _listMedicationConverter.decode(row['medications'] as String),
+            synced: (row['synced'] as int) != 0,
+            uuid: row['uuid'] as String),
         arguments: [id],
-        queryableName: 'Refill',
+        queryableName: 'Dispense',
         isView: false);
   }
 
   @override
-  Future<List<Refill>> findUnSynced() async {
-    return _queryAdapter.queryList('SELECT * FROM Refill WHERE synced = false',
-        mapper: (Map<String, Object?> row) => Refill(
-            row['id'] as int?,
-            _dateTimeConverter.decode(row['date'] as int),
-            row['regimen'] as String,
-            row['regimenId'] as int,
-            row['patientId'] as String,
-            row['quantityPrescribed'] as int,
-            row['quantityDispensed'] as int,
-            _dateTimeConverter.decode(row['dateNextRefill'] as int),
-            row['missedDoses'] == null
+  Future<List<Dispense>> findUnSynced() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Dispense WHERE synced = false',
+        mapper: (Map<String, Object?> row) => Dispense(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            patientId: row['patientId'] as String,
+            dateNextRefill:
+                _dateTimeConverter.decode(row['dateNextRefill'] as int),
+            missedDoses: row['missedDoses'] == null
                 ? null
                 : (row['missedDoses'] as int) != 0,
-            row['adverseIssues'] == null
+            adverseIssues: row['adverseIssues'] == null
                 ? null
                 : (row['adverseIssues'] as int) != 0,
-            (row['synced'] as int) != 0,
-            row['uuid'] as String));
+            medications:
+                _listMedicationConverter.decode(row['medications'] as String),
+            synced: (row['synced'] as int) != 0,
+            uuid: row['uuid'] as String));
   }
 
   @override
-  Future<List<Refill>> findByPatient(String patientId) async {
-    return _queryAdapter.queryList('SELECT * FROM Refill WHERE patientId = ?1',
-        mapper: (Map<String, Object?> row) => Refill(
-            row['id'] as int?,
-            _dateTimeConverter.decode(row['date'] as int),
-            row['regimen'] as String,
-            row['regimenId'] as int,
-            row['patientId'] as String,
-            row['quantityPrescribed'] as int,
-            row['quantityDispensed'] as int,
-            _dateTimeConverter.decode(row['dateNextRefill'] as int),
-            row['missedDoses'] == null
+  Future<List<Dispense>> findByPatient(String patientId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Dispense WHERE patientId = ?1',
+        mapper: (Map<String, Object?> row) => Dispense(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            patientId: row['patientId'] as String,
+            dateNextRefill:
+                _dateTimeConverter.decode(row['dateNextRefill'] as int),
+            missedDoses: row['missedDoses'] == null
                 ? null
                 : (row['missedDoses'] as int) != 0,
-            row['adverseIssues'] == null
+            adverseIssues: row['adverseIssues'] == null
                 ? null
                 : (row['adverseIssues'] as int) != 0,
-            (row['synced'] as int) != 0,
-            row['uuid'] as String),
+            medications:
+                _listMedicationConverter.decode(row['medications'] as String),
+            synced: (row['synced'] as int) != 0,
+            uuid: row['uuid'] as String),
         arguments: [patientId]);
   }
 
   @override
-  Future<List<Refill>> findByPatientAndDate(
+  Future<List<Dispense>> findByPatientAndDate(
     String patientId,
     DateTime date,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Refill WHERE patientId = ?1 AND date = ?2',
-        mapper: (Map<String, Object?> row) => Refill(
-            row['id'] as int?,
-            _dateTimeConverter.decode(row['date'] as int),
-            row['regimen'] as String,
-            row['regimenId'] as int,
-            row['patientId'] as String,
-            row['quantityPrescribed'] as int,
-            row['quantityDispensed'] as int,
-            _dateTimeConverter.decode(row['dateNextRefill'] as int),
-            row['missedDoses'] == null
+        'SELECT * FROM Dispense WHERE patientId = ?1 AND date = ?2',
+        mapper: (Map<String, Object?> row) => Dispense(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            patientId: row['patientId'] as String,
+            dateNextRefill:
+                _dateTimeConverter.decode(row['dateNextRefill'] as int),
+            missedDoses: row['missedDoses'] == null
                 ? null
                 : (row['missedDoses'] as int) != 0,
-            row['adverseIssues'] == null
+            adverseIssues: row['adverseIssues'] == null
                 ? null
                 : (row['adverseIssues'] as int) != 0,
-            (row['synced'] as int) != 0,
-            row['uuid'] as String),
+            medications:
+                _listMedicationConverter.decode(row['medications'] as String),
+            synced: (row['synced'] as int) != 0,
+            uuid: row['uuid'] as String),
         arguments: [patientId, _dateTimeConverter.encode(date)]);
   }
 
   @override
-  Future<List<EstimatedRefill>> estimatedRefill(
-    String siteCode,
+  Future<List<DispenseInfo>> listDispenseInfo(
+    String code,
     DateTime start,
     DateTime end,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT regimen, siteCode, SUM(qty) qty, 1 AS dateNextRefill FROM            EstimatedRefill WHERE siteCode = ?1 AND dateNextRefill BETWEEN            ?2 and ?3 GROUP BY regimen ORDER BY regimen, siteCode',
-        mapper: (Map<String, Object?> row) => EstimatedRefill(row['outletCode'] as String, row['facilityCode'] as String, row['regimen'] as String, row['qty'] as int, _dateTimeConverter.decode(row['dateNextRefill'] as int)),
+        'SELECT * FROM DispenseInfo WHERE (outletCode = ?1 OR facilityCode = ?1         AND date BETWEEN ?2 and ?3 ORDER BY givenName, familyName',
+        mapper: (Map<String, Object?> row) => DispenseInfo(row['outletCode'] as String, row['facilityCode'] as String, row['familyName'] as String, row['givenName'] as String, row['quantity'] as int, _dateTimeConverter.decode(row['date'] as int), _dateTimeConverter.decode(row['dateNextRefill'] as int), _dateTimeConverter.decode(row['dateOfBirth'] as int), row['regimen'] as String, row['sex'] as String, row['hospitalNo'] as String),
         arguments: [
-          siteCode,
+          code,
           _dateTimeConverter.encode(start),
           _dateTimeConverter.encode(end)
         ]);
   }
 
   @override
-  Future<List<RefillInfo>> listRefillInfo(
-    String siteCode,
-    DateTime start,
-    DateTime end,
-  ) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM RefillInfo WHERE siteCode = ?1 AND date BETWEEN          ?2 and ?3 ORDER BY givenName, familyName',
-        mapper: (Map<String, Object?> row) => RefillInfo(row['outletCode'] as String, row['facilityCode'] as String, row['familyName'] as String, row['givenName'] as String, row['quantity'] as int, _dateTimeConverter.decode(row['date'] as int), _dateTimeConverter.decode(row['dateNextRefill'] as int), _dateTimeConverter.decode(row['dateOfBirth'] as int), row['regimen'] as String, row['sex'] as String, row['hospitalNo'] as String),
-        arguments: [
-          siteCode,
-          _dateTimeConverter.encode(start),
-          _dateTimeConverter.encode(end)
-        ]);
+  Future<void> deleteAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Dispense');
   }
 
   @override
-  Future<void> insertRecord(Refill refill) async {
-    await _refillInsertionAdapter.insert(refill, OnConflictStrategy.abort);
+  Future<void> insertRecord(Dispense dispense) async {
+    await _dispenseInsertionAdapter.insert(dispense, OnConflictStrategy.abort);
   }
 
   @override
-  Future<int> updateRecord(Refill refill) {
-    return _refillUpdateAdapter.updateAndReturnChangedRows(
-        refill, OnConflictStrategy.abort);
+  Future<int> updateRecord(Dispense dispense) {
+    return _dispenseUpdateAdapter.updateAndReturnChangedRows(
+        dispense, OnConflictStrategy.abort);
   }
 }
 
@@ -615,76 +600,54 @@ class _$PatientDao extends PatientDao {
   ) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Patient WHERE (outletCode = ?1 OR facilityCode =          ?1) AND serviceDiscontinued = 0 AND (LOWER(givenName) LIKE          LOWER(?2) OR LOWER(familyName) LIKE LOWER(?2) OR          LOWER(hospitalNo) LIKE LOWER(?2)) ORDER BY givenName,        familyName LIMIT 10',
-        mapper: (Map<String, Object?> row) => Patient(row['id'] as int?, row['givenName'] as String, row['familyName'] as String, row['hospitalNo'] as String, _dateTimeConverter.decode(row['dateOfBirth'] as int), row['sex'] as String, row['phone'] as String?, row['facility'] as String?, row['outletCode'] as String?, _dateTimeConverter.decode(row['dateDevolved'] as int), row['facilityCode'] as String, row['address'] as String, _dateTimeConverter.decode(row['lastClinicVisit'] as int), _dateTimeConverter.decode(row['lastRefillDate'] as int), _dateTimeConverter.decode(row['nextAppointmentDate'] as int), _dateTimeConverter.decode(row['nextVisitDate'] as int), row['serviceDiscontinued'] == null ? null : (row['serviceDiscontinued'] as int) != 0, row['reasonDiscontinued'] as String?, _dateTimeConverter.decode(row['dateDiscontinued'] as int), _dateTimeConverter.decode(row['dateStarted'] as int), row['lastClinicStage'] as String?, row['uuid'] as String, row['lastViralLoad'] as String?, row['uniqueId'] as String?, (row['synced'] as int) != 0),
+        mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, dateDevolved: _dateTimeConverter.decode(row['dateDevolved'] as int), facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), serviceDiscontinued: row['serviceDiscontinued'] == null ? null : (row['serviceDiscontinued'] as int) != 0, reasonDiscontinued: row['reasonDiscontinued'] as String?, dateDiscontinued: _dateTimeConverter.decode(row['dateDiscontinued'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, uniqueId: row['uniqueId'] as String?, synced: (row['synced'] as int) != 0),
         arguments: [activationCode, keyword]);
   }
 
   @override
-  Future<List<Patient>> findDiscontinued(String siteCode) async {
+  Future<List<Patient>> findDiscontinued(String outletCode) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Patient where siteCode = ?1 and serviceDiscontinued = 1',
-        mapper: (Map<String, Object?> row) => Patient(
-            row['id'] as int?,
-            row['givenName'] as String,
-            row['familyName'] as String,
-            row['hospitalNo'] as String,
-            _dateTimeConverter.decode(row['dateOfBirth'] as int),
-            row['sex'] as String,
-            row['phone'] as String?,
-            row['facility'] as String?,
-            row['outletCode'] as String?,
-            _dateTimeConverter.decode(row['dateDevolved'] as int),
-            row['facilityCode'] as String,
-            row['address'] as String,
-            _dateTimeConverter.decode(row['lastClinicVisit'] as int),
-            _dateTimeConverter.decode(row['lastRefillDate'] as int),
-            _dateTimeConverter.decode(row['nextAppointmentDate'] as int),
-            _dateTimeConverter.decode(row['nextVisitDate'] as int),
-            row['serviceDiscontinued'] == null
-                ? null
-                : (row['serviceDiscontinued'] as int) != 0,
-            row['reasonDiscontinued'] as String?,
-            _dateTimeConverter.decode(row['dateDiscontinued'] as int),
-            _dateTimeConverter.decode(row['dateStarted'] as int),
-            row['lastClinicStage'] as String?,
-            row['uuid'] as String,
-            row['lastViralLoad'] as String?,
-            row['uniqueId'] as String?,
-            (row['synced'] as int) != 0),
-        arguments: [siteCode]);
+        'SELECT * FROM Patient WHERE outletCode = ?1 AND serviceDiscontinued = 1',
+        mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, dateDevolved: _dateTimeConverter.decode(row['dateDevolved'] as int), facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), serviceDiscontinued: row['serviceDiscontinued'] == null ? null : (row['serviceDiscontinued'] as int) != 0, reasonDiscontinued: row['reasonDiscontinued'] as String?, dateDiscontinued: _dateTimeConverter.decode(row['dateDiscontinued'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, uniqueId: row['uniqueId'] as String?, synced: (row['synced'] as int) != 0),
+        arguments: [outletCode]);
   }
 
   @override
   Future<Patient?> findById(int id) async {
     return _queryAdapter.query('SELECT * FROM Patient WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Patient(
-            row['id'] as int?,
-            row['givenName'] as String,
-            row['familyName'] as String,
-            row['hospitalNo'] as String,
-            _dateTimeConverter.decode(row['dateOfBirth'] as int),
-            row['sex'] as String,
-            row['phone'] as String?,
-            row['facility'] as String?,
-            row['outletCode'] as String?,
-            _dateTimeConverter.decode(row['dateDevolved'] as int),
-            row['facilityCode'] as String,
-            row['address'] as String,
-            _dateTimeConverter.decode(row['lastClinicVisit'] as int),
-            _dateTimeConverter.decode(row['lastRefillDate'] as int),
-            _dateTimeConverter.decode(row['nextAppointmentDate'] as int),
-            _dateTimeConverter.decode(row['nextVisitDate'] as int),
-            row['serviceDiscontinued'] == null
+            id: row['id'] as int?,
+            givenName: row['givenName'] as String,
+            familyName: row['familyName'] as String,
+            hospitalNo: row['hospitalNo'] as String,
+            dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
+            sex: row['sex'] as String,
+            phone: row['phone'] as String?,
+            facility: row['facility'] as String?,
+            outletCode: row['outletCode'] as String?,
+            dateDevolved: _dateTimeConverter.decode(row['dateDevolved'] as int),
+            facilityCode: row['facilityCode'] as String,
+            address: row['address'] as String,
+            lastClinicVisit:
+                _dateTimeConverter.decode(row['lastClinicVisit'] as int),
+            lastRefillDate:
+                _dateTimeConverter.decode(row['lastRefillDate'] as int),
+            nextAppointmentDate:
+                _dateTimeConverter.decode(row['nextAppointmentDate'] as int),
+            nextVisitDate:
+                _dateTimeConverter.decode(row['nextVisitDate'] as int),
+            serviceDiscontinued: row['serviceDiscontinued'] == null
                 ? null
                 : (row['serviceDiscontinued'] as int) != 0,
-            row['reasonDiscontinued'] as String?,
-            _dateTimeConverter.decode(row['dateDiscontinued'] as int),
-            _dateTimeConverter.decode(row['dateStarted'] as int),
-            row['lastClinicStage'] as String?,
-            row['uuid'] as String,
-            row['lastViralLoad'] as String?,
-            row['uniqueId'] as String?,
-            (row['synced'] as int) != 0),
+            reasonDiscontinued: row['reasonDiscontinued'] as String?,
+            dateDiscontinued:
+                _dateTimeConverter.decode(row['dateDiscontinued'] as int),
+            dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int),
+            lastClinicStage: row['lastClinicStage'] as String?,
+            uuid: row['uuid'] as String,
+            lastViralLoad: row['lastViralLoad'] as String?,
+            uniqueId: row['uniqueId'] as String?,
+            synced: (row['synced'] as int) != 0),
         arguments: [id]);
   }
 
@@ -692,33 +655,38 @@ class _$PatientDao extends PatientDao {
   Future<Patient?> findByUniqueId(String uniqueId) async {
     return _queryAdapter.query('SELECT * FROM Patient WHERE uniqueId = ?1',
         mapper: (Map<String, Object?> row) => Patient(
-            row['id'] as int?,
-            row['givenName'] as String,
-            row['familyName'] as String,
-            row['hospitalNo'] as String,
-            _dateTimeConverter.decode(row['dateOfBirth'] as int),
-            row['sex'] as String,
-            row['phone'] as String?,
-            row['facility'] as String?,
-            row['outletCode'] as String?,
-            _dateTimeConverter.decode(row['dateDevolved'] as int),
-            row['facilityCode'] as String,
-            row['address'] as String,
-            _dateTimeConverter.decode(row['lastClinicVisit'] as int),
-            _dateTimeConverter.decode(row['lastRefillDate'] as int),
-            _dateTimeConverter.decode(row['nextAppointmentDate'] as int),
-            _dateTimeConverter.decode(row['nextVisitDate'] as int),
-            row['serviceDiscontinued'] == null
+            id: row['id'] as int?,
+            givenName: row['givenName'] as String,
+            familyName: row['familyName'] as String,
+            hospitalNo: row['hospitalNo'] as String,
+            dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
+            sex: row['sex'] as String,
+            phone: row['phone'] as String?,
+            facility: row['facility'] as String?,
+            outletCode: row['outletCode'] as String?,
+            dateDevolved: _dateTimeConverter.decode(row['dateDevolved'] as int),
+            facilityCode: row['facilityCode'] as String,
+            address: row['address'] as String,
+            lastClinicVisit:
+                _dateTimeConverter.decode(row['lastClinicVisit'] as int),
+            lastRefillDate:
+                _dateTimeConverter.decode(row['lastRefillDate'] as int),
+            nextAppointmentDate:
+                _dateTimeConverter.decode(row['nextAppointmentDate'] as int),
+            nextVisitDate:
+                _dateTimeConverter.decode(row['nextVisitDate'] as int),
+            serviceDiscontinued: row['serviceDiscontinued'] == null
                 ? null
                 : (row['serviceDiscontinued'] as int) != 0,
-            row['reasonDiscontinued'] as String?,
-            _dateTimeConverter.decode(row['dateDiscontinued'] as int),
-            _dateTimeConverter.decode(row['dateStarted'] as int),
-            row['lastClinicStage'] as String?,
-            row['uuid'] as String,
-            row['lastViralLoad'] as String?,
-            row['uniqueId'] as String?,
-            (row['synced'] as int) != 0),
+            reasonDiscontinued: row['reasonDiscontinued'] as String?,
+            dateDiscontinued:
+                _dateTimeConverter.decode(row['dateDiscontinued'] as int),
+            dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int),
+            lastClinicStage: row['lastClinicStage'] as String?,
+            uuid: row['uuid'] as String,
+            lastViralLoad: row['lastViralLoad'] as String?,
+            uniqueId: row['uniqueId'] as String?,
+            synced: (row['synced'] as int) != 0),
         arguments: [uniqueId]);
   }
 
@@ -733,46 +701,51 @@ class _$PatientDao extends PatientDao {
   Future<List<Patient>> findUnSynced() async {
     return _queryAdapter.queryList('SELECT * FROM Patient WHERE synced = false',
         mapper: (Map<String, Object?> row) => Patient(
-            row['id'] as int?,
-            row['givenName'] as String,
-            row['familyName'] as String,
-            row['hospitalNo'] as String,
-            _dateTimeConverter.decode(row['dateOfBirth'] as int),
-            row['sex'] as String,
-            row['phone'] as String?,
-            row['facility'] as String?,
-            row['outletCode'] as String?,
-            _dateTimeConverter.decode(row['dateDevolved'] as int),
-            row['facilityCode'] as String,
-            row['address'] as String,
-            _dateTimeConverter.decode(row['lastClinicVisit'] as int),
-            _dateTimeConverter.decode(row['lastRefillDate'] as int),
-            _dateTimeConverter.decode(row['nextAppointmentDate'] as int),
-            _dateTimeConverter.decode(row['nextVisitDate'] as int),
-            row['serviceDiscontinued'] == null
+            id: row['id'] as int?,
+            givenName: row['givenName'] as String,
+            familyName: row['familyName'] as String,
+            hospitalNo: row['hospitalNo'] as String,
+            dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
+            sex: row['sex'] as String,
+            phone: row['phone'] as String?,
+            facility: row['facility'] as String?,
+            outletCode: row['outletCode'] as String?,
+            dateDevolved: _dateTimeConverter.decode(row['dateDevolved'] as int),
+            facilityCode: row['facilityCode'] as String,
+            address: row['address'] as String,
+            lastClinicVisit:
+                _dateTimeConverter.decode(row['lastClinicVisit'] as int),
+            lastRefillDate:
+                _dateTimeConverter.decode(row['lastRefillDate'] as int),
+            nextAppointmentDate:
+                _dateTimeConverter.decode(row['nextAppointmentDate'] as int),
+            nextVisitDate:
+                _dateTimeConverter.decode(row['nextVisitDate'] as int),
+            serviceDiscontinued: row['serviceDiscontinued'] == null
                 ? null
                 : (row['serviceDiscontinued'] as int) != 0,
-            row['reasonDiscontinued'] as String?,
-            _dateTimeConverter.decode(row['dateDiscontinued'] as int),
-            _dateTimeConverter.decode(row['dateStarted'] as int),
-            row['lastClinicStage'] as String?,
-            row['uuid'] as String,
-            row['lastViralLoad'] as String?,
-            row['uniqueId'] as String?,
-            (row['synced'] as int) != 0));
+            reasonDiscontinued: row['reasonDiscontinued'] as String?,
+            dateDiscontinued:
+                _dateTimeConverter.decode(row['dateDiscontinued'] as int),
+            dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int),
+            lastClinicStage: row['lastClinicStage'] as String?,
+            uuid: row['uuid'] as String,
+            lastViralLoad: row['lastViralLoad'] as String?,
+            uniqueId: row['uniqueId'] as String?,
+            synced: (row['synced'] as int) != 0));
   }
 
   @override
-  Future<List<LastRefill>> listMissedRefill(
-    String siteCode,
+  Future<List<LastDispense>> listMissedDispense(
+    String code,
     DateTime start,
     DateTime end,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM LastRefill WHERE siteCode = ?1 AND dateNextRefill          BETWEEN ?2 AND ?3',
-        mapper: (Map<String, Object?> row) => LastRefill(row['siteCode'] as String, row['givenName'] as String, row['familyName'] as String, row['sex'] as String, _dateTimeConverter.decode(row['dateOfBirth'] as int), _dateTimeConverter.decode(row['date'] as int), _dateTimeConverter.decode(row['dateNextRefill'] as int), row['hospitalNo'] as String),
+        'SELECT * FROM LastDispense WHERE (outletCode = ?1 OR facilityCode = ?1         AND dateNextRefill BETWEEN ?2 AND ?3',
+        mapper: (Map<String, Object?> row) => LastDispense(row['outletCode'] as String, row['facilityCode'] as String, row['givenName'] as String, row['familyName'] as String, row['sex'] as String, _dateTimeConverter.decode(row['dateOfBirth'] as int), _dateTimeConverter.decode(row['date'] as int), _dateTimeConverter.decode(row['dateNextRefill'] as int), row['hospitalNo'] as String),
         arguments: [
-          siteCode,
+          code,
           _dateTimeConverter.encode(start),
           _dateTimeConverter.encode(end)
         ]);
@@ -805,6 +778,11 @@ class _$PatientDao extends PatientDao {
   }
 
   @override
+  Future<void> deleteAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Patient');
+  }
+
+  @override
   Future<int> insertRecord(Patient patient) {
     return _patientInsertionAdapter.insertAndReturnId(
         patient, OnConflictStrategy.abort);
@@ -827,7 +805,8 @@ class _$RegimenDao extends RegimenDao {
             (Regimen item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'regimenType': item.regimenType
+                  'regimenType': item.regimenType,
+                  'arv': item.arv ? 1 : 0
                 },
             changeListener);
 
@@ -842,15 +821,21 @@ class _$RegimenDao extends RegimenDao {
   @override
   Future<List<Regimen>> findAll() async {
     return _queryAdapter.queryList('SELECT * Regimen Outlet',
-        mapper: (Map<String, Object?> row) => Regimen(row['id'] as int,
-            row['name'] as String, row['regimenType'] as String));
+        mapper: (Map<String, Object?> row) => Regimen(
+            row['id'] as int,
+            row['name'] as String,
+            row['regimenType'] as String,
+            (row['arv'] as int) != 0));
   }
 
   @override
   Stream<Regimen?> findById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Regimen WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Regimen(row['id'] as int,
-            row['name'] as String, row['regimenType'] as String),
+        mapper: (Map<String, Object?> row) => Regimen(
+            row['id'] as int,
+            row['name'] as String,
+            row['regimenType'] as String,
+            (row['arv'] as int) != 0),
         arguments: [id],
         queryableName: 'Regimen',
         isView: false);
@@ -859,7 +844,12 @@ class _$RegimenDao extends RegimenDao {
   @override
   Future<void> deleteById(int id) async {
     await _queryAdapter
-        .queryNoReturn('DELETE from Regimen WHERE id = ?1', arguments: [id]);
+        .queryNoReturn('DELETE FROM Regimen WHERE id = ?1', arguments: [id]);
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Regimen');
   }
 
   @override
@@ -884,10 +874,7 @@ class _$OutletDao extends OutletDao {
                   'email': item.email,
                   'type': item.type,
                   'code': item.code,
-                  'facilityCode': item.facilityCode,
-                  'synced': item.synced == null ? null : (item.synced! ? 1 : 0),
-                  'deleted':
-                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                  'facilityCode': item.facilityCode
                 },
             changeListener),
         _outletUpdateAdapter = UpdateAdapter(
@@ -902,10 +889,7 @@ class _$OutletDao extends OutletDao {
                   'email': item.email,
                   'type': item.type,
                   'code': item.code,
-                  'facilityCode': item.facilityCode,
-                  'synced': item.synced == null ? null : (item.synced! ? 1 : 0),
-                  'deleted':
-                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                  'facilityCode': item.facilityCode
                 },
             changeListener);
 
@@ -933,19 +917,6 @@ class _$OutletDao extends OutletDao {
   }
 
   @override
-  Future<List<Outlet>> findUnSynced() async {
-    return _queryAdapter.queryList('SELECT * FROM Outlet WHERE synced = false',
-        mapper: (Map<String, Object?> row) => Outlet(
-            row['name'] as String,
-            row['address'] as String,
-            row['phone'] as String,
-            row['email'] as String,
-            row['type'] as String,
-            row['code'] as String,
-            row['facilityCode'] as String?));
-  }
-
-  @override
   Stream<Outlet?> findById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Outlet WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Outlet(
@@ -959,6 +930,11 @@ class _$OutletDao extends OutletDao {
         arguments: [id],
         queryableName: 'Outlet',
         isView: false);
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Outlet');
   }
 
   @override
@@ -985,10 +961,7 @@ class _$FacilityDao extends FacilityDao {
                   'name': item.name,
                   'level1AD': item.level1AD,
                   'level2AD': item.level2AD,
-                  'code': item.code,
-                  'synced': item.synced == null ? null : (item.synced! ? 1 : 0),
-                  'deleted':
-                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                  'code': item.code
                 },
             changeListener),
         _facilityUpdateAdapter = UpdateAdapter(
@@ -1000,10 +973,7 @@ class _$FacilityDao extends FacilityDao {
                   'name': item.name,
                   'level1AD': item.level1AD,
                   'level2AD': item.level2AD,
-                  'code': item.code,
-                  'synced': item.synced == null ? null : (item.synced! ? 1 : 0),
-                  'deleted':
-                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                  'code': item.code
                 },
             changeListener);
 
@@ -1028,17 +998,6 @@ class _$FacilityDao extends FacilityDao {
   }
 
   @override
-  Future<List<Facility>> findUnSynced() async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM Facility WHERE synced = false',
-        mapper: (Map<String, Object?> row) => Facility(
-            row['name'] as String,
-            row['level1AD'] as int,
-            row['level2AD'] as int,
-            row['code'] as String));
-  }
-
-  @override
   Stream<Facility?> findById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Facility WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Facility(
@@ -1049,6 +1008,11 @@ class _$FacilityDao extends FacilityDao {
         arguments: [id],
         queryableName: 'Facility',
         isView: false);
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Facility');
   }
 
   @override
@@ -1064,3 +1028,4 @@ class _$FacilityDao extends FacilityDao {
 
 // ignore_for_file: unused_element
 final _dateTimeConverter = DateTimeConverter();
+final _listMedicationConverter = ListMedicationConverter();

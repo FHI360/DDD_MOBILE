@@ -1851,55 +1851,55 @@ class _RefillWidgetState extends State<RefillWidget> {
                                               Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(
-                                                    12.0, 12.0, 12.0, 0.0),
+                                                        12.0, 12.0, 12.0, 0.0),
                                                 child: Container(
                                                   width: double.infinity,
                                                   height: 60.0,
                                                   decoration: BoxDecoration(
                                                     color: FlutterFlowTheme.of(
-                                                        context)
+                                                            context)
                                                         .secondaryBackground,
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        8.0),
+                                                        BorderRadius.circular(
+                                                            8.0),
                                                   ),
                                                   child: Row(
                                                     mainAxisSize:
-                                                    MainAxisSize.max,
+                                                        MainAxisSize.max,
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
                                                       Expanded(
                                                         child: Container(
                                                           width: 100.0,
                                                           height: 100.0,
                                                           decoration:
-                                                          BoxDecoration(
+                                                              BoxDecoration(
                                                             color: FlutterFlowTheme
-                                                                .of(context)
+                                                                    .of(context)
                                                                 .secondaryBackground,
                                                             borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                8.0),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
                                                           ),
                                                           child: Row(
                                                             mainAxisSize:
-                                                            MainAxisSize
-                                                                .max,
+                                                                MainAxisSize
+                                                                    .max,
                                                             children: [
                                                               Expanded(
                                                                 child: Column(
                                                                   mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
+                                                                      MainAxisSize
+                                                                          .max,
                                                                   mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
+                                                                      MainAxisAlignment
+                                                                          .center,
                                                                   crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
                                                                     Padding(
                                                                       padding: EdgeInsetsDirectional.fromSTEB(
@@ -1908,20 +1908,20 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0,
                                                                           0.0),
                                                                       child:
-                                                                      Text(
+                                                                          Text(
                                                                         'Regimen',
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
-                                                                          fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
-                                                                          fontSize: 12.0,
-                                                                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
-                                                                        ),
+                                                                              fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                                                                              fontSize: 12.0,
+                                                                              useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
+                                                                            ),
                                                                       ),
                                                                     ),
                                                                     Expanded(
                                                                       child:
-                                                                      Padding(
+                                                                          Padding(
                                                                         padding: EdgeInsetsDirectional.fromSTEB(
                                                                             10.0,
                                                                             0.0,
@@ -1930,39 +1930,43 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                         child: FlutterFlowDropDown<
                                                                             Regimen>(
                                                                           initialOption:
-                                                                          null,
-                                                                          options: _model.regimen,
-                                                                          optionLabels: _model.regimen.map((r)=>r.name).toList(),
+                                                                              null,
+                                                                          options:
+                                                                              _model.regimen,
+                                                                          optionLabels: _model
+                                                                              .regimen
+                                                                              .map((r) => r.name)
+                                                                              .toList(),
                                                                           onChanged: (val) =>
                                                                               setState(() => _model.regimenValue = val),
                                                                           width:
-                                                                          double.infinity,
+                                                                              double.infinity,
                                                                           height:
-                                                                          50.0,
+                                                                              50.0,
                                                                           textStyle: FlutterFlowTheme.of(context)
                                                                               .bodyText1
                                                                               .override(
-                                                                            fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
-                                                                            color: FlutterFlowTheme.of(context).primaryText,
-                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
-                                                                          ),
+                                                                                fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                                                                                color: FlutterFlowTheme.of(context).primaryText,
+                                                                                useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
+                                                                              ),
                                                                           fillColor:
-                                                                          FlutterFlowTheme.of(context).secondaryBackground,
+                                                                              FlutterFlowTheme.of(context).secondaryBackground,
                                                                           elevation:
-                                                                          2.0,
+                                                                              2.0,
                                                                           borderColor:
-                                                                          Colors.transparent,
+                                                                              Colors.transparent,
                                                                           borderWidth:
-                                                                          0.0,
+                                                                              0.0,
                                                                           borderRadius:
-                                                                          0.0,
+                                                                              0.0,
                                                                           margin: EdgeInsetsDirectional.fromSTEB(
                                                                               0.0,
                                                                               0.0,
                                                                               0.0,
                                                                               0.0),
                                                                           hidesUnderline:
-                                                                          true,
+                                                                              true,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2773,95 +2777,120 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                       ),
                                                     ),
                                                     FFButtonWidget(
-                                                      onPressed:
-                                                          ((int.tryParse(_model
+                                                      onPressed: ((int.tryParse(_model
                                                                       .qtyDispensedController
                                                                       .text) !=
-                                                                  null) || _model.regimenValue == null)
-                                                              ? null
-                                                              : () async {
-                                                                  if (_model.formKey
-                                                                              .currentState ==
-                                                                          null ||
-                                                                      !_model
-                                                                          .formKey
-                                                                          .currentState!
-                                                                          .validate()) {
-                                                                    return;
-                                                                  }
-                                                                  final uuid = Uuid();
-                                                                  var clinic = Clinic(
-                                                                      null,
-                                                                      int.tryParse(_model
-                                                                          .systolicController
-                                                                          .text),
-                                                                      int.tryParse(_model
-                                                                          .diastolicController
-                                                                          .text),
-                                                                      double.tryParse(_model
-                                                                          .weightController
-                                                                          .text),
-                                                                      double.tryParse(_model
-                                                                          .temperatureController
-                                                                          .text),
+                                                                  null) ||
+                                                              _model.regimenValue ==
+                                                                  null)
+                                                          ? null
+                                                          : () async {
+                                                              if (_model.formKey
+                                                                          .currentState ==
+                                                                      null ||
+                                                                  !_model
+                                                                      .formKey
+                                                                      .currentState!
+                                                                      .validate()) {
+                                                                return;
+                                                              }
+                                                              final uuid =
+                                                                  Uuid();
+                                                              var clinic = Clinic(
+                                                                  null,
+                                                                  int.tryParse(_model
+                                                                      .systolicController
+                                                                      .text),
+                                                                  int.tryParse(_model
+                                                                      .diastolicController
+                                                                      .text),
+                                                                  double.tryParse(_model
+                                                                      .weightController
+                                                                      .text),
+                                                                  double.tryParse(_model
+                                                                      .temperatureController
+                                                                      .text),
+                                                                  _model
+                                                                      .patient!
+                                                                      .uuid,
+                                                                  getCurrentTimestamp,
+                                                                  functions.booleanFromYesNo(_model
+                                                                      .coughingValue),
+                                                                  functions.booleanFromYesNo(
                                                                       _model
-                                                                          .patient!
-                                                                          .uuid,
-                                                                      getCurrentTimestamp,
-                                                                      functions.booleanFromYesNo(
-                                                                          _model
-                                                                              .coughingValue),
-                                                                      functions.booleanFromYesNo(
-                                                                          _model
-                                                                              .swellingsValue),
-                                                                      functions
-                                                                          .booleanFromYesNo(
-                                                                              _model.nightSweatValue),
-                                                                      functions.booleanFromYesNo(_model.feverValue),
-                                                                      functions.booleanFromYesNo(_model.weightLossValue),
-                                                                      functions.booleanFromYesNo(_model.tbReferValue),
-                                                                      uuid.v4(),
-                                                                      false);
-                                                                  database.then((value) => value
+                                                                          .swellingsValue),
+                                                                  functions.booleanFromYesNo(
+                                                                      _model.nightSweatValue),
+                                                                  functions.booleanFromYesNo(_model.feverValue),
+                                                                  functions.booleanFromYesNo(_model.weightLossValue),
+                                                                  functions.booleanFromYesNo(_model.tbReferValue),
+                                                                  uuid.v4(),
+                                                                  false);
+                                                              database.then(
+                                                                  (value) => value
                                                                       .clinicDao
                                                                       .insertRecord(
                                                                           clinic));
-                                                                  var refill = Refill(
-                                                                      null,
+                                                              final medication =
+                                                                  Medication
+                                                                      .instance();
+                                                              medication
+                                                                      .regimen =
+                                                                  _model
+                                                                      .regimenValue!
+                                                                      .name;
+                                                              medication.arv =
+                                                                  _model
+                                                                      .regimenValue!
+                                                                      .arv;
+                                                              medication
+                                                                      .quantityPrescribed =
+                                                                  int.tryParse(_model
+                                                                          .qtyPrescribedController
+                                                                          .text) ??
+                                                                      0;
+                                                              medication
+                                                                      .quantityDispensed =
+                                                                  int.tryParse(_model
+                                                                          .qtyDispensedController
+                                                                          .text) ??
+                                                                      0;
+                                                              var refill = Dispense(
+                                                                  id: null,
+                                                                  patientId: _model
+                                                                      .patient!
+                                                                      .uuid,
+                                                                  date:
                                                                       getCurrentTimestamp,
-                                                                      _model
-                                                                          .regimenValue!.name,
-                                                                      _model.regimenValue!.id,
-                                                                      _model
-                                                                          .patient!
-                                                                          .uuid,
-                                                                      int.tryParse(_model.qtyPrescribedController.text) ??
-                                                                          0,
-                                                                      int.tryParse(_model
-                                                                              .qtyDispensedController
-                                                                              .text) ??
-                                                                          0,
+                                                                  medications: [
+                                                                    medication
+                                                                  ],
+                                                                  dateNextRefill:
                                                                       _model
                                                                           .datePicked!,
-                                                                      functions.booleanFromYesNo(
+                                                                  missedDoses: functions
+                                                                      .booleanFromYesNo(
                                                                           _model
                                                                               .missedDosesValue),
+                                                                  adverseIssues:
                                                                       functions.booleanFromYesNo(
                                                                           _model
                                                                               .adverseIssuesValue),
-                                                                      false,
-                                                                      uuid.v4());
-                                                                  database.then((value) => value
-                                                                      .refillDao
+                                                                  synced: false,
+                                                                  uuid: uuid
+                                                                      .v4());
+                                                              database.then(
+                                                                  (value) => value
+                                                                      .dispenseDao
                                                                       .insertRecord(
                                                                           refill));
-                                                                  var quantity =
-                                                                      double.tryParse(_model
-                                                                              .qtyDispensedController
-                                                                              .text) ??
-                                                                          0;
-                                                                  context.pop();
-                                                                },
+                                                              var quantity =
+                                                                  double.tryParse(_model
+                                                                          .qtyDispensedController
+                                                                          .text) ??
+                                                                      0;
+                                                              context.pop();
+                                                            },
                                                       text: 'Save',
                                                       options: FFButtonOptions(
                                                         width: 130,

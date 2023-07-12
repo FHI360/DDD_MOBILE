@@ -52,9 +52,9 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
-  Future<List<Refill>> getRefill(String patientId) async {
+  Future<List<Dispense>> getRefill(String patientId) async {
     var _database = await database;
-    return _database.refillDao.findByPatient(patientId);
+    return _database.dispenseDao.findByPatient(patientId);
   }
 
   @override
@@ -354,36 +354,34 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               ),
                                             ),
                                           ),
-                                        if (_model
-                                            .patient?.outletCode == null)
+                                        if (_model.patient?.outletCode == null)
                                           InkWell(
                                             onTap: () async {
                                               await showModalBottomSheet(
                                                 isScrollControlled: true,
                                                 backgroundColor:
-                                                Colors.transparent,
+                                                    Colors.transparent,
                                                 enableDrag: false,
                                                 context: context,
                                                 builder: (context) {
                                                   return Padding(
                                                     padding:
-                                                    MediaQuery.of(context)
-                                                        .viewInsets,
-                                                    child:
-                                                    DevolveWidget(
+                                                        MediaQuery.of(context)
+                                                            .viewInsets,
+                                                    child: DevolveWidget(
                                                       patient: _model.patient,
                                                     ),
                                                   );
                                                 },
                                               ).then((value) => setState(() {
-                                                if (value != null &&
-                                                    value ??
-                                                    false) {
-                                                  _model.patient!
-                                                      .serviceDiscontinued =
-                                                  true;
-                                                }
-                                              }));
+                                                    if (value != null &&
+                                                            value ??
+                                                        false) {
+                                                      _model.patient!
+                                                              .serviceDiscontinued =
+                                                          true;
+                                                    }
+                                                  }));
                                             },
                                             child: Container(
                                               height: 32,
@@ -392,8 +390,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               ),
                                               decoration: BoxDecoration(
                                                 color:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryColor,
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryColor,
                                                 boxShadow: [
                                                   BoxShadow(
                                                     blurRadius: 4,
@@ -402,43 +400,44 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                   )
                                                 ],
                                                 borderRadius:
-                                                BorderRadius.circular(30),
+                                                    BorderRadius.circular(30),
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(8, 0, 8, 0),
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.end,
+                                                      MainAxisAlignment.end,
                                                   children: [
                                                     Padding(
                                                       padding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(
-                                                          0, 0, 12, 0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0, 0, 12, 0),
                                                       child: Text(
                                                         'Devolve',
                                                         style:
-                                                        FlutterFlowTheme.of(
-                                                            context)
-                                                            .bodyText1
-                                                            .override(
-                                                          fontFamily: FlutterFlowTheme.of(
-                                                              context)
-                                                              .bodyText1Family,
-                                                          color: FlutterFlowTheme.of(
-                                                              context)
-                                                              .white,
-                                                          useGoogleFonts: GoogleFonts
-                                                              .asMap()
-                                                              .containsKey(
-                                                              FlutterFlowTheme.of(context)
-                                                                  .bodyText1Family),
-                                                        ),
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .white,
+                                                                  useGoogleFonts: GoogleFonts
+                                                                          .asMap()
+                                                                      .containsKey(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyText1Family),
+                                                                ),
                                                       ),
                                                     ),
                                                     Icon(
-                                                      Icons.arrow_circle_right_outlined,
+                                                      Icons
+                                                          .arrow_circle_right_outlined,
                                                       color: Colors.white,
                                                       size: 12,
                                                     ),
@@ -563,219 +562,227 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                           style: FlutterFlowTheme.of(context)
                               .subtitle2
                               .override(
-                            fontFamily:
-                            FlutterFlowTheme.of(
-                                context)
-                                .bodyText1Family,
-                            fontWeight: FontWeight.w300,
-                            color:  FlutterFlowTheme.of(context).secondaryColor,
-                            useGoogleFonts: GoogleFonts
-                                .asMap()
-                                .containsKey(
-                                FlutterFlowTheme.of(
-                                    context)
-                                    .bodyText1Family),
-                          ),
-
+                                fontFamily: FlutterFlowTheme.of(context)
+                                    .bodyText1Family,
+                                fontWeight: FontWeight.w300,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryColor,
+                                useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                    FlutterFlowTheme.of(context)
+                                        .bodyText1Family),
+                              ),
                         ),
                       ],
                     ),
                   ),
-                  if(_model.patient != null)
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                            child: Container(
-                              width: double.infinity,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).alternate,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Color(0x230F1113),
-                                    offset: Offset(0, 1),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    10, 10, 10, 10),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          width: 120,
-                                          height: 20,
-                                          decoration: BoxDecoration(),
-                                          child: Text(
-                                            'Last Refill',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText1
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyText1Family,
-                                                  fontWeight: FontWeight.w500,
-                                                  useGoogleFonts: GoogleFonts
-                                                          .asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
-                                                ),
+                  if (_model.patient != null)
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                              child: Container(
+                                width: double.infinity,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).alternate,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4,
+                                      color: Color(0x230F1113),
+                                      offset: Offset(0, 1),
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      10, 10, 10, 10),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Container(
+                                            width: 120,
+                                            height: 20,
+                                            decoration: BoxDecoration(),
+                                            child: Text(
+                                              'Last Refill',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
                                           ),
-                                        ),
-                                        if (_model.patient!.lastRefillDate !=
-                                            DateTime(1900))
-                                          Text(
-                                            dateTimeFormat('yMMMd',
-                                                _model.patient?.lastRefillDate),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText1,
+                                          if (_model.patient!.lastRefillDate !=
+                                              DateTime(1900))
+                                            Text(
+                                              dateTimeFormat(
+                                                  'yMMMd',
+                                                  _model
+                                                      .patient?.lastRefillDate),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1,
+                                            ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Container(
+                                            width: 120,
+                                            height: 20,
+                                            decoration: BoxDecoration(),
+                                            child: Text(
+                                              'Last VL Date',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
                                           ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          width: 120,
-                                          height: 20,
-                                          decoration: BoxDecoration(),
-                                          child: Text(
-                                            'Last VL Date',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText1
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyText1Family,
-                                                  fontWeight: FontWeight.w500,
-                                                  useGoogleFonts: GoogleFonts
-                                                          .asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
-                                                ),
+                                          if (_model.patient!.lastClinicVisit !=
+                                              DateTime(1900))
+                                            Text(
+                                              dateTimeFormat(
+                                                  'yMMMd',
+                                                  _model.patient
+                                                      ?.lastClinicVisit!),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1,
+                                            ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Container(
+                                            width: 120,
+                                            height: 20,
+                                            decoration: BoxDecoration(),
+                                            child: Text(
+                                              'Last Clinic',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
                                           ),
-                                        ),
-                                        if (_model.patient!.lastClinicVisit !=
-                                            DateTime(1900))
                                           Text(
                                             dateTimeFormat(
                                                 'yMMMd',
-                                                _model
-                                                    .patient?.lastClinicVisit!),
+                                                _model.patient
+                                                            ?.lastClinicVisit ==
+                                                        DateTime(1900)
+                                                    ? null
+                                                    : _model.patient
+                                                        ?.lastClinicVisit),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1,
                                           ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          width: 120,
-                                          height: 20,
-                                          decoration: BoxDecoration(),
-                                          child: Text(
-                                            'Last Clinic',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText1
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyText1Family,
-                                                  fontWeight: FontWeight.w500,
-                                                  useGoogleFonts: GoogleFonts
-                                                          .asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
-                                                ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Container(
+                                            width: 120,
+                                            height: 20,
+                                            decoration: BoxDecoration(),
+                                            child: Text(
+                                              'Next Appointment',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          dateTimeFormat(
-                                              'yMMMd',
-                                              _model.patient?.lastClinicVisit ==
-                                                      DateTime(1900)
-                                                  ? null
-                                                  : _model.patient
-                                                      ?.lastClinicVisit),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          width: 120,
-                                          height: 20,
-                                          decoration: BoxDecoration(),
-                                          child: Text(
-                                            'Next Appointment',
+                                          Text(
+                                            dateTimeFormat(
+                                                'yMMMd',
+                                                _model.patient
+                                                            ?.nextAppointmentDate ==
+                                                        DateTime(1900)
+                                                    ? null
+                                                    : _model.patient
+                                                        ?.nextAppointmentDate),
                                             style: FlutterFlowTheme.of(context)
-                                                .bodyText1
-                                                .override(
-                                                  fontFamily:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyText1Family,
-                                                  fontWeight: FontWeight.w500,
-                                                  useGoogleFonts: GoogleFonts
-                                                          .asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
-                                                ),
+                                                .bodyText1,
                                           ),
-                                        ),
-                                        Text(
-                                          dateTimeFormat(
-                                              'yMMMd',
-                                              _model.patient
-                                                          ?.nextAppointmentDate ==
-                                                      DateTime(1900)
-                                                  ? null
-                                                  : _model.patient
-                                                      ?.nextAppointmentDate),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   if (!(_model.patient?.serviceDiscontinued ?? false))
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(10, 12, 0, 0),
@@ -847,333 +854,307 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                         ],
                       ),
                     ),
-                  if(_model.patient != null)
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Refill history',
-                          style: FlutterFlowTheme.of(context)
-                              .subtitle2
-                              .override(
-                            fontFamily:
-                            FlutterFlowTheme.of(
-                                context)
-                                .bodyText1Family,
-                            fontWeight: FontWeight.w300,
-                            color:  FlutterFlowTheme.of(context).secondaryColor,
-                            useGoogleFonts: GoogleFonts
-                                .asMap()
-                                .containsKey(
-                                FlutterFlowTheme.of(
-                                    context)
-                                    .bodyText1Family),
+                  if (_model.patient != null)
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Refill history',
+                            style: FlutterFlowTheme.of(context)
+                                .subtitle2
+                                .override(
+                                  fontFamily: FlutterFlowTheme.of(context)
+                                      .bodyText1Family,
+                                  fontWeight: FontWeight.w300,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryColor,
+                                  useGoogleFonts: GoogleFonts.asMap()
+                                      .containsKey(FlutterFlowTheme.of(context)
+                                          .bodyText1Family),
+                                ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  if(_model.patient != null)
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              FutureBuilder<List<Refill>>(
-                                future: getRefill(_model.patient!.uuid),
-                                builder: (context, snapshot) {
-                                  // Customize what your widget looks like when it's loading.
-                                  if (!snapshot.hasData) {
-                                    return Center(
-                                      child: SizedBox(
-                                        width: 50,
-                                        height: 50,
-                                        child: SpinKitCircle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryColor,
-                                          size: 50,
+                  if (_model.patient != null)
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                FutureBuilder<List<Dispense>>(
+                                  future: getRefill(_model.patient!.uuid),
+                                  builder: (context, snapshot) {
+                                    // Customize what your widget looks like when it's loading.
+                                    if (!snapshot.hasData) {
+                                      return Center(
+                                        child: SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: SpinKitCircle(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryColor,
+                                            size: 50,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  }
-                                  List<Refill> listViewRefillRowList =
-                                      snapshot.data!;
-                                  return ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: listViewRefillRowList.length,
-                                    itemBuilder: (context, listViewIndex) {
-                                      final listViewRefillRow =
-                                          listViewRefillRowList[listViewIndex];
-                                      return Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            16, 0, 0, 0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 12, 0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width: 16,
-                                                    height: 16,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryText,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    width: 2,
-                                                    height: 110,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryText,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 12, 0, 0),
-                                              child: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.85,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                                child: Row(
+                                      );
+                                    }
+                                    List<Dispense> listViewRefillRowList =
+                                        snapshot.data!;
+                                    return ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: listViewRefillRowList.length,
+                                      itemBuilder: (context, listViewIndex) {
+                                        final listViewRefillRow =
+                                            listViewRefillRowList[
+                                                listViewIndex];
+                                        return Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16, 0, 0, 0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(0, 0, 12, 0),
+                                                child: Column(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                      MainAxisAlignment.center,
                                                   children: [
-                                                    Expanded(
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Text(
-                                                                    dateTimeFormat(
-                                                                        'yMMMd',
-                                                                        listViewRefillRow
-                                                                            .date),
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyText2
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              FlutterFlowTheme.of(context).bodyText2Family,
-                                                                          color:
-                                                                              Color(0xFF747550),
-                                                                          useGoogleFonts:
-                                                                              GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText2Family),
-                                                                        ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Text(
-                                                                    'Regimen',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .subtitle2,
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            10,
-                                                                            0,
-                                                                            0,
-                                                                            0),
-                                                                    child: Text(
-                                                                      listViewRefillRow
-                                                                          .regimen,
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyText1
-                                                                          .override(
-                                                                            fontFamily:
-                                                                                FlutterFlowTheme.of(context).bodyText1Family,
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).primaryText,
-                                                                            useGoogleFonts:
-                                                                                GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
-                                                                          ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Text(
-                                                                    'Prescribed Qty',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .subtitle2,
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            10,
-                                                                            0,
-                                                                            0,
-                                                                            0),
-                                                                    child: Text(
-                                                                      formatNumber(
-                                                                        listViewRefillRow
-                                                                            .quantityPrescribed,
-                                                                        formatType:
-                                                                            FormatType.custom,
-                                                                        format:
-                                                                            '#,##0',
-                                                                        locale:
-                                                                            '',
-                                                                      ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyText1
-                                                                          .override(
-                                                                            fontFamily:
-                                                                                FlutterFlowTheme.of(context).bodyText1Family,
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).primaryText,
-                                                                            useGoogleFonts:
-                                                                                GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
-                                                                          ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Text(
-                                                                    'Dispensed Qty',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .subtitle2,
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            10,
-                                                                            0,
-                                                                            0,
-                                                                            0),
-                                                                    child: Text(
-                                                                      formatNumber(
-                                                                        listViewRefillRow
-                                                                            .quantityDispensed,
-                                                                        formatType:
-                                                                            FormatType.custom,
-                                                                        format:
-                                                                            '#,##0',
-                                                                        locale:
-                                                                            '',
-                                                                      ),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyText1
-                                                                          .override(
-                                                                            fontFamily:
-                                                                                FlutterFlowTheme.of(context).bodyText1Family,
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).primaryText,
-                                                                            useGoogleFonts:
-                                                                                GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
-                                                                          ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
+                                                    Container(
+                                                      width: 16,
+                                                      height: 16,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 2,
+                                                      height: 110,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(0, 12, 0, 0),
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.85,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(
+                                                                      dateTimeFormat(
+                                                                          'yMMMd',
+                                                                          listViewRefillRow
+                                                                              .date),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyText2
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                FlutterFlowTheme.of(context).bodyText2Family,
+                                                                            color:
+                                                                                Color(0xFF747550),
+                                                                            useGoogleFonts:
+                                                                                GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText2Family),
+                                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                ListView
+                                                                    .builder(
+                                                                  itemBuilder:
+                                                                      (BuildContext
+                                                                              context,
+                                                                          int index) {
+                                                                    final medication =
+                                                                        listViewRefillRow
+                                                                            .getArvs()[index];
+                                                                    return Expanded(
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.max,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Column(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.max,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.center,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    'Regimen',
+                                                                                    style: FlutterFlowTheme.of(context).subtitle2,
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                                                                                    child: Text(
+                                                                                      medication.regimen,
+                                                                                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                            fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                                                                                            color: FlutterFlowTheme.of(context).primaryText,
+                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
+                                                                                          ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    'Prescribed Qty',
+                                                                                    style: FlutterFlowTheme.of(context).subtitle2,
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                                                                                    child: Text(
+                                                                                      formatNumber(
+                                                                                        medication.quantityPrescribed,
+                                                                                        formatType: FormatType.custom,
+                                                                                        format: '#,##0',
+                                                                                        locale: '',
+                                                                                      ),
+                                                                                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                            fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                                                                                            color: FlutterFlowTheme.of(context).primaryText,
+                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
+                                                                                          ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    'Dispensed Qty',
+                                                                                    style: FlutterFlowTheme.of(context).subtitle2,
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                                                                                    child: Text(
+                                                                                      formatNumber(
+                                                                                        medication.quantityDispensed,
+                                                                                        formatType: FormatType.custom,
+                                                                                        format: '#,##0',
+                                                                                        locale: '',
+                                                                                      ),
+                                                                                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                            fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                                                                                            color: FlutterFlowTheme.of(context).primaryText,
+                                                                                            useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyText1Family),
+                                                                                          ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                 ],
               ),
             ),

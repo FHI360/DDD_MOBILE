@@ -6,8 +6,8 @@ import '../main.dart';
 
 Future<String> missedAppointmentPdf(DateTime start, DateTime end) async {
   var _database = await database;
-  List<LastRefill> rows = await _database.patientDao
-      .listMissedRefill(FFAppState().activationCode, start, end);
+  List<LastDispense> rows = await _database.patientDao
+      .listMissedDispense(FFAppState().activationCode, start, end);
 
   String style = await rootBundle.loadString('assets/css/bootstrap.min.css');
   String content = '''

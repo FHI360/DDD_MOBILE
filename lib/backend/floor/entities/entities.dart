@@ -1,4 +1,3 @@
-import 'package:DDD/app_state.dart';
 import 'package:floor/floor.dart';
 import 'package:uuid/uuid.dart';
 
@@ -33,58 +32,72 @@ class Patient {
   bool? deleted = false;
 
   Patient(
-      this.id,
-      this.givenName,
-      this.familyName,
-      this.hospitalNo,
-      this.dateOfBirth,
-      this.sex,
+      {this.id,
+      required this.givenName,
+      required this.familyName,
+      required this.hospitalNo,
+      required this.dateOfBirth,
+      required this.sex,
       this.phone,
       this.facility,
       this.outletCode,
-      this.dateDevolved,
-      this.facilityCode,
-      this.address,
-      this.lastClinicVisit,
-      this.lastRefillDate,
-      this.nextAppointmentDate,
-      this.nextVisitDate,
+      required this.dateDevolved,
+      required this.facilityCode,
+      required this.address,
+      required this.lastClinicVisit,
+      required this.lastRefillDate,
+      required this.nextAppointmentDate,
+      required this.nextVisitDate,
       this.serviceDiscontinued,
       this.reasonDiscontinued,
-      this.dateDiscontinued,
-      this.dateStarted,
+      required this.dateDiscontinued,
+      required this.dateStarted,
       this.lastClinicStage,
-      this.uuid,
+      required this.uuid,
       this.lastViralLoad,
       this.uniqueId,
-      this.synced);
+      required this.synced});
 
   factory Patient.fromJson(Map<String, dynamic> row) => Patient(
-      null,
-      row['givenName'],
-      row['familyName'],
-      row['hospitalNo'],
-      row['dateOfBirth'],
-      row['sex'],
-      row['phone'],
-      row['facility'],
-      row['outletCode'],
-      row['dateDevolved'],
-      row['facilityCode'],
-      row['address'],
-      row['lastClinicVisit'],
-      row['lastRefillDate'],
-      row['nextAppointmentDate'],
-      row['nextVisitDate'],
-      row['serviceDiscontinued'],
-      row['reasonDiscontinued'],
-      row['dateDiscontinued'],
-      row['dateStarted'],
-      row['lastClinicStage'],
-      row['id'],
-      row['lastViralLoad'],
-      row['uniqueId'],
-      true);
+      id: null,
+      givenName: row['givenName'],
+      familyName: row['familyName'],
+      hospitalNo: row['hospitalNo'],
+      dateOfBirth: DateTime.parse(row['dateOfBirth']),
+      sex: row['sex'],
+      phone: row['phone'],
+      facility: row['facility'],
+      outletCode: row['outletCode'],
+      dateDevolved: row['dateDevolved'] != null
+          ? DateTime.parse(row['dateDevolved'])
+          : DateTime(1900),
+      facilityCode: row['facilityCode'],
+      address: row['address'],
+      lastClinicVisit: row['lastClinicVisit'] != null
+          ? DateTime.parse(row['lastClinicVisit'])
+          : DateTime(1900),
+      lastRefillDate: row['lastRefillDate'] != null
+          ? DateTime.parse(row['lastRefillDate'])
+          : DateTime(1900),
+      nextAppointmentDate: row['nextAppointmentDate'] != null
+          ? DateTime.parse(row['nextAppointmentDate'])
+          : DateTime(1900),
+      nextVisitDate: row['nextVisitDate'] != null
+          ? DateTime.parse(row['nextVisitDate'])
+          : DateTime(1900),
+      serviceDiscontinued: row['serviceDiscontinued'],
+      reasonDiscontinued: row['reasonDiscontinued'],
+      dateDiscontinued: row['dateDiscontinued'] != null
+          ? DateTime.parse(row['dateDiscontinued'])
+          : DateTime(1900),
+      dateStarted: row['dateStarted'] != null
+          ? DateTime.parse(row['dateStarted'])
+          : DateTime(1900),
+      lastClinicStage: row['lastClinicStage'],
+      uuid: row['id'],
+      lastViralLoad: row['lastViralLoad'],
+      uniqueId: row['uniqueId'],
+      synced: true);
 
   Map<String, dynamic> toJson() => {
         'id': uuid,
@@ -115,89 +128,91 @@ class Patient {
   factory Patient.instance() {
     var uuid = Uuid();
     return Patient(
-        null,
-        '',
-        '',
-        '',
-        DateTime(1900),
-        '',
-        '',
-        '',
-        null,
-        DateTime(1900),
-        FFAppState().activationCode,
-        '',
-        DateTime(1900),
-        DateTime(1900),
-        DateTime(1900),
-        DateTime(1900),
-        null,
-        null,
-        DateTime(1900),
-        DateTime(1900),
-        null,
-        uuid.v4(),
-        null,
-        '',
-        false);
+        id: null,
+        givenName: '',
+        familyName: '',
+        hospitalNo: '',
+        dateOfBirth: DateTime(1900),
+        sex: '',
+        phone: '',
+        facility: '',
+        outletCode: '',
+        dateDevolved: DateTime(1900),
+        facilityCode: '',
+        address: '',
+        lastClinicVisit: DateTime(1900),
+        lastRefillDate: DateTime(1900),
+        nextAppointmentDate: DateTime(1900),
+        nextVisitDate: DateTime(1900),
+        serviceDiscontinued: false,
+        reasonDiscontinued: '',
+        dateDiscontinued: DateTime(1900),
+        dateStarted: DateTime(1900),
+        lastClinicStage: '',
+        uuid: uuid.v4(),
+        lastViralLoad: '',
+        uniqueId: '',
+        synced: false);
   }
 }
 
 @entity
-class Refill {
+class Dispense {
   @PrimaryKey(autoGenerate: true)
   int? id;
   DateTime date;
-  String regimen;
-  int regimenId;
   String patientId;
-  int quantityPrescribed;
-  int quantityDispensed;
   DateTime dateNextRefill;
+  List<Medication> medications;
   bool synced;
   bool? missedDoses;
   bool? adverseIssues;
   String uuid;
 
-  Refill(
-      this.id,
-      this.date,
-      this.regimen,
-      this.regimenId,
-      this.patientId,
-      this.quantityPrescribed,
-      this.quantityDispensed,
-      this.dateNextRefill,
+  Dispense(
+      {this.id,
+      required this.date,
+      required this.patientId,
+      required this.dateNextRefill,
       this.missedDoses,
       this.adverseIssues,
-      this.synced,
-      this.uuid);
+      required this.medications,
+      required this.synced,
+      required this.uuid});
 
-  factory Refill.fromJson(Map<String, dynamic> row) => Refill(
-      null,
-      row['date'],
-      row['regimen'],
-      row['regimeId'],
-      row['patientId'],
-      row['quantityPrescribed'],
-      row['quantityDispensed'],
-      row['dateNextRefill'],
-      row['missedDoses'],
-      row['adverseIssues'],
-      true,
-      row['id']);
+  factory Dispense.fromJson(Map<String, dynamic> row) {
+    dynamic value = row['medications'];
+    List<Medication> medications = [];
+    medications = List.from(value).map((e) => Medication.fromJson(e)).toList();
+    return Dispense(
+        id: null,
+        date: DateTime.parse(row['date']),
+        patientId: row['patientId'],
+        dateNextRefill: DateTime.parse(row['dateNextRefill']),
+        missedDoses: row['missedDoses'],
+        adverseIssues: row['adverseIssues'],
+        medications: medications,
+        synced: true,
+        uuid: row['id']);
+  }
 
-  Map<String, dynamic> toJson() => {
-        'id': uuid,
-        'date': date.toIso8601String().substring(0, 10),
-        'regimenId': regimenId,
-        'patientId': patientId,
-        'quantityPrescribed': quantityPrescribed,
-        'quantityDispensed': quantityDispensed,
-        'dateNextRefill': dateNextRefill.toIso8601String().substring(0, 10),
-        'missedDoses': missedDoses,
-        'adverseIssues': adverseIssues
-      };
+  Map<String, dynamic> toJson() {
+    final List<Map<String, dynamic>> data = [];
+    medications.forEach((e) => data.add(e.toJson()));
+    return {
+      'id': uuid,
+      'date': date.toIso8601String().substring(0, 10),
+      'patientId': patientId,
+      'dateNextRefill': dateNextRefill.toIso8601String().substring(0, 10),
+      'missedDoses': missedDoses,
+      'adverseIssues': adverseIssues,
+      'medications': medications
+    };
+  }
+
+  List<Medication> getArvs() {
+    return medications.where((m) => m.arv).toList();
+  }
 }
 
 @Entity(tableName: 'clinic')
@@ -275,11 +290,12 @@ class Regimen {
   final int id;
   final String name;
   final String regimenType;
+  final bool arv;
 
-  Regimen(this.id, this.name, this.regimenType);
+  Regimen(this.id, this.name, this.regimenType, this.arv);
 
   factory Regimen.fromJson(Map<String, dynamic> row) =>
-      Regimen(row['id'], row['name'], row['regimenType']);
+      Regimen(row['id'], row['name'], row['regimenType'], row['arv']);
 }
 
 @entity
@@ -290,21 +306,14 @@ class Facility {
   final int level1AD;
   final int level2AD;
   final String code;
-  bool? synced = false;
-  bool? deleted = false;
 
   Facility(this.name, this.level1AD, this.level2AD, this.code);
 
   factory Facility.fromJson(Map<String, dynamic> row) =>
       Facility(row['name'], row['level1AD'], row['level2AD'], row['code']);
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'level1AD': level1AD,
-        'level2AD': level2AD,
-        'code': code,
-        'deleted': deleted
-      };
+  Map<String, dynamic> toJson() =>
+      {'name': name, 'level1AD': level1AD, 'level2AD': level2AD, 'code': code};
 }
 
 @entity
@@ -318,8 +327,6 @@ class Outlet {
   final String type;
   final String code;
   String? facilityCode;
-  bool? synced = false;
-  bool? deleted = false;
 
   Outlet(this.name, this.address, this.phone, this.email, this.type, this.code,
       this.facilityCode);
@@ -340,7 +347,35 @@ class Outlet {
         'code': code,
         'email': email,
         'type': type,
-        'facilityCode': facilityCode,
-        'deleted': deleted
+        'facilityCode': facilityCode
+      };
+}
+
+class Medication {
+  String regimen;
+  int quantityPrescribed;
+  int quantityDispensed;
+  bool arv;
+
+  factory Medication.instance() => Medication(
+      regimen: '', quantityPrescribed: 0, quantityDispensed: 0, arv: true);
+
+  Medication(
+      {required this.regimen,
+      required this.quantityPrescribed,
+      required this.quantityDispensed,
+      required this.arv});
+
+  factory Medication.fromJson(Map<String, dynamic> row) => Medication(
+      regimen: row['regimen'],
+      quantityPrescribed: row['quantityPrescribed'],
+      quantityDispensed: row['quantityDispensed'],
+      arv: row['arv']);
+
+  Map<String, dynamic> toJson() => {
+        'regimen': regimen,
+        'quantityDispensed': quantityDispensed,
+        'quantityPrescribed': quantityPrescribed,
+        'arv': arv
       };
 }

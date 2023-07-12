@@ -17,10 +17,15 @@ class AuthAPIProvider {
 
   Future<void> processProfile() async {
     final response = await api.get(
-      '${FFAppState().baseUrl}/api/ddd/me',
+      '${FFAppState().baseUrl}/api/account',
       options: Options(
         headers: {},
       ),
     );
+
+    final data = await response.data;
+    FFAppState().name = data.organisation.name;
+    FFAppState().activationCode = data.organisation.id;
+    FFAppState().outlet = data.organisation.type == 'OUTLET';
   }
 }

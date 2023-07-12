@@ -2,17 +2,18 @@ import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:floor/floor.dart';
 
 @DatabaseView('''
-  WITH last_refill AS ( 
+  WITH last_Dispense AS ( 
       SELECT * FROM (
             SELECT patientId, date, dateNextRefill, ROW_NUMBER() OVER (PARTITION BY patientId 
-            ORDER BY date DESC) rn FROM refill
+            ORDER BY date DESC) rn FROM Dispense
       ) r WHERE rn = 1
   )
-  SELECT siteCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, 
-    dateNextRefill FROM last_refill JOIN patient ON patientId = id ORDER BY givenName, familyName
-''', viewName: 'LastRefill')
-class LastRefill {
-  final String siteCode;
+  SELECT outletCode, facilityCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, 
+    dateNextRefill FROM LastDispense JOIN patient ON patientId = id ORDER BY givenName, familyName
+''', viewName: 'LastDispense')
+class LastDispense {
+  final String outletCode;
+  final String facilityCode;
   final String givenName;
   final String familyName;
   final String sex;
@@ -21,7 +22,7 @@ class LastRefill {
   final DateTime dateNextRefill;
   final String hospitalNo;
 
-  LastRefill(this.siteCode, this.givenName, this.familyName, this.sex,
+  LastDispense(this.outletCode, this.facilityCode, this.givenName, this.familyName, this.sex,
       this.dateOfBirth, this.date, this.dateNextRefill, this.hospitalNo);
 }
 
@@ -37,8 +38,8 @@ abstract class PatientDao {
   Future<List<Patient>> findByKeyword(String activationCode, String keyword);
 
   @Query(
-      'SELECT * FROM Patient where siteCode = :siteCode and serviceDiscontinued = 1')
-  Future<List<Patient>> findDiscontinued(String siteCode);
+      'SELECT * FROM Patient WHERE outletCode = :outletCode AND serviceDiscontinued = 1')
+  Future<List<Patient>> findDiscontinued(String outletCode);
 
   @Query('SELECT * FROM Patient WHERE id = :id')
   Future<Patient?> findById(int id);
@@ -59,10 +60,11 @@ abstract class PatientDao {
   Future<List<Patient>> findUnSynced();
 
   @Query(
-      '''SELECT * FROM LastRefill WHERE siteCode = :siteCode AND dateNextRefill 
-        BETWEEN :start AND :end''')
-  Future<List<LastRefill>> listMissedRefill(
-      String siteCode, DateTime start, DateTime end);
+      '''
+      SELECT * FROM LastDispense WHERE (outletCode = :code OR facilityCode = :code
+        AND dateNextRefill BETWEEN :start AND :end''')
+  Future<List<LastDispense>> listMissedDispense(
+      String code, DateTime start, DateTime end);
 
   @Query('''Update Patient SET serviceDiscontinued = true, dateDiscontinued = 
       :dateDiscontinued, reasonDiscontinued = :reasonDiscontinued WHERE id = :id''')
@@ -72,36 +74,17 @@ abstract class PatientDao {
   @Query('''Update Patient SET outletCode = :outletCode, dateDevolved = 
       :dateDevolved WHERE id = :id''')
   Future<void> devolvePatient(int id, String outletCode, DateTime dateDevolved);
-}
 
-@DatabaseView('''
-WITH Estimated AS (
-	SELECT * FROM (
-		SELECT quantityDispensed, regimen, dateNextRefill, patientId, outletCode,
-		  facilityCode, ROW_NUMBER() OVER(PARTITION BY patientId ORDER BY dateNextRefill DESC) rn 
-		FROM Refill JOIN Patient p ON patientId = p.uuid	
-	) e WHERE rn = 1
-)
-SELECT regimen, outletCode, facilityCode, SUM(quantityDispensed) qty, dateNextRefill 
-  FROM Estimated GROUP BY regimen, outletCode, facilityCode, dateNextRefill
-''', viewName: 'EstimatedRefill')
-class EstimatedRefill {
-  final String outletCode;
-  final String facilityCode;
-  final String regimen;
-  final int qty;
-  final DateTime dateNextRefill;
-
-  EstimatedRefill(this.outletCode, this.facilityCode, this.regimen, this.qty,
-      this.dateNextRefill);
+  @Query("DELETE FROM Patient")
+  Future<void> deleteAll();
 }
 
 @DatabaseView('''
   SELECT givenName, familyName, sex, dateOfBirth, quantityDispensed quantity, 
-    hospitalNo, regimen, outletCode, facilityCode dateNextRefill, date FROM Refill 
+    hospitalNo, regimen, outletCode, facilityCode dateNextRefill, date FROM Dispense 
     JOIN Patient p ON patientId = p.uuid ORDER BY givenName, familyName, sex    
-''', viewName: 'RefillInfo')
-class RefillInfo {
+''', viewName: 'DispenseInfo')
+class DispenseInfo {
   final String outletCode;
   final String facilityCode;
   final String familyName;
@@ -114,7 +97,7 @@ class RefillInfo {
   final String sex;
   final String hospitalNo;
 
-  RefillInfo(
+  DispenseInfo(
       this.outletCode,
       this.facilityCode,
       this.familyName,
@@ -129,39 +112,37 @@ class RefillInfo {
 }
 
 @dao
-abstract class RefillDao {
-  @Query('SELECT * FROM Refill')
-  Future<List<Refill>> findAll();
+abstract class DispenseDao {
+  @Query('SELECT * FROM Dispense')
+  Future<List<Dispense>> findAll();
 
-  @Query('SELECT * FROM Refill WHERE id = :id')
-  Stream<Refill?> findById(int id);
+  @Query('SELECT * FROM Dispense WHERE id = :id')
+  Stream<Dispense?> findById(int id);
 
-  @Query('SELECT * FROM Refill WHERE synced = false')
-  Future<List<Refill>> findUnSynced();
+  @Query('SELECT * FROM Dispense WHERE synced = false')
+  Future<List<Dispense>> findUnSynced();
 
-  @Query('SELECT * FROM Refill WHERE patientId = :patientId')
-  Future<List<Refill>> findByPatient(String patientId);
+  @Query('SELECT * FROM Dispense WHERE patientId = :patientId')
+  Future<List<Dispense>> findByPatient(String patientId);
 
-  @Query('SELECT * FROM Refill WHERE patientId = :patientId AND date = :date')
-  Future<List<Refill>> findByPatientAndDate(String patientId, DateTime date);
+  @Query('SELECT * FROM Dispense WHERE patientId = :patientId AND date = :date')
+  Future<List<Dispense>> findByPatientAndDate(String patientId, DateTime date);
 
   @insert
-  Future<void> insertRecord(Refill refill);
+  Future<void> insertRecord(Dispense dispense);
 
   @update
-  Future<int> updateRecord(Refill refill);
-
-  @Query('''SELECT regimen, siteCode, SUM(qty) qty, 1 AS dateNextRefill FROM 
-          EstimatedRefill WHERE siteCode = :siteCode AND dateNextRefill BETWEEN 
-          :start and :end GROUP BY regimen ORDER BY regimen, siteCode''')
-  Future<List<EstimatedRefill>> estimatedRefill(
-      String siteCode, DateTime start, DateTime end);
+  Future<int> updateRecord(Dispense dispense);
 
   @Query(
-      '''SELECT * FROM RefillInfo WHERE siteCode = :siteCode AND date BETWEEN 
-        :start and :end ORDER BY givenName, familyName''')
-  Future<List<RefillInfo>> listRefillInfo(
-      String siteCode, DateTime start, DateTime end);
+      '''
+      SELECT * FROM DispenseInfo WHERE (outletCode = :code OR facilityCode = :code
+        AND date BETWEEN :start and :end ORDER BY givenName, familyName''')
+  Future<List<DispenseInfo>> listDispenseInfo(
+      String code, DateTime start, DateTime end);
+
+  @Query("DELETE FROM Dispense")
+  Future<void> deleteAll();
 }
 
 @dao
@@ -180,15 +161,15 @@ abstract class ClinicDao {
 
   @insert
   Future<void> insertRecord(Clinic clinic);
+
+  @Query("DELETE FROM Clinic")
+  Future<void> deleteAll();
 }
 
 @dao
 abstract class FacilityDao {
   @Query('SELECT * FROM Facility')
   Future<List<Facility>> findAll();
-
-  @Query('SELECT * FROM Facility WHERE synced = false')
-  Future<List<Facility>> findUnSynced();
 
   @Query('SELECT * FROM Facility WHERE id = :id')
   Stream<Facility?> findById(int id);
@@ -198,15 +179,15 @@ abstract class FacilityDao {
 
   @update
   Future<void> updateRecord(Facility facility);
+
+  @Query("DELETE FROM Facility")
+  Future<void> deleteAll();
 }
 
 @dao
 abstract class OutletDao {
   @Query('SELECT * FROM Outlet')
   Future<List<Outlet>> findAll();
-
-  @Query('SELECT * FROM Outlet WHERE synced = false')
-  Future<List<Outlet>> findUnSynced();
 
   @Query('SELECT * FROM Outlet WHERE id = :id')
   Stream<Outlet?> findById(int id);
@@ -216,6 +197,9 @@ abstract class OutletDao {
 
   @update
   Future<void> updateRecord(Outlet outlet);
+
+  @Query("DELETE FROM Outlet")
+  Future<void> deleteAll();
 }
 
 @dao
@@ -229,6 +213,9 @@ abstract class RegimenDao {
   @insert
   Future<void> insertRecord(Regimen regimen);
 
-  @Query("DELETE from Regimen WHERE id = :id")
+  @Query("DELETE FROM Regimen WHERE id = :id")
   Future<void> deleteById(int id);
+
+  @Query("DELETE FROM Regimen")
+  Future<void> deleteAll();
 }
