@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:DDD/flutter_flow/flutter_flow_icon_button.dart';
-import 'package:DDD/reports/refill_info_report_widget.dart';
+import 'package:DDD/reports/refill_info_report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:google_fonts/google_fonts.dart';

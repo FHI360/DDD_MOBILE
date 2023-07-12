@@ -1,10 +1,11 @@
 import 'dart:ui';
 
 import 'package:DDD/flutter_flow/flutter_flow_icon_button.dart';
-import 'package:DDD/reports/missed_appointments_report.dart';
+import 'package:DDD/reports/monthly_summary_report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,15 +14,15 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'reports_model.dart';
 
-class MissedAppointmentsWidget extends StatefulWidget {
-  const MissedAppointmentsWidget({Key? key}) : super(key: key);
+class MonthlySummaryReportWidget extends StatefulWidget {
+  const MonthlySummaryReportWidget({Key? key}) : super(key: key);
 
   @override
-  _MissedAppointmentsWidgetState createState() =>
-      _MissedAppointmentsWidgetState();
+  _MonthlySummaryReportWidgetState createState() =>
+      _MonthlySummaryReportWidgetState();
 }
 
-class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
+class _MonthlySummaryReportWidgetState extends State<MonthlySummaryReportWidget> {
   late ReportsModel _model;
 
   @override
@@ -103,7 +104,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     10.0, 8.0, 0.0, 30.0),
                                 child: Text(
-                                  'Missed Appointments Report',
+                                  'Monthly summary Report',
                                   style: FlutterFlowTheme.of(context).title3,
                                 ),
                               ),
@@ -162,7 +163,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                                   .fromSTEB(20,
                                                                       0, 0, 0),
                                                           child: Text(
-                                                            'Start Date',
+                                                            'Month',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText1
@@ -189,7 +190,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                                       4, 0, 0),
                                                           child: Text(
                                                             dateTimeFormat(
-                                                                'yMMMd',
+                                                                'yMMM',
                                                                 _model
                                                                     .datePicked1),
                                                             style: FlutterFlowTheme
@@ -244,17 +245,14 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                           ),
                                                           onPressed: () async {
                                                             final _datePickedDate =
-                                                                await showDatePicker(
+                                                                await showMonthYearPicker(
                                                               context: context,
                                                               initialDate:
-                                                                  DateTime(
-                                                                      2021),
+                                                                  DateTime.now(),
                                                               firstDate:
                                                                   DateTime(
                                                                       2021),
-                                                              lastDate: _model
-                                                                      .datePicked2 ??
-                                                                  DateTime
+                                                              lastDate: DateTime
                                                                       .now(),
                                                             );
 
@@ -262,179 +260,6 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                                 null) {
                                                               setState(() {
                                                                 _model.datePicked1 =
-                                                                    DateTime(
-                                                                  _datePickedDate
-                                                                      .year,
-                                                                  _datePickedDate
-                                                                      .month,
-                                                                  _datePickedDate
-                                                                      .day,
-                                                                );
-                                                              });
-                                                            }
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        5, 5, 5, 5),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 16, 0, 0),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.4,
-                                              height: 60,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                border: Border.all(
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Expanded(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(20,
-                                                                      0, 0, 0),
-                                                          child: Text(
-                                                            'End Date',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyText1
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText1Family,
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryText,
-                                                                  fontSize: 12,
-                                                                  useGoogleFonts: GoogleFonts
-                                                                          .asMap()
-                                                                      .containsKey(
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyText1Family),
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(20,
-                                                                      4, 0, 0),
-                                                          child: Text(
-                                                            dateTimeFormat(
-                                                                'yMMMd',
-                                                                _model
-                                                                    .datePicked2),
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyText2
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText2Family,
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryText,
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  useGoogleFonts: GoogleFonts
-                                                                          .asMap()
-                                                                      .containsKey(
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyText2Family),
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 0, 8, 0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        FlutterFlowIconButton(
-                                                          borderColor: Colors
-                                                              .transparent,
-                                                          borderRadius: 30,
-                                                          buttonSize: 46,
-                                                          icon: Icon(
-                                                            Icons
-                                                                .date_range_outlined,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryColor,
-                                                            size: 20,
-                                                          ),
-                                                          onPressed: () async {
-                                                            final _datePickedDate =
-                                                                await showDatePicker(
-                                                              context: context,
-                                                              initialDate: _model
-                                                                      .datePicked1 ??
-                                                                  DateTime(
-                                                                      2022),
-                                                              firstDate: _model
-                                                                      .datePicked1 ??
-                                                                  DateTime
-                                                                      .now(),
-                                                              lastDate: DateTime
-                                                                  .now(),
-                                                            );
-
-                                                            if (_datePickedDate !=
-                                                                null) {
-                                                              setState(() {
-                                                                _model.datePicked2 =
                                                                     DateTime(
                                                                   _datePickedDate
                                                                       .year,
@@ -505,8 +330,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                       ),
                                     ),
                                     FFButtonWidget(
-                                      onPressed: (_model.datePicked1 == null) ||
-                                              (_model.datePicked2 == null)
+                                      onPressed: (_model.datePicked1 == null)
                                           ? null
                                           : () async {
                                               if (_model.formKey.currentState ==
@@ -516,16 +340,11 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                 return;
                                               }
                                               var targetPath =
-                                                  await getApplicationDocumentsDirectory();
-                                              var content =
-                                                  await missedAppointmentPdf(
-                                                      _model.datePicked1!,
-                                                      _model.datePicked2!);
-                                              await FlutterHtmlToPdf
-                                                  .convertFromHtmlContent(
-                                                      content,
-                                                      targetPath.path,
-                                                      'sample.pdf');
+                                              await getApplicationDocumentsDirectory();
+                                              var content = await monthlySummaryReport(
+                                                  _model.datePicked1!);
+                                              await FlutterHtmlToPdf.convertFromHtmlContent(
+                                                  content, targetPath.path, 'sample.pdf');
                                               context.pushNamed(
                                                 'pdfPreview',
                                                 queryParams: {

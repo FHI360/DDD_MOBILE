@@ -1,7 +1,11 @@
 import 'package:DDD/app_state.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
+import 'package:DDD/widget/missed_appointments_widget.dart';
+import 'package:DDD/widget/monthly_summary_widget.dart';
+import 'package:DDD/widget/refill_info_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class ReportWidget extends StatefulWidget {
@@ -40,10 +44,217 @@ class _ReportWidget extends State<ReportWidget> {
                   ),
                   Padding(
                     padding:
-                    EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 10.0),
+                        EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 30.0),
                     child: Text(
                       'Run report',
                       style: FlutterFlowTheme.of(context).title3,
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 10.0),
+                    child: InkWell(
+                      onTap: () async {
+                        await showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          enableDrag: false,
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: MissedAppointmentsWidget(),
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        height: 32,
+                        constraints: BoxConstraints(
+                          maxHeight: 32,
+                        ),
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).primaryColor,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Color(0x32171717),
+                              offset: Offset(0, 2),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                                child: Text(
+                                  'Missed appointment report',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyText1Family,
+                                        color:
+                                            FlutterFlowTheme.of(context).white,
+                                        useGoogleFonts: GoogleFonts.asMap()
+                                            .containsKey(
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyText1Family),
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 10.0),
+                    child: InkWell(
+                      onTap: () async {
+                        await showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          enableDrag: false,
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: RefillInfoWidget(),
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        height: 32,
+                        constraints: BoxConstraints(
+                          maxHeight: 32,
+                        ),
+                        decoration: BoxDecoration(
+                          color: FlutterFlowTheme.of(context).primaryColor,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Color(0x32171717),
+                              offset: Offset(0, 2),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                                child: Text(
+                                  'Refill report',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                        fontFamily: FlutterFlowTheme.of(context)
+                                            .bodyText1Family,
+                                        color:
+                                            FlutterFlowTheme.of(context).white,
+                                        useGoogleFonts: GoogleFonts.asMap()
+                                            .containsKey(
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyText1Family),
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                    EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 10.0),
+                    child: InkWell(
+                      onTap: () async {
+                        await showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor:
+                          Colors.transparent,
+                          enableDrag: false,
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding:
+                              MediaQuery.of(context)
+                                  .viewInsets,
+                              child: MonthlySummaryReportWidget(),
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        height: 32,
+                        constraints: BoxConstraints(
+                          maxHeight: 32,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                          FlutterFlowTheme.of(context)
+                              .primaryColor,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Color(0x32171717),
+                              offset: Offset(0, 2),
+                            )
+                          ],
+                          borderRadius:
+                          BorderRadius.circular(30),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional
+                              .fromSTEB(8, 0, 8, 0),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                EdgeInsetsDirectional
+                                    .fromSTEB(
+                                    0, 0, 12, 0),
+                                child: Text(
+                                  'Monthly summary report',
+                                  style:
+                                  FlutterFlowTheme.of(
+                                      context)
+                                      .bodyText1
+                                      .override(
+                                    fontFamily: FlutterFlowTheme.of(
+                                        context)
+                                        .bodyText1Family,
+                                    color: FlutterFlowTheme.of(
+                                        context)
+                                        .white,
+                                    useGoogleFonts: GoogleFonts
+                                        .asMap()
+                                        .containsKey(
+                                        FlutterFlowTheme.of(context)
+                                            .bodyText1Family),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
