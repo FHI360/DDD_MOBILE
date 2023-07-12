@@ -88,16 +88,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          'Welcome back',
-                                          style: FlutterFlowTheme.of(context)
-                                              .title1,
-                                        ),
-                                      ],
-                                    ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           0.0, 12.0, 0.0, 0.0),
