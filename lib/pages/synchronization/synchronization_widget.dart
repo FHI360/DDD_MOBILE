@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:DDD/backend/http/account_service.dart';
+import 'package:DDD/backend/http/sync_service.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +112,11 @@ class _SynchronizationWidget extends State<SynchronizationWidget> {
                                 ),
                                 FFButtonWidget(
                                   onPressed:  () async {
+                                    final syncService = SyncService();
+                                    syncService.processSync();
 
+                                    final service = AccountService();
+                                    await service.processAccount();
 
                                     Navigator.pop(context, true);
                                   },

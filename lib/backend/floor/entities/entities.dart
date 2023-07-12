@@ -215,7 +215,7 @@ class Dispense {
   }
 }
 
-@Entity(tableName: 'clinic')
+@Entity(tableName: 'Clinic')
 class Clinic {
   @PrimaryKey(autoGenerate: true)
   int? id;

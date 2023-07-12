@@ -22,8 +22,16 @@ class LastDispense {
   final DateTime dateNextRefill;
   final String hospitalNo;
 
-  LastDispense(this.outletCode, this.facilityCode, this.givenName, this.familyName, this.sex,
-      this.dateOfBirth, this.date, this.dateNextRefill, this.hospitalNo);
+  LastDispense(
+      this.outletCode,
+      this.facilityCode,
+      this.givenName,
+      this.familyName,
+      this.sex,
+      this.dateOfBirth,
+      this.date,
+      this.dateNextRefill,
+      this.hospitalNo);
 }
 
 @dao
@@ -56,11 +64,13 @@ abstract class PatientDao {
   @Query("UPDATE Patient SET synced = true WHERE id = :id")
   Future<void> updateSynced(int id);
 
-  @Query('SELECT * FROM Patient WHERE synced = false')
+  @Query('SELECT * FROM Patient WHERE synced = 0')
   Future<List<Patient>> findUnSynced();
 
-  @Query(
-      '''
+  @Query('SELECT COUNT(*) > 0 FROM Patient WHERE synced = 0')
+  Future<bool?> hasUnSynced();
+
+  @Query('''
       SELECT * FROM LastDispense WHERE (outletCode = :code OR facilityCode = :code
         AND dateNextRefill BETWEEN :start AND :end''')
   Future<List<LastDispense>> listMissedDispense(
@@ -119,7 +129,7 @@ abstract class DispenseDao {
   @Query('SELECT * FROM Dispense WHERE id = :id')
   Stream<Dispense?> findById(int id);
 
-  @Query('SELECT * FROM Dispense WHERE synced = false')
+  @Query('SELECT * FROM Dispense WHERE synced = 0')
   Future<List<Dispense>> findUnSynced();
 
   @Query('SELECT * FROM Dispense WHERE patientId = :patientId')
@@ -134,15 +144,18 @@ abstract class DispenseDao {
   @update
   Future<int> updateRecord(Dispense dispense);
 
-  @Query(
-      '''
+  @Query('''
       SELECT * FROM DispenseInfo WHERE (outletCode = :code OR facilityCode = :code
-        AND date BETWEEN :start and :end ORDER BY givenName, familyName''')
+        AND date BETWEEN :start and :end ORDER BY givenName, familyName
+        ''')
   Future<List<DispenseInfo>> listDispenseInfo(
       String code, DateTime start, DateTime end);
 
   @Query("DELETE FROM Dispense")
   Future<void> deleteAll();
+
+  @Query('SELECT COUNT(*) > 0 FROM Dispense WHERE synced = false')
+  Future<bool?> hasUnSynced();
 }
 
 @dao
@@ -150,7 +163,7 @@ abstract class ClinicDao {
   @Query('SELECT * FROM Clinic')
   Future<List<Clinic>> findAll();
 
-  @Query('SELECT * FROM Clinic WHERE synced = false')
+  @Query('SELECT * FROM Clinic WHERE synced = 0')
   Future<List<Clinic>> findUnSynced();
 
   @Query('SELECT * FROM Clinic WHERE id = :id')
@@ -164,6 +177,9 @@ abstract class ClinicDao {
 
   @Query("DELETE FROM Clinic")
   Future<void> deleteAll();
+
+  @Query('SELECT COUNT(*) > 0 FROM Clinic WHERE synced = false')
+  Future<bool?> hasUnSynced();
 }
 
 @dao

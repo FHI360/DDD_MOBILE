@@ -11,6 +11,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../backend/http/sync_service.dart';
 import 'home_page_model.dart';
 
 export 'home_page_model.dart';
@@ -47,6 +48,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> initialize() async {
+    final syncService = SyncService();
+    syncService.processSync();
+
     final service = AccountService();
     await service.processAccount();
   }

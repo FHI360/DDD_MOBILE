@@ -95,7 +95,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `clinic` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `systolic` INTEGER, `diastolic` INTEGER, `weight` REAL, `temperature` REAL, `patientId` TEXT NOT NULL, `date` INTEGER NOT NULL, `coughing` INTEGER, `swelling` INTEGER, `sweating` INTEGER, `fever` INTEGER, `weightLoss` INTEGER, `tbReferred` INTEGER, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Clinic` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `systolic` INTEGER, `diastolic` INTEGER, `weight` REAL, `temperature` REAL, `patientId` TEXT NOT NULL, `date` INTEGER NOT NULL, `coughing` INTEGER, `swelling` INTEGER, `sweating` INTEGER, `fever` INTEGER, `weightLoss` INTEGER, `tbReferred` INTEGER, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Facility` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `level1AD` INTEGER NOT NULL, `level2AD` INTEGER NOT NULL, `code` TEXT NOT NULL)');
         await database.execute(
@@ -156,7 +156,7 @@ class _$ClinicDao extends ClinicDao {
   )   : _queryAdapter = QueryAdapter(database, changeListener),
         _clinicInsertionAdapter = InsertionAdapter(
             database,
-            'clinic',
+            'Clinic',
             (Clinic item) => <String, Object?>{
                   'id': item.id,
                   'systolic': item.systolic,
@@ -214,7 +214,7 @@ class _$ClinicDao extends ClinicDao {
 
   @override
   Future<List<Clinic>> findUnSynced() async {
-    return _queryAdapter.queryList('SELECT * FROM Clinic WHERE synced = false',
+    return _queryAdapter.queryList('SELECT * FROM Clinic WHERE synced = 0',
         mapper: (Map<String, Object?> row) => Clinic(
             row['id'] as int?,
             row['systolic'] as int?,
@@ -282,6 +282,13 @@ class _$ClinicDao extends ClinicDao {
   @override
   Future<void> deleteAll() async {
     await _queryAdapter.queryNoReturn('DELETE FROM Clinic');
+  }
+
+  @override
+  Future<bool?> hasUnSynced() async {
+    return _queryAdapter.query(
+        'SELECT COUNT(*) > 0 FROM Clinic WHERE synced = false',
+        mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
   }
 
   @override
@@ -396,8 +403,7 @@ class _$DispenseDao extends DispenseDao {
 
   @override
   Future<List<Dispense>> findUnSynced() async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM Dispense WHERE synced = false',
+    return _queryAdapter.queryList('SELECT * FROM Dispense WHERE synced = 0',
         mapper: (Map<String, Object?> row) => Dispense(
             id: row['id'] as int?,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -484,6 +490,13 @@ class _$DispenseDao extends DispenseDao {
   @override
   Future<void> deleteAll() async {
     await _queryAdapter.queryNoReturn('DELETE FROM Dispense');
+  }
+
+  @override
+  Future<bool?> hasUnSynced() async {
+    return _queryAdapter.query(
+        'SELECT COUNT(*) > 0 FROM Dispense WHERE synced = false',
+        mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
   }
 
   @override
@@ -699,7 +712,7 @@ class _$PatientDao extends PatientDao {
 
   @override
   Future<List<Patient>> findUnSynced() async {
-    return _queryAdapter.queryList('SELECT * FROM Patient WHERE synced = false',
+    return _queryAdapter.queryList('SELECT * FROM Patient WHERE synced = 0',
         mapper: (Map<String, Object?> row) => Patient(
             id: row['id'] as int?,
             givenName: row['givenName'] as String,
@@ -733,6 +746,13 @@ class _$PatientDao extends PatientDao {
             lastViralLoad: row['lastViralLoad'] as String?,
             uniqueId: row['uniqueId'] as String?,
             synced: (row['synced'] as int) != 0));
+  }
+
+  @override
+  Future<bool?> hasUnSynced() async {
+    return _queryAdapter.query(
+        'SELECT COUNT(*) > 0 FROM Patient WHERE synced = 0',
+        mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
   }
 
   @override
