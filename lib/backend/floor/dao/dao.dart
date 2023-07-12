@@ -76,8 +76,11 @@ abstract class PatientDao {
   Future<List<LastDispense>> listMissedDispense(
       String code, DateTime start, DateTime end);
 
-  @Query('''Update Patient SET serviceDiscontinued = true, dateDiscontinued = 
-      :dateDiscontinued, reasonDiscontinued = :reasonDiscontinued WHERE id = :id''')
+  @Query('''
+      Update Patient SET serviceDiscontinued = true, dateDiscontinued = 
+      :dateDiscontinued, reasonDiscontinued = :reasonDiscontinued
+      dateDevolved = null, outletCode = null WHERE id = :id
+      ''')
   Future<void> discontinueService(
       int id, DateTime dateDiscontinued, String reasonDiscontinued);
 
