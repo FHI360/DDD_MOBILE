@@ -75,13 +75,61 @@ class RefillModel extends FlutterFlowModel {
     return null;
   }
 
+  String? _weightControllerValidator(BuildContext context, String? val) {
+    if (val != null && val.isNotEmpty && int.tryParse(val) == null) {
+      return 'Please input a number.';
+    }
+
+    if (val != null && int.tryParse(val) != null) {
+      if (int.parse(val) < 1) {
+        return 'Minimum value is 1kg';
+      } else if (int.parse(val) > 500) {
+        return 'Maximum value is 500kg';
+      }
+    }
+
+    return null;
+  }
+
+  String? _bpControllerValidator(BuildContext context, String? val) {
+    if (val != null && val.isNotEmpty && int.tryParse(val) == null) {
+      return 'Please input a number.';
+    }
+
+    if (val != null && int.tryParse(val) != null) {
+      if (int.parse(val) < 60) {
+        return 'Minimum value is 60mmHg';
+      } else if (int.parse(val) > 370) {
+        return 'Maximum value is 370mmHg';
+      }
+    }
+
+    return null;
+  }
+
+  String? _temperatureControllerValidator(BuildContext context, String? val) {
+    if (val != null && val.isNotEmpty && int.tryParse(val) == null) {
+      return 'Please input a number.';
+    }
+
+    if (val != null && int.tryParse(val) != null) {
+      if (int.parse(val) < 10) {
+        return 'Minimum value is 10°C';
+      } else if (int.parse(val) > 46) {
+        return 'Maximum value is 46°C';
+      }
+    }
+
+    return null;
+  }
+
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {
-    weightControllerValidator = _numericControllerValidator;
-    systolicControllerValidator = _numericControllerValidator;
-    diastolicControllerValidator = _numericControllerValidator;
-    temperatureControllerValidator = _numericControllerValidator;
+    weightControllerValidator = _weightControllerValidator;
+    systolicControllerValidator = _bpControllerValidator;
+    diastolicControllerValidator = _bpControllerValidator;
+    temperatureControllerValidator = _temperatureControllerValidator;
   }
 
   void dispose() {
