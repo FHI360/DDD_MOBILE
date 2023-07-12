@@ -3435,3 +3435,4 @@
 /.idea/git_toolbox_prj.xml
 ./.flutter-plugins-dependencies
 ./.flutter-plugins
+/build
