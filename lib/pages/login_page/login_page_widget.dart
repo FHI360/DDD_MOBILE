@@ -306,8 +306,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                   FFAppState().refreshToken =
                                                       response['refreshToken'];
 
-                                                  await AuthAPIProvider()
-                                                      .processProfile();
+                                                 /* await AuthAPIProvider()
+                                                      .processProfile();*/
 
                                                   context.goNamedAuth(
                                                       'homePage', mounted);

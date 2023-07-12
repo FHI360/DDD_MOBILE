@@ -17,7 +17,7 @@ class AuthAPIProvider {
 
   Future<void> processProfile() async {
     final response = await api.get(
-      '${FFAppState().baseUrl}/api/360vax/me',
+      '${FFAppState().baseUrl}/api/ddd/me',
       options: Options(
         headers: {},
       ),
