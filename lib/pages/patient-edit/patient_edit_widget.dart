@@ -1160,7 +1160,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                           ),
                           style: FlutterFlowTheme.of(context).bodyText1,
                           maxLines: 3,
-                          keyboardType: TextInputType.multiline,
+                          keyboardType: TextInputType.phone,
                           validator: _model.phoneControllerValidator
                               .asValidator(context),
                         ),

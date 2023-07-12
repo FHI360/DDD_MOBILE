@@ -64,6 +64,18 @@ class PatientEditModel extends FlutterFlowModel {
     return null;
   }
 
+  String? _phoneControllerValidator(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Field is required';
+    }
+
+    if(val.length < 5 || val.length > 13) {
+      return 'Length of phone number should be between 5 and 13 characters';
+    }
+
+    return null;
+  }
+
   @override
   void dispose() {
     givenNameController?.dispose();
@@ -83,6 +95,6 @@ class PatientEditModel extends FlutterFlowModel {
     hospitalNoControllerValidator = _requiredControllerValidator;
     uniqueIdControllerValidator = _requiredControllerValidator;
     addressControllerValidator = _requiredControllerValidator;
-    phoneControllerValidator = _requiredControllerValidator;
+    phoneControllerValidator = _phoneControllerValidator;
   }
 }
