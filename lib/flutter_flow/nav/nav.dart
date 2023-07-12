@@ -10,6 +10,7 @@ import 'package:DDD/pages/preference/preference_widget.dart';
 import 'package:DDD/pages/refill/refill_widget.dart';
 import 'package:DDD/pages/reports/report_widget.dart';
 import 'package:DDD/pages/synchronization/synchronization_widget.dart';
+import 'package:DDD/widget/pdf_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
@@ -131,6 +132,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               requireAuth: true,
               builder: (context, params) => SynchronizationWidget(),
             ),
+            FFRoute(
+              name: 'pdfPreview',
+              path: 'pdf-preview',
+              requireAuth: true,
+              builder: (context, params) => PdfPreviewPage(
+                path: params.getParam<String>('path', ParamType.String),
+              ),
+            )
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ).toRoute(appStateNotifier),
       ],

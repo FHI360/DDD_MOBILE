@@ -90,6 +90,8 @@ dependencies:
   permission_handler_android: ^10.2.3
   smooth_page_indicator: ^1.1.0
   uuid: ^3.0.7
+  printing: ^5.9.3
+  flutter_html_to_pdf: ^0.7.0
 
 dependency_overrides:
   rxdart: 0.27.4
@@ -132,6 +134,7 @@ flutter:
     - assets/pdfs/
     - assets/csv/
     - assets/keys/
+    - assets/css/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
