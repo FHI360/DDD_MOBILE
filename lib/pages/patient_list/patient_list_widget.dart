@@ -49,26 +49,6 @@ class _PatientListWidgetState extends State<PatientListWidget> {
 
     return Scaffold(
       drawer: DDDDrawer(),
-      floatingActionButton: Visibility(
-        visible: true,
-        child: FloatingActionButton(
-          onPressed: () async {
-            context.pushNamed('patientEdit',queryParams: {
-              'patientId': serializeParam(
-                0,
-                ParamType.int,
-              ),
-            }.withoutNulls,);
-          },
-          backgroundColor: const Color(0xccdf6f3e),
-          elevation: 8.0,
-          child: Icon(
-            Icons.add,
-            color: FlutterFlowTheme.of(context).textColor,
-            size: 24.0,
-          ),
-        ),
-      ),
       appBar: AppBar(
         centerTitle: true,
         title: const Text(

@@ -277,9 +277,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        if (!(_model
-                                                .patient?.serviceDiscontinued ??
-                                            false))
+                                        if (!FFAppState().outlet)
                                           InkWell(
                                             onTap: () async {
                                               context.pushNamed(
@@ -354,7 +352,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               ),
                                             ),
                                           ),
-                                        if (_model.patient?.outletCode == null)
+                                        if (_model.patient?.outletCode == null && !FFAppState().outlet)
                                           InkWell(
                                             onTap: () async {
                                               await showModalBottomSheet(
@@ -448,7 +446,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                           ),
                                         if (!(_model
                                                 .patient?.serviceDiscontinued ??
-                                            false))
+                                            false) && FFAppState().outlet)
                                           InkWell(
                                             onTap: () async {
                                               await showModalBottomSheet(
