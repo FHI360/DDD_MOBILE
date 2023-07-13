@@ -116,24 +116,20 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                   child: InkWell(
                                     onTap: () async {
                                       final _datePickedDate =
-                                      await showDatePicker(
+                                          await showDatePicker(
                                         context: context,
-                                        initialDate:
-                                        getCurrentTimestamp,
+                                        initialDate: getCurrentTimestamp,
                                         firstDate: DateTime(1900),
-                                        lastDate:
-                                        getCurrentTimestamp,
+                                        lastDate: getCurrentTimestamp,
                                       );
 
-                                      if (_datePickedDate !=
-                                          null) {
+                                      if (_datePickedDate != null) {
                                         setState(() {
-                                          _model.datePicked =
-                                              DateTime(
-                                                _datePickedDate.year,
-                                                _datePickedDate.month,
-                                                _datePickedDate.day,
-                                              );
+                                          _model.datePicked = DateTime(
+                                            _datePickedDate.year,
+                                            _datePickedDate.month,
+                                            _datePickedDate.day,
+                                          );
                                         });
                                       }
                                     },
@@ -433,14 +429,19 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                 );
                                                 return;
                                               }
-                                              database.then((value) => value
-                                                  .patientDao
-                                                  .discontinueService(
-                                                      widget.patient!.id!,
-                                                      _model.datePicked!,
-                                                      _model.reasonValue!));
+                                              final _database = await database;
+                                              var devolve = Devolve.instance();
+                                              devolve.patientId =
+                                                  widget.patient!.uuid;
+                                              devolve.outletCode =
+                                                  FFAppState().activationCode;
+                                              devolve.date = _model.datePicked!;
+                                              devolve.reasonDiscontinued =
+                                                  _model.reasonValue!;
+                                              await _database.devolveDao
+                                                  .insertRecord(devolve);
 
-                                              Navigator.pop(context, true);
+                                              Navigator.pop(context, devolve);
                                             },
                                       text: 'Discontinue',
                                       options: FFButtonOptions(

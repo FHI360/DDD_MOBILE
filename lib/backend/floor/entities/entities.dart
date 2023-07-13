@@ -14,16 +14,12 @@ class Patient {
   String? phone;
   String? facility;
   String? outletCode;
-  DateTime dateDevolved;
   String facilityCode;
   String address;
   DateTime lastClinicVisit;
   DateTime lastRefillDate;
   DateTime nextAppointmentDate;
   DateTime nextVisitDate;
-  bool? serviceDiscontinued;
-  String? reasonDiscontinued;
-  DateTime dateDiscontinued;
   DateTime dateStarted;
   String uuid;
   bool synced;
@@ -41,16 +37,12 @@ class Patient {
       this.phone,
       this.facility,
       this.outletCode,
-      required this.dateDevolved,
       required this.facilityCode,
       required this.address,
       required this.lastClinicVisit,
       required this.lastRefillDate,
       required this.nextAppointmentDate,
       required this.nextVisitDate,
-      this.serviceDiscontinued,
-      this.reasonDiscontinued,
-      required this.dateDiscontinued,
       required this.dateStarted,
       this.lastClinicStage,
       required this.uuid,
@@ -67,10 +59,6 @@ class Patient {
       sex: row['sex'],
       phone: row['phone'],
       facility: row['facility'],
-      outletCode: row['outletCode'],
-      dateDevolved: row['dateDevolved'] != null
-          ? DateTime.parse(row['dateDevolved'])
-          : DateTime(1900),
       facilityCode: row['facilityCode'],
       address: row['address'],
       lastClinicVisit: row['lastClinicVisit'] != null
@@ -84,11 +72,6 @@ class Patient {
           : DateTime(1900),
       nextVisitDate: row['nextVisitDate'] != null
           ? DateTime.parse(row['nextVisitDate'])
-          : DateTime(1900),
-      serviceDiscontinued: row['serviceDiscontinued'],
-      reasonDiscontinued: row['reasonDiscontinued'],
-      dateDiscontinued: row['dateDiscontinued'] != null
-          ? DateTime.parse(row['dateDiscontinued'])
           : DateTime(1900),
       dateStarted: row['dateStarted'] != null
           ? DateTime.parse(row['dateStarted'])
@@ -107,22 +90,11 @@ class Patient {
         'dateOfBirth': dateOfBirth.toIso8601String().substring(0, 10),
         'sex': sex,
         'phone': phone,
-        'facility': facility,
-        'outletCode': outletCode,
-        'facilityCode': facilityCode,
+        'facility': {'id': facilityCode},
         'address': address,
-        'lastClinicVisit': lastClinicVisit.toIso8601String().substring(0, 10),
-        'lastRefillDate': lastRefillDate.toIso8601String().substring(0, 10),
-        'nextAppointmentDate':
-            nextAppointmentDate.toIso8601String().substring(0, 10),
-        'nextVisitDate': nextVisitDate.toIso8601String().substring(0, 10),
-        'serviceDiscontinued': serviceDiscontinued,
-        'reasonDiscontinued': reasonDiscontinued,
-        'dateDiscontinued': dateDiscontinued.toIso8601String().substring(0, 10),
-        'dateStarted': dateDiscontinued.toIso8601String().substring(0, 10),
-        'deleted': deleted,
+        'dateStarted': dateStarted.toIso8601String().substring(0, 10),
+        'archived': deleted,
         'lastViralLoad': lastViralLoad,
-        'dateDevolved': dateDevolved.toIso8601String().substring(0, 10)
       };
 
   factory Patient.instance() {
@@ -137,16 +109,12 @@ class Patient {
         phone: '',
         facility: '',
         outletCode: '',
-        dateDevolved: DateTime(1900),
         facilityCode: '',
         address: '',
         lastClinicVisit: DateTime(1900),
         lastRefillDate: DateTime(1900),
         nextAppointmentDate: DateTime(1900),
         nextVisitDate: DateTime(1900),
-        serviceDiscontinued: false,
-        reasonDiscontinued: '',
-        dateDiscontinued: DateTime(1900),
         dateStarted: DateTime(1900),
         lastClinicStage: '',
         uuid: uuid.v4(),
@@ -187,7 +155,7 @@ class Dispense {
     return Dispense(
         id: null,
         date: DateTime.parse(row['date']),
-        patientId: row['patientId'],
+        patientId: row['patient']['id'],
         dateNextRefill: DateTime.parse(row['dateNextRefill']),
         missedDoses: row['missedDoses'],
         adverseIssues: row['adverseIssues'],
@@ -202,7 +170,7 @@ class Dispense {
     return {
       'id': uuid,
       'date': date.toIso8601String().substring(0, 10),
-      'patientId': patientId,
+      'patient': {'id': patientId},
       'dateNextRefill': dateNextRefill.toIso8601String().substring(0, 10),
       'missedDoses': missedDoses,
       'adverseIssues': adverseIssues,
@@ -257,7 +225,7 @@ class Clinic {
       row['diastolic'],
       row['weight'],
       row['temperature'],
-      row['patientId'],
+      row['patientId']['id'],
       row['date'],
       row['coughing'],
       row['swelling'],
@@ -274,7 +242,7 @@ class Clinic {
         'diastolic': diastolic,
         'weight': weight,
         'temperature': temperature,
-        'patientId': patientId,
+        'patient': {'id': patientId},
         'date': date.toIso8601String().substring(0, 10),
         'coughing': coughing,
         'swelling': swelling,
@@ -378,4 +346,56 @@ class Medication {
         'quantityPrescribed': quantityPrescribed,
         'arv': arv
       };
+}
+
+@entity
+class Devolve {
+  @PrimaryKey(autoGenerate: true)
+  int? id;
+  String? reasonDiscontinued;
+  DateTime date;
+  String outletCode;
+  String patientId;
+  String uuid;
+  bool synced;
+
+  Devolve(
+      {this.id,
+      this.reasonDiscontinued,
+      required this.date,
+      required this.outletCode,
+      required this.patientId,
+      required this.synced,
+      required this.uuid});
+
+  factory Devolve.instance() {
+    final uuid = Uuid();
+    return Devolve(
+        date: DateTime(1900),
+        outletCode: '',
+        patientId: '',
+        synced: false,
+        uuid: uuid.v4());
+  }
+
+  factory Devolve.fromJson(Map<String, dynamic> payload) {
+    return new Devolve(
+        id: null,
+        date: DateTime.parse(payload['date']),
+        outletCode: payload['organization']['id'],
+        patientId: payload['patient']['id'],
+        uuid: payload['id'],
+        reasonDiscontinued: payload['reasonDiscontinued'],
+        synced: true);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': uuid,
+      'date': date.toIso8601String().substring(0, 10),
+      'patient': {'id': patientId},
+      'organisation': {'id': outletCode},
+      'reasonDiscontinued': reasonDiscontinued
+    };
+  }
 }

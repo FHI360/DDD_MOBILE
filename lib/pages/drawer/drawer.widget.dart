@@ -55,13 +55,14 @@ class DDDDrawer extends StatelessWidget {
             context.pushNamed('synchronization');
           },
         ),
-        MLMenuItem(
-          leading: Icon(Icons.settings),
-          content: Text("Preferences"),
-          onClick: () {
-            context.pushNamed('preferences');
-          },
-        ),
+        if (FFAppState().admin)
+          MLMenuItem(
+            leading: Icon(Icons.settings),
+            content: Text("Preferences"),
+            onClick: () {
+              context.pushNamed('preferences');
+            },
+          ),
         MLMenuItem(
           leading: Icon(Icons.exit_to_app),
           content: Text('Sign out'),

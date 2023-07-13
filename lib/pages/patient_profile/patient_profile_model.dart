@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 class PatientProfileModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
   Patient? patient;
+  Devolve? devolve;
 
   void initState(BuildContext context) {}
 

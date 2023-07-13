@@ -76,18 +76,6 @@ abstract class PatientDao {
   Future<List<LastDispense>> listMissedDispense(
       String code, DateTime start, DateTime end);
 
-  @Query('''
-      Update Patient SET serviceDiscontinued = true, dateDiscontinued = 
-      :dateDiscontinued, reasonDiscontinued = :reasonDiscontinued
-      dateDevolved = null, outletCode = null WHERE id = :id
-      ''')
-  Future<void> discontinueService(
-      int id, DateTime dateDiscontinued, String reasonDiscontinued);
-
-  @Query('''Update Patient SET outletCode = :outletCode, dateDevolved = 
-      :dateDevolved WHERE id = :id''')
-  Future<void> devolvePatient(int id, String outletCode, DateTime dateDevolved);
-
   @Query("DELETE FROM Patient")
   Future<void> deleteAll();
 }
@@ -182,6 +170,24 @@ abstract class ClinicDao {
   Future<void> deleteAll();
 
   @Query('SELECT COUNT(*) > 0 FROM Clinic WHERE synced = false')
+  Future<bool?> hasUnSynced();
+}
+
+@dao
+abstract class DevolveDao {
+  @Query('SELECT * FROM Devolve WHERE synced = 0')
+  Future<List<Devolve>> findUnSynced();
+
+  @Query('SELECT * FROM Devolve WHERE patientId = :patientId ORDER BY date DESC LIMIT 1')
+  Future<Devolve?> findByPatient(String patientId);
+
+  @insert
+  Future<void> insertRecord(Devolve devolve);
+
+  @Query("DELETE FROM Devolve")
+  Future<void> deleteAll();
+
+  @Query('SELECT COUNT(*) > 0 FROM Devolve WHERE synced = false')
   Future<bool?> hasUnSynced();
 }
 

@@ -5,17 +5,14 @@ import 'package:DDD/main.dart';
 import 'package:DDD/widget/devolve_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import 'discontinue_service_model.dart';
 
 export 'discontinue_service_model.dart';
-
 
 class DevolveWidget extends StatefulWidget {
   const DevolveWidget({
@@ -26,17 +23,16 @@ class DevolveWidget extends StatefulWidget {
   final Patient? patient;
 
   @override
-  _DevolveWidgetWidgetState createState() =>
-      _DevolveWidgetWidgetState();
+  _DevolveWidgetWidgetState createState() => _DevolveWidgetWidgetState();
 }
 
 class _DevolveWidgetWidgetState extends State<DevolveWidget> {
   late DevolveModel _model;
 
   Future<void> initialize() async {
-    final _database =await database;
+    final _database = await database;
     _model.outlets = await _database.outletDao.findAll();
-    _model.outlets.sort((o1,o2)=>o1.name.compareTo(o2.name));
+    _model.outlets.sort((o1, o2) => o1.name.compareTo(o2.name));
   }
 
   @override
@@ -122,24 +118,20 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                   child: InkWell(
                                     onTap: () async {
                                       final _datePickedDate =
-                                      await showDatePicker(
+                                          await showDatePicker(
                                         context: context,
-                                        initialDate:
-                                        getCurrentTimestamp,
+                                        initialDate: getCurrentTimestamp,
                                         firstDate: DateTime(1900),
-                                        lastDate:
-                                        getCurrentTimestamp,
+                                        lastDate: getCurrentTimestamp,
                                       );
 
-                                      if (_datePickedDate !=
-                                          null) {
+                                      if (_datePickedDate != null) {
                                         setState(() {
-                                          _model.datePicked =
-                                              DateTime(
-                                                _datePickedDate.year,
-                                                _datePickedDate.month,
-                                                _datePickedDate.day,
-                                              );
+                                          _model.datePicked = DateTime(
+                                            _datePickedDate.year,
+                                            _datePickedDate.month,
+                                            _datePickedDate.day,
+                                          );
                                         });
                                       }
                                     },
@@ -285,10 +277,16 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                                     10.0,
                                                                     0.0),
                                                         child:
-                                                            FlutterFlowDropDown<Outlet>(
+                                                            FlutterFlowDropDown<
+                                                                Outlet>(
                                                           initialOption: null,
-                                                          options: _model.outlets,
-                                                          optionLabels: _model.outlets.map((e) => e.name).toList(),
+                                                          options:
+                                                              _model.outlets,
+                                                          optionLabels: _model
+                                                              .outlets
+                                                              .map(
+                                                                  (e) => e.name)
+                                                              .toList(),
                                                           onChanged: (val) =>
                                                               setState(() =>
                                                                   _model.outletValue =
@@ -388,7 +386,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                     ),
                                     FFButtonWidget(
                                       onPressed: (_model.datePicked == null) ||
-                                              (_model.outletValue == null )
+                                              (_model.outletValue == null)
                                           ? null
                                           : () async {
                                               if (_model.formKey.currentState ==
@@ -429,14 +427,20 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                 );
                                                 return;
                                               }
-                                              database.then((value) => value
-                                                  .patientDao
-                                                  .devolvePatient(
-                                                      widget.patient!.id!,
-                                                      _model.outletValue!.code,
-                                                      _model.datePicked!));
+                                              final _database = await database;
+                                              var devolve = Devolve.instance();
+                                              devolve.patientId =
+                                                  widget.patient!.uuid;
+                                              devolve.outletCode =
+                                                  FFAppState().activationCode;
+                                              devolve.date = _model.datePicked!;
+                                              devolve.outletCode =
+                                                  _model.outletValue!.code;
 
-                                              Navigator.pop(context, true);
+                                              await _database.devolveDao
+                                                  .insertRecord(devolve);
+
+                                              Navigator.pop(context, devolve);
                                             },
                                       text: 'Devolve',
                                       options: FFButtonOptions(

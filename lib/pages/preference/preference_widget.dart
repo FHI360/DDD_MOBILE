@@ -1,4 +1,6 @@
 import 'package:DDD/app_state.dart';
+import 'package:DDD/backend/http/account_service.dart';
+import 'package:DDD/backend/http/sync_service.dart';
 import 'package:DDD/flutter_flow/flutter_flow_drop_down.dart';
 import 'package:DDD/flutter_flow/flutter_flow_model.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
@@ -256,6 +258,12 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                                   }
                                   FFAppState().activationCode =
                                       _model.facilityValue!;
+
+                                  final syncService = SyncService();
+                                  syncService.processSync();
+
+                                  final service = AccountService();
+                                  await service.processAccount();
                                   Navigator.pop(context);
 
                                   setState(() {});

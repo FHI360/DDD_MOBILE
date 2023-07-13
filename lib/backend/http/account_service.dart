@@ -15,25 +15,35 @@ class AccountService {
     patients.forEach((p) async {
       await _database.patientDao.insertRecord(Patient.fromJson(p));
     });
+
     await _database.facilityDao.deleteAll();
     final facilities = data.facilities;
     facilities.forEach((f) async {
       await _database.facilityDao.insertRecord(Facility.fromJson(f));
     });
+
     await _database.outletDao.deleteAll();
     final outlets = data.outlets;
     outlets.forEach((o) async {
       await _database.outletDao.insertRecord(Outlet.fromJson(o));
     });
+
     final regimens = data.regimens;
     await _database.regimenDao.deleteAll();
     regimens.forEach((r) async {
       await _database.regimenDao.insertRecord(Regimen.fromJson(r));
     });
+
     final dispenses = patients.expand((p) => p.dispenses);
     await _database.dispenseDao.deleteAll();
     dispenses.forEach((r) async {
       await _database.dispenseDao.insertRecord(Dispense.fromJson(r));
+    });
+
+    final devolves = data.devolves;
+    await _database.devolveDao.deleteAll();
+    regimens.forEach((r) async {
+      await _database.devolveDao.insertRecord(Devolve.fromJson(r));
     });
   }
 }

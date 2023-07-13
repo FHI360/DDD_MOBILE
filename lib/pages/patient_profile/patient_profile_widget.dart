@@ -34,20 +34,27 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
 
+  Future<void> initialize() async {
+    var _database = await database;
+    var patient = await _database.patientDao.findById(widget.patientId!);
+    setState(() async {
+      _model.patient = patient;
+      var devolve =
+          await _database.devolveDao.findByPatient(patient!.uuid ?? '');
+      if (devolve == null) {
+        devolve = Devolve.instance();
+      }
+      _model.devolve = devolve;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => PatientProfileModel());
-
+    initialize();
     // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      var _database = await database;
-      var patient = await _database.patientDao.findById(widget.patientId!);
-      setState(() {
-        _model.patient = patient;
-        print("Initialized");
-      });
-    });
+    SchedulerBinding.instance.addPostFrameCallback((_) async {});
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -352,7 +359,9 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               ),
                                             ),
                                           ),
-                                        if (_model.patient?.outletCode == null && !FFAppState().outlet)
+                                        if (_model.patient?.outletCode ==
+                                                null &&
+                                            !FFAppState().outlet)
                                           InkWell(
                                             onTap: () async {
                                               await showModalBottomSheet(
@@ -372,12 +381,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                   );
                                                 },
                                               ).then((value) => setState(() {
-                                                    if (value != null &&
-                                                            value ??
-                                                        false) {
-                                                      _model.patient!
-                                                              .serviceDiscontinued =
-                                                          true;
+                                                    if (value != null) {
+                                                      _model.devolve = value;
                                                     }
                                                   }));
                                             },
@@ -444,9 +449,14 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               ),
                                             ),
                                           ),
-                                        if (!(_model
-                                                .patient?.serviceDiscontinued ??
-                                            false) && FFAppState().outlet)
+                                        if ((_model.devolve!
+                                                        .reasonDiscontinued ==
+                                                    null ||
+                                                _model
+                                                    .devolve!
+                                                    .reasonDiscontinued!
+                                                    .isEmpty) &&
+                                            FFAppState().outlet)
                                           InkWell(
                                             onTap: () async {
                                               await showModalBottomSheet(
@@ -467,12 +477,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                   );
                                                 },
                                               ).then((value) => setState(() {
-                                                    if (value != null &&
-                                                            value ??
-                                                        false) {
-                                                      _model.patient!
-                                                              .serviceDiscontinued =
-                                                          true;
+                                                    if (value != null) {
+                                                      _model.devolve = value;
                                                     }
                                                   }));
                                             },
@@ -781,7 +787,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                         ],
                       ),
                     ),
-                  if (!(_model.patient?.serviceDiscontinued ?? false))
+                  if (_model.devolve?.reasonDiscontinued != null &&
+                      _model.devolve!.reasonDiscontinued!.isNotEmpty)
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(10, 12, 0, 0),
                       child: Row(

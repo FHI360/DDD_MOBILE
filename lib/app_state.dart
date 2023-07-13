@@ -24,6 +24,7 @@ class FFAppState extends ChangeNotifier {
     _outlet = await secureStorage.getBool('ff_outlet') ?? _outlet;
     _name = await secureStorage.getString('ff_name') ?? _name;
     _baseUrl = await secureStorage.getString('ff_baseUrl') ?? _baseUrl;
+    _admin = await secureStorage.getBool('ff_admin') ?? _admin;
   }
 
   void update(VoidCallback callback) {
@@ -85,6 +86,15 @@ class FFAppState extends ChangeNotifier {
   set outlet(bool _value) {
     _outlet = _value;
     secureStorage.setBool('ff_outlet', _outlet);
+  }
+
+  bool _admin = false;
+
+  bool get admin => _admin;
+
+  set admin(bool _value) {
+    _admin = _value;
+    secureStorage.setBool('ff_admin', _admin);
   }
 }
 

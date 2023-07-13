@@ -1486,7 +1486,6 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                         _model.uniqueIdController.text;
                                     _model.patient!.lastViralLoad =
                                         _model.viralLoadController.text;
-                                    _model.patient!.serviceDiscontinued = false;
                                     _model.patient!.facilityCode =
                                         FFAppState().activationCode;
                                     _model.patient!.synced = false;
