@@ -46,9 +46,9 @@ Future<String> refillInfoPdf(DateTime start, DateTime end) async {
         <td class="justify-content-start" colspan="3">${e.hospitalNo}</td>
         <td class="justify-content-start" colspan="2">${dateTimeFormat('yMMMd', e.dateOfBirth)}</td>
         <td class="justify-content-start">${e.sex}</td>
-        <td class="justify-content-start" colspan="4">${e.regimen}</td>
+        <td class="justify-content-start" colspan="4">${e.medications.first.regimen}</td>
         <td class="justify-content-start">${formatNumber(
-      e.quantity,
+      e.medications.first.quantityDispensed,
       formatType: FormatType.custom,
       format: '#,##0',
       locale: '',
@@ -65,10 +65,13 @@ Future<String> refillInfoPdf(DateTime start, DateTime end) async {
   <!DOCTYPE html>
   <html lang="en">
     <style>
+      @page {
+            size: landscape;
+          }
       $style
     </style>
     <body>
-      <div class="container">
+      <div class="container-fluid">
         $content
       </div>
     </body>

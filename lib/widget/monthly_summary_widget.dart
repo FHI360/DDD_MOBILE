@@ -22,7 +22,8 @@ class MonthlySummaryReportWidget extends StatefulWidget {
       _MonthlySummaryReportWidgetState();
 }
 
-class _MonthlySummaryReportWidgetState extends State<MonthlySummaryReportWidget> {
+class _MonthlySummaryReportWidgetState
+    extends State<MonthlySummaryReportWidget> {
   late ReportsModel _model;
 
   @override
@@ -248,12 +249,13 @@ class _MonthlySummaryReportWidgetState extends State<MonthlySummaryReportWidget>
                                                                 await showMonthYearPicker(
                                                               context: context,
                                                               initialDate:
-                                                                  DateTime.now(),
+                                                                  DateTime
+                                                                      .now(),
                                                               firstDate:
                                                                   DateTime(
                                                                       2021),
                                                               lastDate: DateTime
-                                                                      .now(),
+                                                                  .now(),
                                                             );
 
                                                             if (_datePickedDate !=
@@ -340,16 +342,19 @@ class _MonthlySummaryReportWidgetState extends State<MonthlySummaryReportWidget>
                                                 return;
                                               }
                                               var targetPath =
-                                              await getApplicationDocumentsDirectory();
-                                              var content = await monthlySummaryReport(
-                                                  _model.datePicked1!);
-                                              await FlutterHtmlToPdf.convertFromHtmlContent(
-                                                  content, targetPath.path, 'sample.pdf');
+                                                  await getApplicationDocumentsDirectory();
+                                              var content =
+                                                  await monthlySummaryReport(
+                                                      _model.datePicked1!);
+                                              var file = await FlutterHtmlToPdf
+                                                  .convertFromHtmlContent(
+                                                      content,
+                                                      targetPath.path,
+                                                      'report');
                                               context.pushNamed(
                                                 'pdfPreview',
-                                                queryParams: {
-                                                  'path': targetPath.path
-                                                }.withoutNulls,
+                                                queryParams: {'path': file.path}
+                                                    .withoutNulls,
                                               );
                                             },
                                       text: 'View',

@@ -7,6 +7,7 @@ import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +60,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
-    initialize();
+    //initialize();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -83,10 +84,29 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       drawer: DDDDrawer(),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 50,
+            Text(
+              'Welcome',
+              style: FlutterFlowTheme.of(context).bodyText1.override(
+                fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                useGoogleFonts: GoogleFonts.asMap().containsKey(
+                    FlutterFlowTheme.of(context).bodyText1Family),
+              ),
             ),
+            Text(
+              FFAppState().name,
+              style: FlutterFlowTheme.of(context).bodyText1.override(
+                    fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                    fontSize: 20,
+                    color: FlutterFlowTheme.of(context).secondaryColor,
+                    fontWeight: FontWeight.w500,
+                    useGoogleFonts: GoogleFonts.asMap().containsKey(
+                        FlutterFlowTheme.of(context).bodyText1Family),
+                  ),
+            )
           ],
         ),
       ),

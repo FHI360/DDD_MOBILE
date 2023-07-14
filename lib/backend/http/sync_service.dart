@@ -27,7 +27,7 @@ class SyncService {
     return response.data;
   }
 
-  Future<void> processSync() async {
+  Future<bool> processSync() async {
     final _database = await database;
     var hasData = await _database.patientDao.hasUnSynced();
     if (!(hasData ?? false)) {
@@ -59,7 +59,11 @@ class SyncService {
           radius: 3.0,
           textStyle: TextStyle(fontSize: 15.0),
         );
+
+        return false;
       }
     }
+
+    return true;
   }
 }

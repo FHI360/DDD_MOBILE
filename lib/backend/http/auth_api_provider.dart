@@ -24,9 +24,9 @@ class AuthAPIProvider {
     );
 
     final data = await response.data;
-    FFAppState().name = data.organisation.name;
-    FFAppState().activationCode = data.organisation.id;
-    FFAppState().outlet = data.organisation.type == 'OUTLET';
-    FFAppState().admin = data.organisation.type == 'CO';
+    FFAppState().name = data['organisation']['name'];
+    FFAppState().activationCode = data['organisation']['id'];
+    FFAppState().outlet = data['organisation']['type'] == 'OUTLET';
+    FFAppState().admin = data['organisation']['type'] == 'CO';
   }
 }

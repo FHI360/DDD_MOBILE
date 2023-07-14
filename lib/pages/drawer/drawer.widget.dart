@@ -50,7 +50,7 @@ class DDDDrawer extends StatelessWidget {
         ),
         MLMenuItem(
           leading: Icon(Icons.sync),
-          content: Text("Synchronization"),
+          content: Text('Synchronization'),
           onClick: () {
             context.pushNamed('synchronization');
           },
@@ -72,6 +72,11 @@ class DDDDrawer extends StatelessWidget {
             FFAppState().activationCode = '';
             FFAppState().name = '';
             context.pushNamed('loginPage');
+          },
+        ),
+        MLMenuItem(
+          content: Text(''),
+          onClick: () {
           },
         ),
       ],

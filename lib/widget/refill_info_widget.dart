@@ -19,8 +19,7 @@ class RefillInfoWidget extends StatefulWidget {
   const RefillInfoWidget({Key? key}) : super(key: key);
 
   @override
-  _RefillInfoWidgetWidgetState createState() =>
-      _RefillInfoWidgetWidgetState();
+  _RefillInfoWidgetWidgetState createState() => _RefillInfoWidgetWidgetState();
 }
 
 class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
@@ -249,12 +248,14 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                                 await showDatePicker(
                                                               context: context,
                                                               initialDate:
-                                                                  DateTime(
-                                                                      2021),
+                                                                  DateTime
+                                                                      .now(),
                                                               firstDate:
                                                                   DateTime(
                                                                       2021),
-                                                              lastDate:_model.datePicked2 ?? DateTime
+                                                              lastDate: _model
+                                                                      .datePicked2 ??
+                                                                  DateTime
                                                                       .now(),
                                                             );
 
@@ -516,17 +517,19 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                 return;
                                               }
                                               var targetPath =
-                                              await getApplicationDocumentsDirectory();
+                                                  await getApplicationDocumentsDirectory();
                                               var content = await refillInfoPdf(
                                                   _model.datePicked1!,
                                                   _model.datePicked2!);
-                                              await FlutterHtmlToPdf.convertFromHtmlContent(
-                                                  content, targetPath.path, 'sample.pdf');
+                                              var file = await FlutterHtmlToPdf
+                                                  .convertFromHtmlContent(
+                                                      content,
+                                                      targetPath.path,
+                                                      'report');
                                               context.pushNamed(
                                                 'pdfPreview',
-                                                queryParams: {
-                                                  'path': targetPath.path
-                                                }.withoutNulls,
+                                                queryParams: {'path': file.path}
+                                                    .withoutNulls,
                                               );
                                             },
                                       text: 'View',

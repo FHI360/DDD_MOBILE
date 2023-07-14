@@ -2,6 +2,7 @@ import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:DDD/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
@@ -51,6 +52,8 @@ class _RefillWidgetState extends State<RefillWidget> {
     _model.temperatureController ??= TextEditingController();
     _model.qtyPrescribedController ??= TextEditingController();
     _model.qtyDispensedController ??= TextEditingController();
+
+    initialize();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       var _database = await database;
@@ -1909,7 +1912,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                        'Regimen',
+                                                                        'Regimen (required)',
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -2042,7 +2045,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                        'Quantity Prescribed',
+                                                                        'Quantity Prescribed (required)',
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -2065,12 +2068,12 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           initialOption:
                                                                               null,
                                                                           options: [
-                                                                            1,
-                                                                            2,
-                                                                            3,
-                                                                            4,
-                                                                            5,
-                                                                            6
+                                                                            30,
+                                                                            60,
+                                                                            90,
+                                                                            120,
+                                                                            150,
+                                                                            180
                                                                           ],
                                                                           optionLabels: [
                                                                             '30 days',
@@ -2189,7 +2192,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                        'Quantity Dispensed',
+                                                                        'Quantity Dispensed (required)',
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -2212,12 +2215,12 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           initialOption:
                                                                               null,
                                                                           options: [
-                                                                            1,
-                                                                            2,
-                                                                            3,
-                                                                            4,
-                                                                            5,
-                                                                            6
+                                                                            30,
+                                                                            60,
+                                                                            90,
+                                                                            120,
+                                                                            150,
+                                                                            180
                                                                           ],
                                                                           optionLabels: [
                                                                             '30 days',
@@ -2636,7 +2639,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                             .start,
                                                                     children: [
                                                                       Text(
-                                                                        'Next Refill Date',
+                                                                        'Next Refill Date (required)',
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1,
                                                                       ),
@@ -2779,7 +2782,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                     FFButtonWidget(
                                                       onPressed: ((int.tryParse(_model
                                                                       .qtyDispensedController
-                                                                      .text) !=
+                                                                      .text) ==
                                                                   null) ||
                                                               _model.regimenValue ==
                                                                   null)
@@ -2879,17 +2882,55 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                   synced: false,
                                                                   uuid: uuid
                                                                       .v4());
-                                                              database.then(
-                                                                  (value) => value
-                                                                      .dispenseDao
-                                                                      .insertRecord(
-                                                                          refill));
-                                                              var quantity =
-                                                                  double.tryParse(_model
-                                                                          .qtyDispensedController
-                                                                          .text) ??
-                                                                      0;
-                                                              context.pop();
+                                                              final value =
+                                                                  await database;
+                                                              await value
+                                                                  .dispenseDao
+                                                                  .insertRecord(
+                                                                      refill);
+                                                              _model.patient!
+                                                                      .nextAppointmentDate =
+                                                                  _model
+                                                                      .datePicked!;
+                                                              _model.patient!
+                                                                      .lastRefillDate =
+                                                                  getCurrentTimestamp;
+                                                              await value
+                                                                  .patientDao
+                                                                  .updateRecord(
+                                                                      _model
+                                                                          .patient!);
+                                                              showToast(
+                                                                'Dispense successfully saved',
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            10),
+                                                                position:
+                                                                    ToastPosition
+                                                                        .bottom,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green,
+                                                                radius: 3.0,
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                        fontSize:
+                                                                            15.0),
+                                                              );
+                                                              context.pushNamed(
+                                                                'patientProfile',
+                                                                queryParams: {
+                                                                  'patientId':
+                                                                      serializeParam(
+                                                                    _model
+                                                                        .patient!
+                                                                        .id,
+                                                                    ParamType
+                                                                        .int,
+                                                                  ),
+                                                                }.withoutNulls,
+                                                              );
                                                             },
                                                       text: 'Save',
                                                       options: FFButtonOptions(

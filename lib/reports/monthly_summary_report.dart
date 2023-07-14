@@ -5,10 +5,10 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '../main.dart';
 
 Future<String> monthlySummaryReport(DateTime start) async {
-  DateTime end = new DateTime(start.year, start.month);
+  DateTime end = DateTime(start.year, start.month + 1, 0);
   var _database = await database;
-  List<DispenseInfo> rows =
-      await _database.dispenseDao.listDispenseInfo(FFAppState().activationCode, start, end);
+  List<DispenseInfo> rows = await _database.dispenseDao
+      .listDispenseInfo(FFAppState().activationCode, start, end);
   String style = await rootBundle.loadString('assets/css/bootstrap.min.css');
   String content = '''
   <div class="row">
@@ -47,9 +47,9 @@ Future<String> monthlySummaryReport(DateTime start) async {
         <td class="justify-content-start" colspan="3">${e.hospitalNo}</td>
         <td class="justify-content-start" colspan="2">${dateTimeFormat('yMMMd', e.dateOfBirth)}</td>
         <td class="justify-content-start">${e.sex}</td>
-        <td class="justify-content-start" colspan="4">${e.regimen}</td>
+        <td class="justify-content-start" colspan="4">${e.medications.first.regimen}</td>
         <td class="justify-content-start">${formatNumber(
-      e.quantity,
+      e.medications.first.quantityDispensed,
       formatType: FormatType.custom,
       format: '#,##0',
       locale: '',

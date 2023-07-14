@@ -9,10 +9,10 @@ import 'package:floor/floor.dart';
       ) r WHERE rn = 1
   )
   SELECT outletCode, facilityCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, 
-    dateNextRefill FROM LastDispense JOIN patient ON patientId = id ORDER BY givenName, familyName
+    dateNextRefill FROM last_Dispense JOIN patient p ON patientId = p.uuid ORDER BY givenName, familyName
 ''', viewName: 'LastDispense')
 class LastDispense {
-  final String outletCode;
+  final String? outletCode;
   final String facilityCode;
   final String givenName;
   final String familyName;
@@ -38,16 +38,12 @@ class LastDispense {
 abstract class PatientDao {
   @Query('''
       SELECT * FROM Patient WHERE (outletCode = :activationCode OR facilityCode = 
-        :activationCode) AND serviceDiscontinued = 0 AND (LOWER(givenName) LIKE 
+        :activationCode) AND (LOWER(givenName) LIKE 
         LOWER(:keyword) OR LOWER(familyName) LIKE LOWER(:keyword) OR 
         LOWER(hospitalNo) LIKE LOWER(:keyword)) ORDER BY givenName, 
       familyName LIMIT 10
       ''')
   Future<List<Patient>> findByKeyword(String activationCode, String keyword);
-
-  @Query(
-      'SELECT * FROM Patient WHERE outletCode = :outletCode AND serviceDiscontinued = 1')
-  Future<List<Patient>> findDiscontinued(String outletCode);
 
   @Query('SELECT * FROM Patient WHERE id = :id')
   Future<Patient?> findById(int id);
@@ -71,7 +67,7 @@ abstract class PatientDao {
   Future<bool?> hasUnSynced();
 
   @Query('''
-      SELECT * FROM LastDispense WHERE (outletCode = :code OR facilityCode = :code
+      SELECT * FROM LastDispense WHERE (outletCode = :code OR facilityCode = :code)
         AND dateNextRefill BETWEEN :start AND :end''')
   Future<List<LastDispense>> listMissedDispense(
       String code, DateTime start, DateTime end);
@@ -81,20 +77,19 @@ abstract class PatientDao {
 }
 
 @DatabaseView('''
-  SELECT givenName, familyName, sex, dateOfBirth, quantityDispensed quantity, 
-    hospitalNo, regimen, outletCode, facilityCode dateNextRefill, date FROM Dispense 
+  SELECT givenName, familyName, sex, dateOfBirth, medications, 
+    hospitalNo, outletCode, facilityCode, dateNextRefill, date FROM Dispense 
     JOIN Patient p ON patientId = p.uuid ORDER BY givenName, familyName, sex    
 ''', viewName: 'DispenseInfo')
 class DispenseInfo {
-  final String outletCode;
+  final String? outletCode;
   final String facilityCode;
   final String familyName;
   final String givenName;
-  final int quantity;
+  final List<Medication> medications;
   final DateTime date;
   final DateTime dateNextRefill;
   final DateTime dateOfBirth;
-  final String regimen;
   final String sex;
   final String hospitalNo;
 
@@ -103,11 +98,10 @@ class DispenseInfo {
       this.facilityCode,
       this.familyName,
       this.givenName,
-      this.quantity,
+      this.medications,
       this.date,
       this.dateNextRefill,
       this.dateOfBirth,
-      this.regimen,
       this.sex,
       this.hospitalNo);
 }
@@ -123,7 +117,7 @@ abstract class DispenseDao {
   @Query('SELECT * FROM Dispense WHERE synced = 0')
   Future<List<Dispense>> findUnSynced();
 
-  @Query('SELECT * FROM Dispense WHERE patientId = :patientId')
+  @Query('SELECT * FROM Dispense WHERE patientId = :patientId ORDER BY date DESC')
   Future<List<Dispense>> findByPatient(String patientId);
 
   @Query('SELECT * FROM Dispense WHERE patientId = :patientId AND date = :date')
@@ -136,8 +130,8 @@ abstract class DispenseDao {
   Future<int> updateRecord(Dispense dispense);
 
   @Query('''
-      SELECT * FROM DispenseInfo WHERE (outletCode = :code OR facilityCode = :code
-        AND date BETWEEN :start and :end ORDER BY givenName, familyName
+      SELECT * FROM DispenseInfo WHERE (outletCode = :code OR facilityCode = :code)
+        AND date BETWEEN :start AND :end ORDER BY givenName, familyName
         ''')
   Future<List<DispenseInfo>> listDispenseInfo(
       String code, DateTime start, DateTime end);
@@ -229,7 +223,7 @@ abstract class OutletDao {
 
 @dao
 abstract class RegimenDao {
-  @Query('SELECT * Regimen Outlet')
+  @Query('SELECT * FROM Regimen')
   Future<List<Regimen>> findAll();
 
   @Query('SELECT * FROM Regimen WHERE id = :id')
@@ -237,9 +231,6 @@ abstract class RegimenDao {
 
   @insert
   Future<void> insertRecord(Regimen regimen);
-
-  @Query("DELETE FROM Regimen WHERE id = :id")
-  Future<void> deleteById(int id);
 
   @Query("DELETE FROM Regimen")
   Future<void> deleteAll();

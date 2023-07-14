@@ -7,6 +7,7 @@ class PatientProfileModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
   Patient? patient;
   Devolve? devolve;
+  List<Dispense> dispenses = [];
 
   void initState(BuildContext context) {}
 

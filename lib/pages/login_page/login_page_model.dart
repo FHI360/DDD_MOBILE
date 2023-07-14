@@ -26,7 +26,7 @@ class LoginPageModel extends FlutterFlowModel {
     }
 
     final regExp = RegExp(
-        r'^(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9-_\.]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9-_.\/]*)?$',
+        r'^(https?://)?([\da-z.-]+)(\.[a-z.]{2,6})?(:\d{1,5})?$',
         caseSensitive: false,
         multiLine: false);
 

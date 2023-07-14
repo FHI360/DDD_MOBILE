@@ -25,8 +25,11 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
 
   Future<void> initialize() async {
     final _database = await database;
-    _model.facilities = await _database.facilityDao.findAll();
-    _model.facilities.sort((f1, f2) => f1.name.compareTo(f2.name));
+   var facilities = await _database.facilityDao.findAll();
+    facilities.sort((f1, f2) => f1.name.compareTo(f2.name));
+    setState(() {
+      _model.facilities = facilities;
+    });
   }
 
   @override

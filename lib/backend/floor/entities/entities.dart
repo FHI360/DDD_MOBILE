@@ -59,6 +59,7 @@ class Patient {
       sex: row['sex'],
       phone: row['phone'],
       facility: row['facility'],
+      outletCode: row['outletCode'],
       facilityCode: row['facilityCode'],
       address: row['address'],
       lastClinicVisit: row['lastClinicVisit'] != null
@@ -67,8 +68,8 @@ class Patient {
       lastRefillDate: row['lastRefillDate'] != null
           ? DateTime.parse(row['lastRefillDate'])
           : DateTime(1900),
-      nextAppointmentDate: row['nextAppointmentDate'] != null
-          ? DateTime.parse(row['nextAppointmentDate'])
+      nextAppointmentDate: row['nextRefillDate'] != null
+          ? DateTime.parse(row['nextRefillDate'])
           : DateTime(1900),
       nextVisitDate: row['nextVisitDate'] != null
           ? DateTime.parse(row['nextVisitDate'])
@@ -78,7 +79,7 @@ class Patient {
           : DateTime(1900),
       lastClinicStage: row['lastClinicStage'],
       uuid: row['id'],
-      lastViralLoad: row['lastViralLoad'],
+      lastViralLoad: row['viralLoad'],
       uniqueId: row['uniqueId'],
       synced: true);
 
@@ -90,11 +91,13 @@ class Patient {
         'dateOfBirth': dateOfBirth.toIso8601String().substring(0, 10),
         'sex': sex,
         'phone': phone,
-        'facility': {'id': facilityCode},
+        'organisation': {'id': facilityCode},
         'address': address,
         'dateStarted': dateStarted.toIso8601String().substring(0, 10),
         'archived': deleted,
         'lastViralLoad': lastViralLoad,
+        'uniqueId': uniqueId,
+        'lastClinicStage': lastClinicStage
       };
 
   factory Patient.instance() {
@@ -155,7 +158,7 @@ class Dispense {
     return Dispense(
         id: null,
         date: DateTime.parse(row['date']),
-        patientId: row['patient']['id'],
+        patientId: row['patientId'],
         dateNextRefill: DateTime.parse(row['dateNextRefill']),
         missedDoses: row['missedDoses'],
         adverseIssues: row['adverseIssues'],
@@ -178,8 +181,8 @@ class Dispense {
     };
   }
 
-  List<Medication> getArvs() {
-    return medications.where((m) => m.arv).toList();
+  Medication? getArv() {
+    return medications.where((m) => m.arv).toList().first;
   }
 }
 
@@ -263,7 +266,7 @@ class Regimen {
   Regimen(this.id, this.name, this.regimenType, this.arv);
 
   factory Regimen.fromJson(Map<String, dynamic> row) =>
-      Regimen(row['id'], row['name'], row['regimenType'], row['arv']);
+      Regimen(row['id'], row['name'], row['type']['name'], row['arv']);
 }
 
 @entity
@@ -271,17 +274,12 @@ class Facility {
   @PrimaryKey(autoGenerate: true)
   int? id;
   final String name;
-  final int level1AD;
-  final int level2AD;
   final String code;
 
-  Facility(this.name, this.level1AD, this.level2AD, this.code);
+  Facility(this.name, this.code);
 
   factory Facility.fromJson(Map<String, dynamic> row) =>
-      Facility(row['name'], row['level1AD'], row['level2AD'], row['code']);
-
-  Map<String, dynamic> toJson() =>
-      {'name': name, 'level1AD': level1AD, 'level2AD': level2AD, 'code': code};
+      Facility(row['name'], row['id']);
 }
 
 @entity
@@ -289,34 +287,13 @@ class Outlet {
   @PrimaryKey(autoGenerate: true)
   int? id;
   final String name;
-  final String address;
-  final String phone;
-  final String email;
-  final String type;
   final String code;
   String? facilityCode;
 
-  Outlet(this.name, this.address, this.phone, this.email, this.type, this.code,
-      this.facilityCode);
+  Outlet(this.name, this.code, this.facilityCode);
 
-  factory Outlet.fromJson(Map<String, dynamic> row) => Outlet(
-      row['name'],
-      row['address'],
-      row['phone'],
-      row['email'],
-      row['type'],
-      row['code'],
-      row['facilityCode']);
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'address': address,
-        'phone': phone,
-        'code': code,
-        'email': email,
-        'type': type,
-        'facilityCode': facilityCode
-      };
+  factory Outlet.fromJson(Map<String, dynamic> row) =>
+      Outlet(row['name'], row['id'], row['facilityCode'] ?? '');
 }
 
 class Medication {
@@ -336,14 +313,14 @@ class Medication {
 
   factory Medication.fromJson(Map<String, dynamic> row) => Medication(
       regimen: row['regimen'],
-      quantityPrescribed: row['quantityPrescribed'],
-      quantityDispensed: row['quantityDispensed'],
+      quantityPrescribed: row['qtyPrescribed'],
+      quantityDispensed: row['qtyDispensed'],
       arv: row['arv']);
 
   Map<String, dynamic> toJson() => {
         'regimen': regimen,
-        'quantityDispensed': quantityDispensed,
-        'quantityPrescribed': quantityPrescribed,
+        'qtyDispensed': quantityDispensed,
+        'qtyPrescribed': quantityPrescribed,
         'arv': arv
       };
 }
@@ -382,8 +359,8 @@ class Devolve {
     return new Devolve(
         id: null,
         date: DateTime.parse(payload['date']),
-        outletCode: payload['organization']['id'],
-        patientId: payload['patient']['id'],
+        outletCode: payload['outlet'],
+        patientId: payload['patientId'],
         uuid: payload['id'],
         reasonDiscontinued: payload['reasonDiscontinued'],
         synced: true);
@@ -392,7 +369,7 @@ class Devolve {
   Map<String, dynamic> toJson() {
     return {
       'id': uuid,
-      'date': date.toIso8601String().substring(0, 10),
+      'date': date.toIso8601String(),
       'patient': {'id': patientId},
       'organisation': {'id': outletCode},
       'reasonDiscontinued': reasonDiscontinued

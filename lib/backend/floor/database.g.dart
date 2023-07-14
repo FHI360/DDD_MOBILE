@@ -99,9 +99,9 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Clinic` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `systolic` INTEGER, `diastolic` INTEGER, `weight` REAL, `temperature` REAL, `patientId` TEXT NOT NULL, `date` INTEGER NOT NULL, `coughing` INTEGER, `swelling` INTEGER, `sweating` INTEGER, `fever` INTEGER, `weightLoss` INTEGER, `tbReferred` INTEGER, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Facility` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `level1AD` INTEGER NOT NULL, `level2AD` INTEGER NOT NULL, `code` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Facility` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Outlet` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `phone` TEXT NOT NULL, `email` TEXT NOT NULL, `type` TEXT NOT NULL, `code` TEXT NOT NULL, `facilityCode` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Outlet` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `facilityCode` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `uniqueId` TEXT, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT, `facility` TEXT, `outletCode` TEXT, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT, `lastViralLoad` TEXT, `deleted` INTEGER)');
         await database.execute(
@@ -112,9 +112,9 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `Devolve` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `reasonDiscontinued` TEXT, `date` INTEGER NOT NULL, `outletCode` TEXT NOT NULL, `patientId` TEXT NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
 
         await database.execute(
-            'CREATE VIEW IF NOT EXISTS `LastDispense` AS   WITH last_Dispense AS ( \n      SELECT * FROM (\n            SELECT patientId, date, dateNextRefill, ROW_NUMBER() OVER (PARTITION BY patientId \n            ORDER BY date DESC) rn FROM Dispense\n      ) r WHERE rn = 1\n  )\n  SELECT outletCode, facilityCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, \n    dateNextRefill FROM LastDispense JOIN patient ON patientId = id ORDER BY givenName, familyName\n');
+            'CREATE VIEW IF NOT EXISTS `LastDispense` AS   WITH last_Dispense AS ( \n      SELECT * FROM (\n            SELECT patientId, date, dateNextRefill, ROW_NUMBER() OVER (PARTITION BY patientId \n            ORDER BY date DESC) rn FROM Dispense\n      ) r WHERE rn = 1\n  )\n  SELECT outletCode, facilityCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, \n    dateNextRefill FROM last_Dispense JOIN patient p ON patientId = p.uuid ORDER BY givenName, familyName\n');
         await database.execute(
-            'CREATE VIEW IF NOT EXISTS `DispenseInfo` AS   SELECT givenName, familyName, sex, dateOfBirth, quantityDispensed quantity, \n    hospitalNo, regimen, outletCode, facilityCode dateNextRefill, date FROM Dispense \n    JOIN Patient p ON patientId = p.uuid ORDER BY givenName, familyName, sex    \n');
+            'CREATE VIEW IF NOT EXISTS `DispenseInfo` AS   SELECT givenName, familyName, sex, dateOfBirth, medications, \n    hospitalNo, outletCode, facilityCode, dateNextRefill, date FROM Dispense \n    JOIN Patient p ON patientId = p.uuid ORDER BY givenName, familyName, sex    \n');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -506,7 +506,7 @@ class _$DispenseDao extends DispenseDao {
   @override
   Future<List<Dispense>> findByPatient(String patientId) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Dispense WHERE patientId = ?1',
+        'SELECT * FROM Dispense WHERE patientId = ?1 ORDER BY date DESC',
         mapper: (Map<String, Object?> row) => Dispense(
             id: row['id'] as int?,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -559,8 +559,8 @@ class _$DispenseDao extends DispenseDao {
     DateTime end,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM DispenseInfo WHERE (outletCode = ?1 OR facilityCode = ?1         AND date BETWEEN ?2 and ?3 ORDER BY givenName, familyName',
-        mapper: (Map<String, Object?> row) => DispenseInfo(row['outletCode'] as String, row['facilityCode'] as String, row['familyName'] as String, row['givenName'] as String, row['quantity'] as int, _dateTimeConverter.decode(row['date'] as int), _dateTimeConverter.decode(row['dateNextRefill'] as int), _dateTimeConverter.decode(row['dateOfBirth'] as int), row['regimen'] as String, row['sex'] as String, row['hospitalNo'] as String),
+        'SELECT * FROM DispenseInfo WHERE (outletCode = ?1 OR facilityCode = ?1)         AND date BETWEEN ?2 AND ?3 ORDER BY givenName, familyName',
+        mapper: (Map<String, Object?> row) => DispenseInfo(row['outletCode'] as String?, row['facilityCode'] as String, row['familyName'] as String, row['givenName'] as String, _listMedicationConverter.decode(row['medications'] as String), _dateTimeConverter.decode(row['date'] as int), _dateTimeConverter.decode(row['dateNextRefill'] as int), _dateTimeConverter.decode(row['dateOfBirth'] as int), row['sex'] as String, row['hospitalNo'] as String),
         arguments: [
           code,
           _dateTimeConverter.encode(start),
@@ -679,17 +679,9 @@ class _$PatientDao extends PatientDao {
     String keyword,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Patient WHERE (outletCode = ?1 OR facilityCode =          ?1) AND serviceDiscontinued = 0 AND (LOWER(givenName) LIKE          LOWER(?2) OR LOWER(familyName) LIKE LOWER(?2) OR          LOWER(hospitalNo) LIKE LOWER(?2)) ORDER BY givenName,        familyName LIMIT 10',
+        'SELECT * FROM Patient WHERE (outletCode = ?1 OR facilityCode =          ?1) AND (LOWER(givenName) LIKE          LOWER(?2) OR LOWER(familyName) LIKE LOWER(?2) OR          LOWER(hospitalNo) LIKE LOWER(?2)) ORDER BY givenName,        familyName LIMIT 10',
         mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, uniqueId: row['uniqueId'] as String?, synced: (row['synced'] as int) != 0),
         arguments: [activationCode, keyword]);
-  }
-
-  @override
-  Future<List<Patient>> findDiscontinued(String outletCode) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM Patient WHERE outletCode = ?1 AND serviceDiscontinued = 1',
-        mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, uniqueId: row['uniqueId'] as String?, synced: (row['synced'] as int) != 0),
-        arguments: [outletCode]);
   }
 
   @override
@@ -808,8 +800,8 @@ class _$PatientDao extends PatientDao {
     DateTime end,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM LastDispense WHERE (outletCode = ?1 OR facilityCode = ?1         AND dateNextRefill BETWEEN ?2 AND ?3',
-        mapper: (Map<String, Object?> row) => LastDispense(row['outletCode'] as String, row['facilityCode'] as String, row['givenName'] as String, row['familyName'] as String, row['sex'] as String, _dateTimeConverter.decode(row['dateOfBirth'] as int), _dateTimeConverter.decode(row['date'] as int), _dateTimeConverter.decode(row['dateNextRefill'] as int), row['hospitalNo'] as String),
+        'SELECT * FROM LastDispense WHERE (outletCode = ?1 OR facilityCode = ?1)         AND dateNextRefill BETWEEN ?2 AND ?3',
+        mapper: (Map<String, Object?> row) => LastDispense(row['outletCode'] as String?, row['facilityCode'] as String, row['givenName'] as String, row['familyName'] as String, row['sex'] as String, _dateTimeConverter.decode(row['dateOfBirth'] as int), _dateTimeConverter.decode(row['date'] as int), _dateTimeConverter.decode(row['dateNextRefill'] as int), row['hospitalNo'] as String),
         arguments: [
           code,
           _dateTimeConverter.encode(start),
@@ -860,7 +852,7 @@ class _$RegimenDao extends RegimenDao {
 
   @override
   Future<List<Regimen>> findAll() async {
-    return _queryAdapter.queryList('SELECT * Regimen Outlet',
+    return _queryAdapter.queryList('SELECT * FROM Regimen',
         mapper: (Map<String, Object?> row) => Regimen(
             row['id'] as int,
             row['name'] as String,
@@ -879,12 +871,6 @@ class _$RegimenDao extends RegimenDao {
         arguments: [id],
         queryableName: 'Regimen',
         isView: false);
-  }
-
-  @override
-  Future<void> deleteById(int id) async {
-    await _queryAdapter
-        .queryNoReturn('DELETE FROM Regimen WHERE id = ?1', arguments: [id]);
   }
 
   @override
@@ -909,10 +895,6 @@ class _$OutletDao extends OutletDao {
             (Outlet item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'address': item.address,
-                  'phone': item.phone,
-                  'email': item.email,
-                  'type': item.type,
                   'code': item.code,
                   'facilityCode': item.facilityCode
                 },
@@ -924,10 +906,6 @@ class _$OutletDao extends OutletDao {
             (Outlet item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'address': item.address,
-                  'phone': item.phone,
-                  'email': item.email,
-                  'type': item.type,
                   'code': item.code,
                   'facilityCode': item.facilityCode
                 },
@@ -946,27 +924,15 @@ class _$OutletDao extends OutletDao {
   @override
   Future<List<Outlet>> findAll() async {
     return _queryAdapter.queryList('SELECT * FROM Outlet',
-        mapper: (Map<String, Object?> row) => Outlet(
-            row['name'] as String,
-            row['address'] as String,
-            row['phone'] as String,
-            row['email'] as String,
-            row['type'] as String,
-            row['code'] as String,
-            row['facilityCode'] as String?));
+        mapper: (Map<String, Object?> row) => Outlet(row['name'] as String,
+            row['code'] as String, row['facilityCode'] as String?));
   }
 
   @override
   Stream<Outlet?> findById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Outlet WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Outlet(
-            row['name'] as String,
-            row['address'] as String,
-            row['phone'] as String,
-            row['email'] as String,
-            row['type'] as String,
-            row['code'] as String,
-            row['facilityCode'] as String?),
+        mapper: (Map<String, Object?> row) => Outlet(row['name'] as String,
+            row['code'] as String, row['facilityCode'] as String?),
         arguments: [id],
         queryableName: 'Outlet',
         isView: false);
@@ -999,8 +965,6 @@ class _$FacilityDao extends FacilityDao {
             (Facility item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'level1AD': item.level1AD,
-                  'level2AD': item.level2AD,
                   'code': item.code
                 },
             changeListener),
@@ -1011,8 +975,6 @@ class _$FacilityDao extends FacilityDao {
             (Facility item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'level1AD': item.level1AD,
-                  'level2AD': item.level2AD,
                   'code': item.code
                 },
             changeListener);
@@ -1030,21 +992,15 @@ class _$FacilityDao extends FacilityDao {
   @override
   Future<List<Facility>> findAll() async {
     return _queryAdapter.queryList('SELECT * FROM Facility',
-        mapper: (Map<String, Object?> row) => Facility(
-            row['name'] as String,
-            row['level1AD'] as int,
-            row['level2AD'] as int,
-            row['code'] as String));
+        mapper: (Map<String, Object?> row) =>
+            Facility(row['name'] as String, row['code'] as String));
   }
 
   @override
   Stream<Facility?> findById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Facility WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Facility(
-            row['name'] as String,
-            row['level1AD'] as int,
-            row['level2AD'] as int,
-            row['code'] as String),
+        mapper: (Map<String, Object?> row) =>
+            Facility(row['name'] as String, row['code'] as String),
         arguments: [id],
         queryableName: 'Facility',
         isView: false);

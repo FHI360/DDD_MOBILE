@@ -119,7 +119,7 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                           await showDatePicker(
                                         context: context,
                                         initialDate: getCurrentTimestamp,
-                                        firstDate: DateTime(1900),
+                                        firstDate: DateTime.now(),
                                         lastDate: getCurrentTimestamp,
                                       );
 

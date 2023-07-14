@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -247,8 +248,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                                 await showDatePicker(
                                                               context: context,
                                                               initialDate:
-                                                                  DateTime(
-                                                                      2021),
+                                                                  DateTime.now(),
                                                               firstDate:
                                                                   DateTime(
                                                                       2021),
@@ -521,15 +521,16 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                   await missedAppointmentPdf(
                                                       _model.datePicked1!,
                                                       _model.datePicked2!);
-                                              await FlutterHtmlToPdf
+//                                              await Printing.convertHtml(html: '')
+                                              var file = await FlutterHtmlToPdf
                                                   .convertFromHtmlContent(
                                                       content,
                                                       targetPath.path,
-                                                      'sample.pdf');
+                                                      'report');
                                               context.pushNamed(
                                                 'pdfPreview',
                                                 queryParams: {
-                                                  'path': targetPath.path
+                                                  'path': file.path
                                                 }.withoutNulls,
                                               );
                                             },

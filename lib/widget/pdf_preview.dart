@@ -15,6 +15,7 @@ class PdfPreviewPage extends StatelessWidget {
         title: Text('PDF Preview'),
       ),
       body: PdfPreview(
+        useActions: true,
         build: (context) => File(path).readAsBytesSync(),
       ),
     );

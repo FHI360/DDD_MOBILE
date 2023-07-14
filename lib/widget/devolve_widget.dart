@@ -46,6 +46,8 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
     super.initState();
     _model = createModel(context, () => DevolveModel());
 
+    initialize();
+
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 

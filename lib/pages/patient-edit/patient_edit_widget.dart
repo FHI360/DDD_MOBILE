@@ -25,38 +25,42 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
   final _unfocusNode = FocusNode();
 
   Future<void> initialize() async {
+    var patient;
     if (widget.patientId != null && widget.patientId != 0) {
       final _database = await database;
-      _model.patient = await _database.patientDao.findById(widget.patientId!);
+      patient = await _database.patientDao.findById(widget.patientId!);
     } else {
-      _model.patient = Patient.instance();
+      patient = Patient.instance();
     }
 
-    _model.givenNameController ??=
-        TextEditingController(text: _model.patient?.givenName);
-    _model.familyNameController ??=
-        TextEditingController(text: _model.patient?.familyName);
-    _model.uniqueIdController ??=
-        TextEditingController(text: _model.patient?.uniqueId);
-    _model.phoneController ??=
-        TextEditingController(text: _model.patient?.phone);
-    _model.addressController ??=
-        TextEditingController(text: _model.patient?.address);
-    _model.hospitalNoController ??=
-        TextEditingController(text: _model.patient?.hospitalNo);
-    _model.uniqueIdController ??=
-        TextEditingController(text: _model.patient?.uniqueId);
-    _model.addressController ??=
-        TextEditingController(text: _model.patient?.lastViralLoad);
-    _model.datePicked1 = _model.patient!.dateOfBirth != DateTime(1900)
-        ? _model.patient!.dateOfBirth
-        : null;
-    _model.datePicked2 = _model.patient!.dateStarted != DateTime(1900)
-        ? _model.patient!.dateStarted
-        : null;
-    _model.sexValue = _model.patient!.sex;
+    setState(() {
+      _model.patient = patient;
+      _model.givenNameController ??=
+          TextEditingController(text: _model.patient?.givenName);
+      _model.familyNameController ??=
+          TextEditingController(text: _model.patient?.familyName);
+      _model.uniqueIdController ??=
+          TextEditingController(text: _model.patient?.uniqueId);
+      _model.phoneController ??=
+          TextEditingController(text: _model.patient?.phone);
+      _model.addressController ??=
+          TextEditingController(text: _model.patient?.address);
+      _model.hospitalNoController ??=
+          TextEditingController(text: _model.patient?.hospitalNo);
+      _model.uniqueIdController ??=
+          TextEditingController(text: _model.patient?.uniqueId);
+      _model.addressController ??=
+          TextEditingController(text: _model.patient?.lastViralLoad);
+      _model.datePicked1 = _model.patient!.dateOfBirth != DateTime(1900)
+          ? _model.patient!.dateOfBirth
+          : null;
+      _model.datePicked2 = _model.patient!.dateStarted != DateTime(1900)
+          ? _model.patient!.dateStarted
+          : null;
 
-    _model.clinicStageValue = _model.patient!.lastClinicStage;
+      _model.clinicStageValue = _model.patient!.lastClinicStage;
+      _model.sexValue = _model.patient!.sex;
+    });
   }
 
   @override
@@ -128,13 +132,13 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                     ),
                     Padding(
                       padding:
-                      EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                       child: Container(
                         width: double.infinity,
                         height: 60.0,
                         decoration: BoxDecoration(
                           color:
-                          FlutterFlowTheme.of(context).secondaryBackground,
+                              FlutterFlowTheme.of(context).secondaryBackground,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Row(
@@ -156,41 +160,40 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Padding(
                                             padding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                5.0, 0.0, 0.0, 0.0),
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    5.0, 0.0, 0.0, 0.0),
                                             child: Text(
                                               'Facility',
                                               style:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyText1
-                                                  .override(
-                                                fontFamily:
-                                                FlutterFlowTheme.of(
-                                                    context)
-                                                    .bodyText1Family,
-                                                fontSize: 12.0,
-                                                useGoogleFonts: GoogleFonts
-                                                    .asMap()
-                                                    .containsKey(
-                                                    FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyText1Family),
-                                              ),
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontSize: 12.0,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
                                             ),
                                           ),
                                           Expanded(
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(
-                                                  10.0, 0.0, 10.0, 0.0),
-                                              child:
-                                              Text(
+                                                      10.0, 0.0, 10.0, 0.0),
+                                              child: Text(
                                                 FFAppState().name,
                                               ),
                                             ),
@@ -798,84 +801,47 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 60.0,
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    5.0, 0.0, 0.0, 0.0),
-                                            child: Text(
-                                              'Sex',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText1
-                                                      .override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyText1Family,
-                                                        fontSize: 12.0,
-                                                        useGoogleFonts: GoogleFonts
-                                                                .asMap()
-                                                            .containsKey(
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1Family),
-                                                      ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
+                    if (_model.patient != null)
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            16.0, 12.0, 16.0, 0.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: 60.0,
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      10.0, 0.0, 10.0, 0.0),
-                                              child:
-                                                  FlutterFlowDropDown<String>(
-                                                initialOption:
-                                                    _model.sexValue ??= '',
-                                                options: ['FEMALE', 'MALE'],
-                                                optionLabels: [
-                                                  'Female',
-                                                  'Male'
-                                                ],
-                                                onChanged: (val) => setState(
-                                                    () =>
-                                                        _model.sexValue = val),
-                                                width: double.infinity,
-                                                height: 50.0,
-                                                textStyle:
+                                                  .fromSTEB(5.0, 0.0, 0.0, 0.0),
+                                              child: Text(
+                                                'Sex',
+                                                style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyText1
                                                         .override(
@@ -883,9 +849,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                               FlutterFlowTheme.of(
                                                                       context)
                                                                   .bodyText1Family,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryText,
+                                                          fontSize: 12.0,
                                                           useGoogleFonts: GoogleFonts
                                                                   .asMap()
                                                               .containsKey(
@@ -893,31 +857,69 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                                           context)
                                                                       .bodyText1Family),
                                                         ),
-                                                fillColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
-                                                elevation: 2.0,
-                                                borderColor: Colors.transparent,
-                                                borderWidth: 0.0,
-                                                borderRadius: 0.0,
-                                                margin: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 0.0, 0.0),
-                                                hidesUnderline: true,
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        10.0, 0.0, 10.0, 0.0),
+                                                child:
+                                                    FlutterFlowDropDown<String>(
+                                                  initialOption:
+                                                      _model.sexValue ??= '',
+                                                  options: ['Female', 'Male'],
+                                                  onChanged: (val) => setState(
+                                                      () => _model.sexValue =
+                                                          val),
+                                                  width: double.infinity,
+                                                  height: 50.0,
+                                                  textStyle: FlutterFlowTheme
+                                                          .of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                                  fillColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .secondaryBackground,
+                                                  elevation: 2.0,
+                                                  borderColor:
+                                                      Colors.transparent,
+                                                  borderWidth: 0.0,
+                                                  borderRadius: 0.0,
+                                                  margin: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 0.0, 0.0, 0.0),
+                                                  hidesUnderline: true,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
@@ -1192,7 +1194,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                         ),
                         child: TextFormField(
                           controller: _model.phoneController,
-                          autofocus: true,
+                          autofocus: false,
                           obscureText: false,
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
@@ -1239,127 +1241,130 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                             ),
                           ),
                           style: FlutterFlowTheme.of(context).bodyText1,
-                          maxLines: 3,
+                          maxLines: 1,
                           keyboardType: TextInputType.phone,
                           validator: _model.phoneControllerValidator
                               .asValidator(context),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 60.0,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF111417),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                width: double.infinity,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  border: Border.all(
+                    if (_model.patient != null)
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(
+                            16.0, 12.0, 16.0, 0.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: 60.0,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF111417),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 100.0,
+                                  decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    width: 2.0,
+                                        .secondaryBackground,
+                                    border: Border.all(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryBackground,
+                                      width: 2.0,
+                                    ),
                                   ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 5.0, 5.0, 5.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Clinic stage',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText1
-                                            .override(
-                                              fontFamily:
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        10.0, 5.0, 5.0, 5.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Clinic stage',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyText1Family,
+                                                fontSize: 12.0,
+                                                useGoogleFonts: GoogleFonts
+                                                        .asMap()
+                                                    .containsKey(
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyText1Family),
+                                              ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 100.0,
+                                            decoration: BoxDecoration(
+                                              color:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyText1Family,
-                                              fontSize: 12.0,
-                                              useGoogleFonts:
-                                                  GoogleFonts.asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
+                                                      .secondaryBackground,
                                             ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 100.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                          ),
-                                          child: FlutterFlowDropDown<String>(
-                                            options: [
-                                              'Stage I',
-                                              'Stage II',
-                                              'Stage III',
-                                              'Stage IV',
-                                              'Stage V',
-                                            ],
-                                            onChanged: (val) => setState(() =>
-                                                _model.clinicStageValue = val),
-                                            width: 180.0,
-                                            height: 50.0,
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyText1
-                                                    .override(
-                                                      fontFamily:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                      useGoogleFonts: GoogleFonts
-                                                              .asMap()
-                                                          .containsKey(
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyText1Family),
-                                                    ),
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .secondaryBackground,
-                                            elevation: 2.0,
-                                            borderColor: Colors.transparent,
-                                            borderWidth: 0.0,
-                                            borderRadius: 0.0,
-                                            margin:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    12.0, 4.0, 12.0, 4.0),
-                                            hidesUnderline: true,
+                                            child: FlutterFlowDropDown<String>(
+                                              options: [
+                                                'Stage I',
+                                                'Stage II',
+                                                'Stage III',
+                                                'Stage IV',
+                                                'Stage V',
+                                              ],
+                                              onChanged: (val) => setState(() =>
+                                                  _model.clinicStageValue =
+                                                      val),
+                                              width: 180.0,
+                                              height: 50.0,
+                                              textStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                              fillColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                              elevation: 2.0,
+                                              borderColor: Colors.transparent,
+                                              borderWidth: 0.0,
+                                              borderRadius: 0.0,
+                                              margin: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      12.0, 4.0, 12.0, 4.0),
+                                              hidesUnderline: true,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 20.0),
@@ -1492,16 +1497,26 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
 
                                     final _database = await database;
                                     if (_model.patient!.id == null) {
-                                      await _database.patientDao
+                                      _model.patient!.id = await _database.patientDao
                                           .insertRecord(_model.patient!);
                                     } else {
                                       await _database.patientDao
                                           .updateRecord(_model.patient!);
                                     }
 
-                                    Navigator.pop(context);
-
-                                    setState(() {});
+                                    context.pushNamed(
+                                      'patientProfile',
+                                      queryParams: {
+                                        'patientId':
+                                        serializeParam(
+                                          _model
+                                              .patient!
+                                              .id,
+                                          ParamType
+                                              .int,
+                                        ),
+                                      }.withoutNulls,
+                                    );
                                   },
                             text: 'Save Changes',
                             options: FFButtonOptions(
