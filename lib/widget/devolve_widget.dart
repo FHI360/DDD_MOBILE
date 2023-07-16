@@ -33,6 +33,21 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
     final _database = await database;
     _model.outlets = await _database.outletDao.findAll();
     _model.outlets.sort((o1, o2) => o1.name.compareTo(o2.name));
+    var devolve =
+        await _database.devolveDao.findByPatient(widget.patient!.uuid);
+    var currentOutlet = _model.outlets.where((o) {
+      if (devolve == null) {
+        return false;
+      }
+      return o.code == devolve.outletCode &&
+          (devolve.reasonDiscontinued == null ||
+              devolve.reasonDiscontinued!.isEmpty);
+    });
+
+    setState(() {
+      _model.devolve = devolve;
+      _model.outlet = currentOutlet.isNotEmpty ? currentOutlet.first : null;
+    });
   }
 
   @override
@@ -281,7 +296,8 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                         child:
                                                             FlutterFlowDropDown<
                                                                 Outlet>(
-                                                          initialOption: null,
+                                                          initialOption:
+                                                              _model.outlet,
                                                           options:
                                                               _model.outlets,
                                                           optionLabels: _model
@@ -441,6 +457,8 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
 
                                               await _database.devolveDao
                                                   .insertRecord(devolve);
+
+                                              print('Date: ${devolve.date}');
 
                                               Navigator.pop(context, devolve);
                                             },

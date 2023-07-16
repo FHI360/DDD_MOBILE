@@ -412,6 +412,22 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 ),
                               ),
                             ),
+                            Spacer(),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 8, 0, 0),
+                                  child: Text(
+                                    '2023.1 14-07-2023',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -426,3 +442,4 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     );
   }
 }
+//2023.1 14-07-2023

@@ -8,6 +8,7 @@ class PatientProfileModel extends FlutterFlowModel {
   Patient? patient;
   Devolve? devolve;
   List<Dispense> dispenses = [];
+  String? refOrganisation;
 
   void initState(BuildContext context) {}
 

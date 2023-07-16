@@ -11,6 +11,8 @@ class DevolveModel extends FlutterFlowModel {
   // State field(s) for reason widget.
   Outlet? outletValue;
   List<Outlet> outlets = [];
+  Devolve? devolve;
+  Outlet? outlet;
 
   /// Initialization and disposal methods.
 

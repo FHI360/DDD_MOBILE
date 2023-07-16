@@ -1,6 +1,65 @@
 import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:floor/floor.dart';
 
+class Disaggregate {
+  final String data;
+  final int value;
+
+  Disaggregate(this.data, this.value);
+}
+
+@DatabaseView('''
+WITH Data AS ( 
+      SELECT * FROM (
+            SELECT patientId, dateNextRefill, ROW_NUMBER() OVER (PARTITION BY patientId 
+            ORDER BY date DESC) rn FROM Dispense
+      ) r WHERE rn = 1
+  ),
+Appointment AS (
+	SELECT sex, strftime('%Y', 'now') - strftime('%Y', datetime(dateOfBirth/1000, 'unixepoch')) - 
+		(strftime('%m-%d', 'now') < strftime('%m-%d', datetime(dateOfBirth/1000, 'unixepoch'))) AS age, 
+		dateNextRefill date, outletCode, facilityCode FROM Data JOIN patient p ON patientId = p.uuid
+)
+SELECT * FROM Appointment
+''', viewName: 'Appointment')
+class Appointment {
+  final String sex;
+  final int age;
+  final DateTime date;
+  final String outletCode;
+  final String facilityCode;
+  final String data;
+
+  Appointment(this.sex, this.age, this.date, this.outletCode, this.facilityCode,
+      this.data);
+}
+
+@DatabaseView('''
+WITH Data AS ( 
+      SELECT * FROM (
+            SELECT patientId, date, ROW_NUMBER() OVER (PARTITION BY patientId 
+            ORDER BY date DESC) rn FROM Dispense
+      ) r WHERE rn = 1
+  ),
+Refill AS (
+	SELECT sex, strftime('%Y', 'now') - strftime('%Y', datetime(dateOfBirth/1000, 'unixepoch')) - 
+		(strftime('%m-%d', 'now') < strftime('%m-%d', datetime(dateOfBirth/1000, 'unixepoch'))) AS age, 
+		date, outletCode, facilityCode FROM Data JOIN patient p ON patientId = p.uuid
+)
+SELECT * FROM Refill
+''', viewName: 'Refill')
+class Refill {
+  final String sex;
+  final int age;
+  final DateTime date;
+  final String outletCode;
+  final String facilityCode;
+  final String data;
+
+  Refill(this.sex, this.age, this.date, this.outletCode, this.facilityCode,
+      this.data);
+}
+
 @DatabaseView('''
   WITH last_Dispense AS ( 
       SELECT * FROM (
@@ -74,6 +133,20 @@ abstract class PatientDao {
 
   @Query("DELETE FROM Patient")
   Future<void> deleteAll();
+
+  /*@Query('''
+    WITH DISS AS (
+	    SELECT CASE
+		            WHEN age < 15 AND sex = 'Female' THEN'fu' 
+		            WHEN age < 15 AND sex = 'Male' THEN 'mu' 
+		            ELSE 'ov' 
+	            END data, outletCode, facilityCode, date FROM Appointment
+	  )
+    SELECT data, COUNT(*) value FROM DISS WHERE (facilityCode = :code OR
+      outletCode = :code) AND date BETWEEN :start AND :end GROUP BY 1 
+  ''')
+  Future<List<Appointment>> missingAppointments(
+      String code, DateTime start, DateTime end);*/
 }
 
 @DatabaseView('''
@@ -117,7 +190,8 @@ abstract class DispenseDao {
   @Query('SELECT * FROM Dispense WHERE synced = 0')
   Future<List<Dispense>> findUnSynced();
 
-  @Query('SELECT * FROM Dispense WHERE patientId = :patientId ORDER BY date DESC')
+  @Query(
+      'SELECT * FROM Dispense WHERE patientId = :patientId ORDER BY date DESC')
   Future<List<Dispense>> findByPatient(String patientId);
 
   @Query('SELECT * FROM Dispense WHERE patientId = :patientId AND date = :date')
@@ -172,7 +246,8 @@ abstract class DevolveDao {
   @Query('SELECT * FROM Devolve WHERE synced = 0')
   Future<List<Devolve>> findUnSynced();
 
-  @Query('SELECT * FROM Devolve WHERE patientId = :patientId ORDER BY date DESC LIMIT 1')
+  @Query(
+      'SELECT * FROM Devolve WHERE patientId = :patientId ORDER BY date DESC LIMIT 1')
   Future<Devolve?> findByPatient(String patientId);
 
   @insert

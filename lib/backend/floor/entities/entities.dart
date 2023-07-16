@@ -279,7 +279,7 @@ class Facility {
   Facility(this.name, this.code);
 
   factory Facility.fromJson(Map<String, dynamic> row) =>
-      Facility(row['name'], row['id']);
+      Facility(row['name'] ?? '', row['id']);
 }
 
 @entity
@@ -293,7 +293,7 @@ class Outlet {
   Outlet(this.name, this.code, this.facilityCode);
 
   factory Outlet.fromJson(Map<String, dynamic> row) =>
-      Outlet(row['name'], row['id'], row['facilityCode'] ?? '');
+      Outlet(row['name'] ?? '', row['id'], row['facilityCode'] ?? '');
 }
 
 class Medication {

@@ -28,5 +28,6 @@ class AuthAPIProvider {
     FFAppState().activationCode = data['organisation']['id'];
     FFAppState().outlet = data['organisation']['type'] == 'OUTLET';
     FFAppState().admin = data['organisation']['type'] == 'CO';
+    FFAppState().displayDame = data['displayName'];
   }
 }

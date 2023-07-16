@@ -1,3 +1,4 @@
+import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:flutter/material.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -9,6 +10,7 @@ class DiscontinueServiceModel extends FlutterFlowModel {
   DateTime? datePicked;
   // State field(s) for reason widget.
   String? reasonValue;
+  Devolve? devolve;
 
   /// Initialization and disposal methods.
 

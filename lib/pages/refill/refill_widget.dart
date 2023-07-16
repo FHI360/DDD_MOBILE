@@ -2237,7 +2237,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                                 : '';
                                                                             DateTime
                                                                                 nrd =
-                                                                                DateTime(getCurrentTimestamp.year, getCurrentTimestamp.month, getCurrentTimestamp.day + 30 * (int.tryParse(_model.qtyDispensedController.text) ?? 0));
+                                                                                DateTime(getCurrentTimestamp.year, getCurrentTimestamp.month, getCurrentTimestamp.day + (int.tryParse(_model.qtyDispensedController.text) ?? 0));
                                                                             _model.datePicked =
                                                                                 nrd;
                                                                           }),

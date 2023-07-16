@@ -39,6 +39,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
     var patient = await _database.patientDao.findById(widget.patientId!);
     var devolve = await _database.devolveDao.findByPatient(patient!.uuid);
     var dispenses = await _database.dispenseDao.findByPatient(patient.uuid);
+    final facilities = await _database.facilityDao.findAll();
+    final outlets = await _database.outletDao.findAll();
     setState(() {
       _model.patient = patient;
 
@@ -47,6 +49,18 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
       }
       _model.devolve = devolve;
       _model.dispenses = dispenses;
+
+      if (FFAppState().outlet) {
+        _model.refOrganisation = facilities
+            .firstWhere((f) => f.code == _model.patient!.facilityCode,
+                orElse: () => Facility.fromJson({}))
+            .name;
+      } else if (_model.patient!.outletCode != null) {
+        _model.refOrganisation = outlets
+            .firstWhere((o) => o.code == _model.patient!.outletCode,
+                orElse: () => Outlet.fromJson({}))
+            .name;
+      }
     });
   }
 
@@ -138,15 +152,16 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 8, 5, 0),
-                                        child: Icon(Icons.perm_identity , size: 13),
+                                        child:
+                                            Icon(Icons.perm_identity, size: 13),
                                       ),
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 8, 0, 0),
                                         child: Text(
                                           _model.patient?.hospitalNo ?? '',
-                                          style:
-                                          FlutterFlowTheme.of(context).bodyText1,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1,
                                         ),
                                       ),
                                     ],
@@ -223,8 +238,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                             0, 8, 0, 0),
                                         child: Text(
                                           _model.patient?.phone ?? '',
-                                          style:
-                                          FlutterFlowTheme.of(context).bodyText1,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1,
                                         ),
                                       ),
                                     ],
@@ -235,15 +250,17 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 8, 5, 0),
-                                        child: Icon(Icons.stacked_line_chart_rounded, size: 13),
+                                        child: Icon(
+                                            Icons.stacked_line_chart_rounded,
+                                            size: 13),
                                       ),
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 8, 0, 0),
                                         child: Text(
                                           _model.patient?.lastClinicStage ?? '',
-                                          style:
-                                          FlutterFlowTheme.of(context).bodyText1,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1,
                                         ),
                                       ),
                                     ],
@@ -253,7 +270,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 0, 5, 0),
-                                        child: Icon(Icons.house_outlined, size: 13),
+                                        child: Icon(Icons.house_outlined,
+                                            size: 13),
                                       ),
                                       Container(
                                         child: Wrap(
@@ -266,7 +284,48 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                   FlutterFlowTheme.of(context)
                                                       .bodyText1
                                                       .override(
-                                                    fontSize: 13,
+                                                        fontSize: 13,
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 5, 0),
+                                        child: Icon(Icons.add_business_outlined,
+                                            size: 13),
+                                      ),
+                                      Container(
+                                        child: Wrap(
+                                          children: [
+                                            Text(
+                                              _model.refOrganisation ?? '',
+                                              softWrap: true,
+                                              maxLines: 3,
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontSize: 13,
                                                         fontFamily:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -722,33 +781,33 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                             child: Text(
                                               'Last VL Date',
                                               style:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyText1
-                                                  .override(
-                                                fontFamily:
-                                                FlutterFlowTheme.of(
-                                                    context)
-                                                    .bodyText1Family,
-                                                fontWeight:
-                                                FontWeight.w500,
-                                                useGoogleFonts: GoogleFonts
-                                                    .asMap()
-                                                    .containsKey(
-                                                    FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyText1Family),
-                                              ),
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
                                             ),
                                           ),
                                           Text(
                                             dateTimeFormat(
                                                 'yMMMd',
                                                 _model.patient
-                                                    ?.lastClinicVisit ==
-                                                    DateTime(1900)
+                                                            ?.lastClinicVisit ==
+                                                        DateTime(1900)
                                                     ? null
                                                     : _model.patient
-                                                    ?.lastClinicVisit),
+                                                        ?.lastClinicVisit),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1,
                                           ),

@@ -1,5 +1,7 @@
+import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:multilevel_drawer/multilevel_drawer.dart';
 
 class DDDDrawer extends StatelessWidget {
@@ -17,7 +19,18 @@ class DDDDrawer extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text(FFAppState().name)
+            Text(FFAppState().name),
+            Text(
+              FFAppState().displayDame,
+              style: FlutterFlowTheme.of(context).bodyText1.override(
+                    fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                    fontSize: 13,
+                    color: FlutterFlowTheme.of(context).secondaryColor,
+                    fontWeight: FontWeight.w500,
+                    useGoogleFonts: GoogleFonts.asMap().containsKey(
+                        FlutterFlowTheme.of(context).bodyText1Family),
+                  ),
+            )
           ],
         )),
       ),
@@ -76,8 +89,7 @@ class DDDDrawer extends StatelessWidget {
         ),
         MLMenuItem(
           content: Text(''),
-          onClick: () {
-          },
+          onClick: () {},
         ),
       ],
     );
