@@ -26,6 +26,7 @@ class Patient {
   String? lastClinicStage;
   String? lastViralLoad;
   bool? deleted = false;
+  String? targetGroup;
 
   Patient(
       {this.id,
@@ -34,6 +35,7 @@ class Patient {
       required this.hospitalNo,
       required this.dateOfBirth,
       required this.sex,
+      this.targetGroup,
       this.phone,
       this.facility,
       this.outletCode,
@@ -62,6 +64,7 @@ class Patient {
       outletCode: row['outletCode'],
       facilityCode: row['facilityCode'],
       address: row['address'],
+      targetGroup: row['targetGroup'],
       lastClinicVisit: row['lastClinicVisit'] != null
           ? DateTime.parse(row['lastClinicVisit'])
           : DateTime(1900),
@@ -77,7 +80,7 @@ class Patient {
       dateStarted: row['dateStarted'] != null
           ? DateTime.parse(row['dateStarted'])
           : DateTime(1900),
-      lastClinicStage: row['lastClinicStage'],
+      lastClinicStage: row['clinicStage'],
       uuid: row['id'],
       lastViralLoad: row['viralLoad'],
       uniqueId: row['uniqueId'],
@@ -97,7 +100,8 @@ class Patient {
         'archived': deleted,
         'lastViralLoad': lastViralLoad,
         'uniqueId': uniqueId,
-        'lastClinicStage': lastClinicStage
+        'clinicStage': lastClinicStage,
+        'targetGroup': targetGroup
       };
 
   factory Patient.instance() {
