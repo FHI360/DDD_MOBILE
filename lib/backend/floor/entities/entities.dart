@@ -1,3 +1,4 @@
+import 'package:DDD/app_state.dart';
 import 'package:floor/floor.dart';
 import 'package:uuid/uuid.dart';
 
@@ -181,12 +182,17 @@ class Dispense {
       'dateNextRefill': dateNextRefill.toIso8601String().substring(0, 10),
       'missedDoses': missedDoses,
       'adverseIssues': adverseIssues,
-      'medications': medications
+      'medications': medications,
+      'organisation': {'id': FFAppState().activationCode}
     };
   }
 
   Medication? getArv() {
-    return medications.where((m) => m.arv).toList().first;
+    var meds =  medications.where((m) => m.arv).toList();
+    if(meds.isNotEmpty) {
+      return meds.first;
+    }
+    return null;
   }
 }
 
@@ -255,7 +261,8 @@ class Clinic {
         'swelling': swelling,
         'fever': fever,
         'weightLoss': weightLoss,
-        'tbReferred': tbReferred
+        'tbReferred': tbReferred,
+        'organisation': {'id': FFAppState().activationCode}
       };
 }
 

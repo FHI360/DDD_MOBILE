@@ -13,6 +13,7 @@ class RefillModel extends FlutterFlowModel {
   // State field(s) for PageView widget.
   PageController? pageViewController;
   DateTime? datePicked;
+  DateTime? datePicked1;
   DateTime? nrd;
 
   // State field(s) for weight widget.

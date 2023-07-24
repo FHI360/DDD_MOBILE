@@ -148,6 +148,9 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                             _datePickedDate.year,
                                             _datePickedDate.month,
                                             _datePickedDate.day,
+                                            _datePickedDate.hour,
+                                            _datePickedDate.minute,
+                                            _datePickedDate.second
                                           );
                                         });
                                       }

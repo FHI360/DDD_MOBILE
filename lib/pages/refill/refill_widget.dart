@@ -188,6 +188,35 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                           8.0),
                                                 ),
                                                 child: InkWell(
+                                                  onTap: () async {
+                                                    DateTime today =
+                                                        DateTime.now();
+                                                    DateTime min = DateTime(
+                                                        today.year - 1,
+                                                        today.month,
+                                                        today.day);
+                                                    final _datePickedDate =
+                                                        await showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          getCurrentTimestamp,
+                                                      firstDate: min,
+                                                      lastDate:
+                                                          getCurrentTimestamp,
+                                                    );
+
+                                                    if (_datePickedDate !=
+                                                        null) {
+                                                      setState(() {
+                                                        _model.datePicked1 =
+                                                            DateTime(
+                                                          _datePickedDate.year,
+                                                          _datePickedDate.month,
+                                                          _datePickedDate.day,
+                                                        );
+                                                      });
+                                                    }
+                                                  },
                                                   child: Row(
                                                     mainAxisSize:
                                                         MainAxisSize.max,
@@ -197,9 +226,9 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                           padding:
                                                               EdgeInsetsDirectional
                                                                   .fromSTEB(
-                                                                      1.0,
-                                                                      0.0,
-                                                                      1.0,
+                                                                      3.0,
+                                                                      3.0,
+                                                                      3.0,
                                                                       0.0),
                                                           child: Row(
                                                             mainAxisSize:
@@ -222,7 +251,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           .start,
                                                                   children: [
                                                                     Text(
-                                                                      'Date of visit',
+                                                                      'Visit Date (required)',
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyText1,
@@ -230,7 +259,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                     Text(
                                                                       dateTimeFormat(
                                                                         'yMMMd',
-                                                                        getCurrentTimestamp,
+                                                                        _model
+                                                                            .datePicked1,
                                                                         locale:
                                                                             FFLocalizations.of(context).languageCode,
                                                                       ),
@@ -240,7 +270,24 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                     ),
                                                                   ],
                                                                 ),
-                                                              )
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            1.0,
+                                                                            0.0,
+                                                                            5.0,
+                                                                            0.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .date_range,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryText,
+                                                                  size: 24.0,
+                                                                ),
+                                                              ),
                                                             ],
                                                           ),
                                                         ),
@@ -2682,47 +2729,6 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                   ),
                                                 ),
                                               ),
-                                              if (_model.datePicked != null &&
-                                                  _model.datePicked!.isAfter(
-                                                      _model.patient!
-                                                          .nextAppointmentDate) &&
-                                                  _model.patient!
-                                                      .nextAppointmentDate
-                                                      .isAfter(DateTime.now()))
-                                                Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  5.0,
-                                                                  12.0,
-                                                                  2.0,
-                                                                  0.0),
-                                                      child: Text(
-                                                        'Remind patient to go for next facility appointment on ${dateTimeFormat('yMMMd', _model.patient!.nextAppointmentDate)}',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyText1
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText1Family,
-                                                                  color: Color(
-                                                                      0xFFCC4066),
-                                                                  useGoogleFonts: GoogleFonts
-                                                                          .asMap()
-                                                                      .containsKey(
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyText1Family),
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
                                               Padding(
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(0, 30, 0, 0),
@@ -2785,6 +2791,10 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                       .text) ==
                                                                   null) ||
                                                               _model.regimenValue ==
+                                                                  null ||
+                                                              _model.datePicked1 ==
+                                                                  null ||
+                                                              _model.datePicked ==
                                                                   null)
                                                           ? null
                                                           : () async {
@@ -2816,7 +2826,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                   _model
                                                                       .patient!
                                                                       .uuid,
-                                                                  getCurrentTimestamp,
+                                                                  _model
+                                                                      .datePicked1!,
                                                                   functions.booleanFromYesNo(_model
                                                                       .coughingValue),
                                                                   functions.booleanFromYesNo(
@@ -2863,8 +2874,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                   patientId: _model
                                                                       .patient!
                                                                       .uuid,
-                                                                  date:
-                                                                      getCurrentTimestamp,
+                                                                  date: _model
+                                                                      .datePicked1!,
                                                                   medications: [
                                                                     medication
                                                                   ],

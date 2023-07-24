@@ -333,7 +333,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .primaryColor,
+                                                                .secondaryColor,
                                                         useGoogleFonts: GoogleFonts
                                                                 .asMap()
                                                             .containsKey(
@@ -908,7 +908,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                     ),
                   if ((_model.devolve?.reasonDiscontinued == null ||
                           _model.devolve!.reasonDiscontinued!.isEmpty) &&
-                      true)
+                      FFAppState().outlet)
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(10, 12, 0, 0),
                       child: Row(
