@@ -5,6 +5,7 @@ import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
 import 'package:DDD/flutter_flow/instant_timer.dart';
 import 'package:DDD/flutter_flow/nav/nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +111,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             _model.emailAddressLoginController,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: 'Username',
+                                          labelText: 'LOGIN.USERNAME'.tr(),
                                           labelStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,

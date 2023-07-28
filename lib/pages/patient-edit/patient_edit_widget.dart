@@ -6,6 +6,7 @@ import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:DDD/pages/patient-edit/patient_edit_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oktoast/oktoast.dart';
@@ -60,6 +61,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
 
       _model.clinicStageValue = _model.patient!.lastClinicStage;
       _model.sexValue = _model.patient!.sex;
+      _model.targetGroupValue = _model.patient!.targetGroup;
     });
   }
 
@@ -715,10 +717,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                     dateTimeFormat(
                                                       'yMMMd',
                                                       _model.datePicked1,
-                                                      locale:
-                                                          FFLocalizations.of(
-                                                                  context)
-                                                              .languageCode,
+                                                      locale: context
+                                                          .locale.languageCode,
                                                     ),
                                                     style: FlutterFlowTheme.of(
                                                             context)
@@ -808,10 +808,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                     dateTimeFormat(
                                                       'yMMMd',
                                                       _model.datePicked2,
-                                                      locale:
-                                                          FFLocalizations.of(
-                                                                  context)
-                                                              .languageCode,
+                                                      locale: context
+                                                          .locale.languageCode,
                                                     ),
                                                     style: FlutterFlowTheme.of(
                                                             context)
@@ -1389,10 +1387,137 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                       'Stage IV',
                                                       'Stage V',
                                                     ],
-                                                    initialOption: _model.clinicStageValue,
+                                                    initialOption:
+                                                        _model.clinicStageValue,
                                                     onChanged: (val) =>
                                                         setState(() => _model
                                                                 .clinicStageValue =
+                                                            val),
+                                                    width: 180.0,
+                                                    height: 50.0,
+                                                    textStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyText1
+                                                            .override(
+                                                              fontFamily:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryText,
+                                                              useGoogleFonts: GoogleFonts
+                                                                      .asMap()
+                                                                  .containsKey(
+                                                                      FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyText1Family),
+                                                            ),
+                                                    fillColor: FlutterFlowTheme
+                                                            .of(context)
+                                                        .secondaryBackground,
+                                                    elevation: 2.0,
+                                                    borderColor:
+                                                        Colors.transparent,
+                                                    borderWidth: 0.0,
+                                                    borderRadius: 0.0,
+                                                    margin:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(12.0, 4.0,
+                                                                12.0, 4.0),
+                                                    hidesUnderline: true,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          if (_model.patient != null)
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 12.0, 16.0, 0.0),
+                              child: Container(
+                                width: double.infinity,
+                                height: 60.0,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF111417),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 100.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  10.0, 5.0, 5.0, 5.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Target group',
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyText1
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyText1Family,
+                                                          fontSize: 12.0,
+                                                          useGoogleFonts: GoogleFonts
+                                                                  .asMap()
+                                                              .containsKey(
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family),
+                                                        ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 100.0,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground,
+                                                  ),
+                                                  child: FlutterFlowDropDown<
+                                                      String>(
+                                                    options: [
+                                                      'MSM',
+                                                      'FSW',
+                                                      'TG',
+                                                      'Other'
+                                                    ],
+                                                    initialOption:
+                                                        _model.targetGroupValue,
+                                                    onChanged: (val) =>
+                                                        setState(() => _model
+                                                                .targetGroupValue =
                                                             val),
                                                     width: 180.0,
                                                     height: 50.0,
@@ -1577,6 +1702,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                               _model.viralLoadController.text;
                                           _model.patient!.facilityCode =
                                               FFAppState().activationCode;
+                                          _model.patient!.targetGroup =
+                                              _model.targetGroupValue;
                                           _model.patient!.synced = false;
 
                                           final _database = await database;

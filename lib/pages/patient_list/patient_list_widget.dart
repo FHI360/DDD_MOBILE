@@ -132,9 +132,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(5, 0, 5, 5),
                         child: InkWell(
-                          onTap: (_model.keywordController.text.isEmpty)
-                              ? null
-                              : () async {
+                          onTap: () async {
                                   _model.patients = await filterPatients(
                                     _model.keywordController.text,
                                   );

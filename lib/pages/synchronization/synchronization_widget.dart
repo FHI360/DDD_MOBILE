@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:DDD/backend/http/account_service.dart';
 import 'package:DDD/backend/http/sync_service.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
+import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -116,7 +117,7 @@ class _SynchronizationWidget extends State<SynchronizationWidget> {
                                     await service.processAccount();
                                   }
 
-                                  Navigator.pop(context, true);
+                                  context.pushNamed('patientList');
                                 },
                                 text: 'Synchronize',
                                 options: FFButtonOptions(

@@ -134,16 +134,16 @@ abstract class PatientDao {
   @Query("DELETE FROM Patient")
   Future<void> deleteAll();
 
-  /*@Query('''
+/*@Query('''
     WITH DISS AS (
 	    SELECT CASE
-		            WHEN age < 15 AND sex = 'Female' THEN'fu' 
-		            WHEN age < 15 AND sex = 'Male' THEN 'mu' 
-		            ELSE 'ov' 
+		            WHEN age < 15 AND sex = 'Female' THEN'fu'
+		            WHEN age < 15 AND sex = 'Male' THEN 'mu'
+		            ELSE 'ov'
 	            END data, outletCode, facilityCode, date FROM Appointment
 	  )
     SELECT data, COUNT(*) value FROM DISS WHERE (facilityCode = :code OR
-      outletCode = :code) AND date BETWEEN :start AND :end GROUP BY 1 
+      outletCode = :code) AND date BETWEEN :start AND :end GROUP BY 1
   ''')
   Future<List<Appointment>> missingAppointments(
       String code, DateTime start, DateTime end);*/
@@ -213,7 +213,7 @@ abstract class DispenseDao {
   @Query("DELETE FROM Dispense")
   Future<void> deleteAll();
 
-  @Query('SELECT COUNT(*) > 0 FROM Dispense WHERE synced = false')
+  @Query('SELECT COUNT(*) > 0 FROM Dispense WHERE synced= 0')
   Future<bool?> hasUnSynced();
 }
 
@@ -237,7 +237,7 @@ abstract class ClinicDao {
   @Query("DELETE FROM Clinic")
   Future<void> deleteAll();
 
-  @Query('SELECT COUNT(*) > 0 FROM Clinic WHERE synced = false')
+  @Query('SELECT COUNT(*) > 0 FROM Clinic WHERE synced= 0')
   Future<bool?> hasUnSynced();
 }
 
@@ -256,7 +256,7 @@ abstract class DevolveDao {
   @Query("DELETE FROM Devolve")
   Future<void> deleteAll();
 
-  @Query('SELECT COUNT(*) > 0 FROM Devolve WHERE synced = false')
+  @Query('SELECT COUNT(*) > 0 FROM Devolve WHERE synced= 0')
   Future<bool?> hasUnSynced();
 }
 
@@ -309,4 +309,36 @@ abstract class RegimenDao {
 
   @Query("DELETE FROM Regimen")
   Future<void> deleteAll();
+}
+
+@dao
+abstract class ViralLoadDao {
+  @Query('SELECT * FROM ViralLoad')
+  Future<List<ViralLoad>> findAll();
+
+  @Query('SELECT * FROM ViralLoad WHERE id = :id')
+  Stream<ViralLoad?> findById(int id);
+
+  @Query('SELECT * FROM ViralLoad WHERE synced = 0')
+  Future<List<ViralLoad>> findUnSynced();
+
+  @Query(
+      'SELECT * FROM ViralLoad WHERE patientId = :patientId ORDER BY date DESC')
+  Future<List<ViralLoad>> findByPatient(String patientId);
+
+  @Query(
+      'SELECT * FROM ViralLoad WHERE patientId = :patientId AND date = :date')
+  Future<List<ViralLoad>> findByPatientAndDate(String patientId, DateTime date);
+
+  @insert
+  Future<void> insertRecord(ViralLoad vialLoad);
+
+  @update
+  Future<int> updateRecord(ViralLoad vialLoad);
+
+  @Query("DELETE FROM ViralLoad")
+  Future<void> deleteAll();
+
+  @Query('SELECT COUNT(*) > 0 FROM ViralLoad WHERE synced= 0')
+  Future<bool?> hasUnSynced();
 }

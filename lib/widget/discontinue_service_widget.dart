@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:DDD/main.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -14,8 +14,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'discontinue_service_model.dart';
 
 export 'discontinue_service_model.dart';
-
-final log = Logger('DiscontinueServiceWidget');
 
 class DiscontinueServiceWidget extends StatefulWidget {
   const DiscontinueServiceWidget({
@@ -153,7 +151,7 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(
-                                                      1.0, 0.0, 10.0, 0.0),
+                                                      5.0, 0.0, 10.0, 0.0),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
@@ -181,8 +179,8 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                           dateTimeFormat(
                                                             'yMMMd',
                                                             _model.datePicked,
-                                                            locale: FFLocalizations
-                                                                    .of(context)
+                                                            locale: context
+                                                                .locale
                                                                 .languageCode,
                                                           ),
                                                           style: FlutterFlowTheme

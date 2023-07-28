@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/widget/devolve_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
     setState(() {
       _model.devolve = devolve;
       _model.outlet = currentOutlet.isNotEmpty ? currentOutlet.first : null;
+      _model.initialized = true;
     });
   }
 
@@ -145,13 +147,12 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                       if (_datePickedDate != null) {
                                         setState(() {
                                           _model.datePicked = DateTime(
-                                            _datePickedDate.year,
-                                            _datePickedDate.month,
-                                            _datePickedDate.day,
-                                            _datePickedDate.hour,
-                                            _datePickedDate.minute,
-                                            _datePickedDate.second
-                                          );
+                                              _datePickedDate.year,
+                                              _datePickedDate.month,
+                                              _datePickedDate.day,
+                                              _datePickedDate.hour,
+                                              _datePickedDate.minute,
+                                              _datePickedDate.second);
                                         });
                                       }
                                     },
@@ -162,7 +163,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    1.0, 0.0, 10.0, 0.0),
+                                                    5.0, 0.0, 10.0, 0.0),
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               mainAxisAlignment:
@@ -190,10 +191,8 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                         dateTimeFormat(
                                                           'yMMMd',
                                                           _model.datePicked,
-                                                          locale:
-                                                              FFLocalizations.of(
-                                                                      context)
-                                                                  .languageCode,
+                                                          locale: context.locale
+                                                              .languageCode,
                                                         ),
                                                         style:
                                                             FlutterFlowTheme.of(
@@ -221,146 +220,149 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12.0, 12.0, 12.0, 0.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 60.0,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          width: 100.0,
-                                          height: 100.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  5.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Text(
-                                                        'Outlet',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyText1
-                                                                .override(
-                                                                  fontFamily: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText1Family,
-                                                                  fontSize:
-                                                                      12.0,
-                                                                  useGoogleFonts: GoogleFonts
-                                                                          .asMap()
-                                                                      .containsKey(
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .bodyText1Family),
-                                                                ),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: Padding(
+                              if (_model.initialized)
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      12.0, 12.0, 12.0, 0.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 60.0,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            width: 100.0,
+                                            height: 100.0,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
                                                         padding:
                                                             EdgeInsetsDirectional
                                                                 .fromSTEB(
-                                                                    10.0,
+                                                                    5.0,
                                                                     0.0,
-                                                                    10.0,
+                                                                    0.0,
                                                                     0.0),
-                                                        child:
-                                                            FlutterFlowDropDown<
-                                                                Outlet>(
-                                                          initialOption:
-                                                              _model.outlet,
-                                                          options:
-                                                              _model.outlets,
-                                                          optionLabels: _model
-                                                              .outlets
-                                                              .map(
-                                                                  (e) => e.name)
-                                                              .toList(),
-                                                          onChanged: (val) =>
-                                                              setState(() =>
-                                                                  _model.outletValue =
-                                                                      val),
-                                                          width:
-                                                              double.infinity,
-                                                          height: 50.0,
-                                                          textStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyText1
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyText1Family,
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primaryText,
-                                                                    useGoogleFonts: GoogleFonts
-                                                                            .asMap()
-                                                                        .containsKey(
-                                                                            FlutterFlowTheme.of(context).bodyText1Family),
-                                                                  ),
-                                                          fillColor: FlutterFlowTheme
+                                                        child: Text(
+                                                          'Outlet',
+                                                          style: FlutterFlowTheme
                                                                   .of(context)
-                                                              .secondaryBackground,
-                                                          elevation: 2.0,
-                                                          borderColor: Colors
-                                                              .transparent,
-                                                          borderWidth: 0.0,
-                                                          borderRadius: 0.0,
-                                                          margin:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0),
-                                                          hidesUnderline: true,
+                                                              .bodyText1
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family,
+                                                                fontSize: 12.0,
+                                                                useGoogleFonts: GoogleFonts
+                                                                        .asMap()
+                                                                    .containsKey(
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyText1Family),
+                                                              ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                      Expanded(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      10.0,
+                                                                      0.0,
+                                                                      10.0,
+                                                                      0.0),
+                                                          child:
+                                                              FlutterFlowDropDown<
+                                                                  Outlet>(
+                                                            initialOption:
+                                                                _model.outlet,
+                                                            options:
+                                                                _model.outlets,
+                                                            optionLabels: _model
+                                                                .outlets
+                                                                .map((e) =>
+                                                                    e.name)
+                                                                .toList(),
+                                                            onChanged: (val) =>
+                                                                setState(() =>
+                                                                    _model.outletValue =
+                                                                        val),
+                                                            width:
+                                                                double.infinity,
+                                                            height: 50.0,
+                                                            textStyle:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyText1Family,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primaryText,
+                                                                      useGoogleFonts: GoogleFonts
+                                                                              .asMap()
+                                                                          .containsKey(
+                                                                              FlutterFlowTheme.of(context).bodyText1Family),
+                                                                    ),
+                                                            fillColor: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .secondaryBackground,
+                                                            elevation: 2.0,
+                                                            borderColor: Colors
+                                                                .transparent,
+                                                            borderWidth: 0.0,
+                                                            borderRadius: 0.0,
+                                                            margin:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            hidesUnderline:
+                                                                true,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     24, 24, 24, 24),
@@ -448,20 +450,30 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                 );
                                                 return;
                                               }
+                                              DateTime now = DateTime.now();
+                                              DateTime devolveDate = DateTime(
+                                                  _model.datePicked!.year,
+                                                  _model.datePicked!.month,
+                                                  _model.datePicked!.day,
+                                                  now.hour,
+                                                  now.minute,
+                                                  now.second);
                                               final _database = await database;
                                               var devolve = Devolve.instance();
                                               devolve.patientId =
                                                   widget.patient!.uuid;
-                                              devolve.outletCode =
-                                                  FFAppState().activationCode;
-                                              devolve.date = _model.datePicked!;
+                                              devolve.date = devolveDate;
                                               devolve.outletCode =
                                                   _model.outletValue!.code;
 
                                               await _database.devolveDao
                                                   .insertRecord(devolve);
 
-                                              print('Date: ${devolve.date}');
+                                              widget.patient!.outletCode =
+                                                  _model.outletValue!.code;
+                                              await _database.patientDao
+                                                  .updateRecord(
+                                                      widget.patient!);
 
                                               Navigator.pop(context, devolve);
                                             },

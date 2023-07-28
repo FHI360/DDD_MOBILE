@@ -94,6 +94,7 @@ dependencies:
   flutter_html_to_pdf: ^0.7.0
   multilevel_drawer: ^2.0.0
   month_year_picker: ^0.2.0+4
+  easy_localization: ^3.0.2
 
 dependency_overrides:
   rxdart: 0.27.4
@@ -135,7 +136,7 @@ flutter:
     - assets/rive_animations/
     - assets/pdfs/
     - assets/csv/
-    - assets/keys/
+    - assets/translations/
     - assets/css/
 
 

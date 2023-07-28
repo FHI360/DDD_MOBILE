@@ -32,7 +32,7 @@ class ListMedicationConverter extends TypeConverter<List<Medication>, String> {
 @TypeConverters([DateTimeConverter, ListMedicationConverter])
 @Database(
     version: 9,
-    entities: [Clinic, Facility, Outlet, Patient, Regimen, Dispense, Devolve],
+    entities: [Clinic, Facility, Outlet, Patient, Regimen, Dispense, Devolve, ViralLoad],
     views: [LastDispense, DispenseInfo])
 abstract class AppDatabase extends FloorDatabase {
   ClinicDao get clinicDao;
@@ -48,4 +48,6 @@ abstract class AppDatabase extends FloorDatabase {
   OutletDao get outletDao;
 
   FacilityDao get facilityDao;
+
+  ViralLoadDao get viralLoadDao;
 }

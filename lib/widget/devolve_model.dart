@@ -13,6 +13,7 @@ class DevolveModel extends FlutterFlowModel {
   List<Outlet> outlets = [];
   Devolve? devolve;
   Outlet? outlet;
+  bool initialized = false;
 
   /// Initialization and disposal methods.
 

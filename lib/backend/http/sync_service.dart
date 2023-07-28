@@ -13,12 +13,14 @@ class SyncService {
     List<Dispense> dispenses = await _database.dispenseDao.findUnSynced();
     List<Clinic> clinic = await _database.clinicDao.findUnSynced();
     List<Devolve> devolves = await _database.devolveDao.findUnSynced();
+    List<ViralLoad> viralLoads = await _database.viralLoadDao.findUnSynced();
 
     final Map<String, dynamic> payload = new Map<String, dynamic>();
     payload['patients'] = patients.map((e) => e.toJson()).toList();
     payload['dispenses'] = dispenses.map((d) => d.toJson()).toList();
     payload['clinics'] = clinic.map((c) => c.toJson()).toList();
     payload['devolves'] = devolves.map((d) => d.toJson()).toList();
+    payload['viralLoads'] = viralLoads.map((v) => v.toJson()).toList();
 
     final response = await api.post(
       '${FFAppState().baseUrl}/api/ddd/sync',
@@ -38,6 +40,9 @@ class SyncService {
     }
     if (!(hasData ?? false)) {
       hasData = await _database.devolveDao.hasUnSynced();
+    }
+    if (!(hasData ?? false)) {
+      hasData = await _database.viralLoadDao.hasUnSynced();
     }
     if (hasData ?? false) {
       final response = await _syncRecords();

@@ -75,6 +75,8 @@ class _$AppDatabase extends AppDatabase {
 
   FacilityDao? _facilityDaoInstance;
 
+  ViralLoadDao? _viralLoadDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -103,13 +105,15 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Outlet` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `facilityCode` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `uniqueId` TEXT, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT, `facility` TEXT, `outletCode` TEXT, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT, `lastViralLoad` TEXT, `deleted` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `uniqueId` TEXT, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT, `facility` TEXT, `outletCode` TEXT, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `viralLoadDate` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT, `lastViralLoad` TEXT, `deleted` INTEGER, `targetGroup` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Regimen` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `regimenType` TEXT NOT NULL, `arv` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Dispense` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `patientId` TEXT NOT NULL, `dateNextRefill` INTEGER NOT NULL, `medications` TEXT NOT NULL, `synced` INTEGER NOT NULL, `missedDoses` INTEGER, `adverseIssues` INTEGER, `uuid` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Devolve` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `reasonDiscontinued` TEXT, `date` INTEGER NOT NULL, `outletCode` TEXT NOT NULL, `patientId` TEXT NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ViralLoad` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `value` TEXT, `nextAppointment` INTEGER NOT NULL, `patientId` TEXT NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
 
         await database.execute(
             'CREATE VIEW IF NOT EXISTS `LastDispense` AS   WITH last_Dispense AS ( \n      SELECT * FROM (\n            SELECT patientId, date, dateNextRefill, ROW_NUMBER() OVER (PARTITION BY patientId \n            ORDER BY date DESC) rn FROM Dispense\n      ) r WHERE rn = 1\n  )\n  SELECT outletCode, facilityCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, \n    dateNextRefill FROM last_Dispense JOIN patient p ON patientId = p.uuid ORDER BY givenName, familyName\n');
@@ -155,6 +159,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   FacilityDao get facilityDao {
     return _facilityDaoInstance ??= _$FacilityDao(database, changeListener);
+  }
+
+  @override
+  ViralLoadDao get viralLoadDao {
+    return _viralLoadDaoInstance ??= _$ViralLoadDao(database, changeListener);
   }
 }
 
@@ -296,7 +305,7 @@ class _$ClinicDao extends ClinicDao {
   @override
   Future<bool?> hasUnSynced() async {
     return _queryAdapter.query(
-        'SELECT COUNT(*) > 0 FROM Clinic WHERE synced = false',
+        'SELECT COUNT(*) > 0 FROM Clinic WHERE synced= 0',
         mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
   }
 
@@ -368,7 +377,7 @@ class _$DevolveDao extends DevolveDao {
   @override
   Future<bool?> hasUnSynced() async {
     return _queryAdapter.query(
-        'SELECT COUNT(*) > 0 FROM Devolve WHERE synced = false',
+        'SELECT COUNT(*) > 0 FROM Devolve WHERE synced= 0',
         mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
   }
 
@@ -576,7 +585,7 @@ class _$DispenseDao extends DispenseDao {
   @override
   Future<bool?> hasUnSynced() async {
     return _queryAdapter.query(
-        'SELECT COUNT(*) > 0 FROM Dispense WHERE synced = false',
+        'SELECT COUNT(*) > 0 FROM Dispense WHERE synced= 0',
         mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
   }
 
@@ -623,11 +632,14 @@ class _$PatientDao extends PatientDao {
                       _dateTimeConverter.encode(item.nextVisitDate),
                   'dateStarted': _dateTimeConverter.encode(item.dateStarted),
                   'uuid': item.uuid,
+                  'viralLoadDate':
+                      _dateTimeConverter.encode(item.viralLoadDate),
                   'synced': item.synced ? 1 : 0,
                   'lastClinicStage': item.lastClinicStage,
                   'lastViralLoad': item.lastViralLoad,
                   'deleted':
-                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                      item.deleted == null ? null : (item.deleted! ? 1 : 0),
+                  'targetGroup': item.targetGroup
                 }),
         _patientUpdateAdapter = UpdateAdapter(
             database,
@@ -656,11 +668,14 @@ class _$PatientDao extends PatientDao {
                       _dateTimeConverter.encode(item.nextVisitDate),
                   'dateStarted': _dateTimeConverter.encode(item.dateStarted),
                   'uuid': item.uuid,
+                  'viralLoadDate':
+                      _dateTimeConverter.encode(item.viralLoadDate),
                   'synced': item.synced ? 1 : 0,
                   'lastClinicStage': item.lastClinicStage,
                   'lastViralLoad': item.lastViralLoad,
                   'deleted':
-                      item.deleted == null ? null : (item.deleted! ? 1 : 0)
+                      item.deleted == null ? null : (item.deleted! ? 1 : 0),
+                  'targetGroup': item.targetGroup
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -680,7 +695,7 @@ class _$PatientDao extends PatientDao {
   ) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Patient WHERE (outletCode = ?1 OR facilityCode =          ?1) AND (LOWER(givenName) LIKE          LOWER(?2) OR LOWER(familyName) LIKE LOWER(?2) OR          LOWER(hospitalNo) LIKE LOWER(?2)) ORDER BY givenName,        familyName LIMIT 10',
-        mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, uniqueId: row['uniqueId'] as String?, synced: (row['synced'] as int) != 0),
+        mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, targetGroup: row['targetGroup'] as String?, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, viralLoadDate: _dateTimeConverter.decode(row['viralLoadDate'] as int), uniqueId: row['uniqueId'] as String?, synced: (row['synced'] as int) != 0),
         arguments: [activationCode, keyword]);
   }
 
@@ -694,6 +709,7 @@ class _$PatientDao extends PatientDao {
             hospitalNo: row['hospitalNo'] as String,
             dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
             sex: row['sex'] as String,
+            targetGroup: row['targetGroup'] as String?,
             phone: row['phone'] as String?,
             facility: row['facility'] as String?,
             outletCode: row['outletCode'] as String?,
@@ -711,6 +727,8 @@ class _$PatientDao extends PatientDao {
             lastClinicStage: row['lastClinicStage'] as String?,
             uuid: row['uuid'] as String,
             lastViralLoad: row['lastViralLoad'] as String?,
+            viralLoadDate:
+                _dateTimeConverter.decode(row['viralLoadDate'] as int),
             uniqueId: row['uniqueId'] as String?,
             synced: (row['synced'] as int) != 0),
         arguments: [id]);
@@ -726,6 +744,7 @@ class _$PatientDao extends PatientDao {
             hospitalNo: row['hospitalNo'] as String,
             dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
             sex: row['sex'] as String,
+            targetGroup: row['targetGroup'] as String?,
             phone: row['phone'] as String?,
             facility: row['facility'] as String?,
             outletCode: row['outletCode'] as String?,
@@ -743,6 +762,8 @@ class _$PatientDao extends PatientDao {
             lastClinicStage: row['lastClinicStage'] as String?,
             uuid: row['uuid'] as String,
             lastViralLoad: row['lastViralLoad'] as String?,
+            viralLoadDate:
+                _dateTimeConverter.decode(row['viralLoadDate'] as int),
             uniqueId: row['uniqueId'] as String?,
             synced: (row['synced'] as int) != 0),
         arguments: [uniqueId]);
@@ -765,6 +786,7 @@ class _$PatientDao extends PatientDao {
             hospitalNo: row['hospitalNo'] as String,
             dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
             sex: row['sex'] as String,
+            targetGroup: row['targetGroup'] as String?,
             phone: row['phone'] as String?,
             facility: row['facility'] as String?,
             outletCode: row['outletCode'] as String?,
@@ -782,6 +804,8 @@ class _$PatientDao extends PatientDao {
             lastClinicStage: row['lastClinicStage'] as String?,
             uuid: row['uuid'] as String,
             lastViralLoad: row['lastViralLoad'] as String?,
+            viralLoadDate:
+                _dateTimeConverter.decode(row['viralLoadDate'] as int),
             uniqueId: row['uniqueId'] as String?,
             synced: (row['synced'] as int) != 0));
   }
@@ -1019,6 +1043,155 @@ class _$FacilityDao extends FacilityDao {
   @override
   Future<void> updateRecord(Facility facility) async {
     await _facilityUpdateAdapter.update(facility, OnConflictStrategy.abort);
+  }
+}
+
+class _$ViralLoadDao extends ViralLoadDao {
+  _$ViralLoadDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _viralLoadInsertionAdapter = InsertionAdapter(
+            database,
+            'ViralLoad',
+            (ViralLoad item) => <String, Object?>{
+                  'id': item.id,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'value': item.value,
+                  'nextAppointment':
+                      _dateTimeConverter.encode(item.nextAppointment),
+                  'patientId': item.patientId,
+                  'uuid': item.uuid,
+                  'synced': item.synced ? 1 : 0
+                },
+            changeListener),
+        _viralLoadUpdateAdapter = UpdateAdapter(
+            database,
+            'ViralLoad',
+            ['id'],
+            (ViralLoad item) => <String, Object?>{
+                  'id': item.id,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'value': item.value,
+                  'nextAppointment':
+                      _dateTimeConverter.encode(item.nextAppointment),
+                  'patientId': item.patientId,
+                  'uuid': item.uuid,
+                  'synced': item.synced ? 1 : 0
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ViralLoad> _viralLoadInsertionAdapter;
+
+  final UpdateAdapter<ViralLoad> _viralLoadUpdateAdapter;
+
+  @override
+  Future<List<ViralLoad>> findAll() async {
+    return _queryAdapter.queryList('SELECT * FROM ViralLoad',
+        mapper: (Map<String, Object?> row) => ViralLoad(
+            id: row['id'] as int?,
+            nextAppointment:
+                _dateTimeConverter.decode(row['nextAppointment'] as int),
+            patientId: row['patientId'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            uuid: row['uuid'] as String,
+            value: row['value'] as String?,
+            synced: (row['synced'] as int) != 0));
+  }
+
+  @override
+  Stream<ViralLoad?> findById(int id) {
+    return _queryAdapter.queryStream('SELECT * FROM ViralLoad WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => ViralLoad(
+            id: row['id'] as int?,
+            nextAppointment:
+                _dateTimeConverter.decode(row['nextAppointment'] as int),
+            patientId: row['patientId'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            uuid: row['uuid'] as String,
+            value: row['value'] as String?,
+            synced: (row['synced'] as int) != 0),
+        arguments: [id],
+        queryableName: 'ViralLoad',
+        isView: false);
+  }
+
+  @override
+  Future<List<ViralLoad>> findUnSynced() async {
+    return _queryAdapter.queryList('SELECT * FROM ViralLoad WHERE synced = 0',
+        mapper: (Map<String, Object?> row) => ViralLoad(
+            id: row['id'] as int?,
+            nextAppointment:
+                _dateTimeConverter.decode(row['nextAppointment'] as int),
+            patientId: row['patientId'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            uuid: row['uuid'] as String,
+            value: row['value'] as String?,
+            synced: (row['synced'] as int) != 0));
+  }
+
+  @override
+  Future<List<ViralLoad>> findByPatient(String patientId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM ViralLoad WHERE patientId = ?1 ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => ViralLoad(
+            id: row['id'] as int?,
+            nextAppointment:
+                _dateTimeConverter.decode(row['nextAppointment'] as int),
+            patientId: row['patientId'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            uuid: row['uuid'] as String,
+            value: row['value'] as String?,
+            synced: (row['synced'] as int) != 0),
+        arguments: [patientId]);
+  }
+
+  @override
+  Future<List<ViralLoad>> findByPatientAndDate(
+    String patientId,
+    DateTime date,
+  ) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM ViralLoad WHERE patientId = ?1 AND date = ?2',
+        mapper: (Map<String, Object?> row) => ViralLoad(
+            id: row['id'] as int?,
+            nextAppointment:
+                _dateTimeConverter.decode(row['nextAppointment'] as int),
+            patientId: row['patientId'] as String,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            uuid: row['uuid'] as String,
+            value: row['value'] as String?,
+            synced: (row['synced'] as int) != 0),
+        arguments: [patientId, _dateTimeConverter.encode(date)]);
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM ViralLoad');
+  }
+
+  @override
+  Future<bool?> hasUnSynced() async {
+    return _queryAdapter.query(
+        'SELECT COUNT(*) > 0 FROM ViralLoad WHERE synced= 0',
+        mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
+  }
+
+  @override
+  Future<void> insertRecord(ViralLoad vialLoad) async {
+    await _viralLoadInsertionAdapter.insert(vialLoad, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateRecord(ViralLoad vialLoad) {
+    return _viralLoadUpdateAdapter.updateAndReturnChangedRows(
+        vialLoad, OnConflictStrategy.abort);
   }
 }
 

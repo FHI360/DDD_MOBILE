@@ -13,6 +13,7 @@ class PatientEditModel extends FlutterFlowModel {
   TextEditingController? hospitalNoController;
   String? sexValue;
   String? clinicStageValue;
+  String? targetGroupValue;
   DateTime? datePicked1;
   DateTime? datePicked2;
   bool? ageEstimatedValue;

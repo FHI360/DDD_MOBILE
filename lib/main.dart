@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'backend/floor/database.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
-import 'flutter_flow/internationalization.dart';
 
 String currentVersion = '1.0.0';
 String databaseName = 'ddd.db';
@@ -20,13 +19,19 @@ final router = createRouter(_appStateNotifier);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await FlutterFlowTheme.initialize();
 
   final appState = FFAppState(); // Initialize FFAppState
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
-    child: MyApp(),
+    child: EasyLocalization(
+        supportedLocales: [Locale('en'), Locale('fr')],
+        path: 'assets/translations',
+        fallbackLocale: Locale('en'),
+        useOnlyLangCode: true,
+        child: MyApp()),
   ));
 }
 
@@ -57,10 +62,6 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  void setLocale(String language) {
-    setState(() => _locale = createLocale(language));
-  }
-
   void setThemeMode(ThemeMode mode) => setState(() {
         _themeMode = mode;
         FlutterFlowTheme.saveThemeMode(mode);
@@ -72,16 +73,11 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp.router(
         title: 'DDD',
         localizationsDelegates: [
-          FFLocalizationsDelegate(),
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+          ...context.localizationDelegates,
           MonthYearPickerLocalizations.delegate,
         ],
-        locale: _locale,
-        supportedLocales: const [
-          Locale('en'),
-        ],
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         theme: ThemeData(brightness: Brightness.light),
         darkTheme: ThemeData(brightness: Brightness.light),
         themeMode: _themeMode,

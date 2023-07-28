@@ -3,6 +3,7 @@ import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:DDD/widget/devolve_widget.dart';
 import 'package:DDD/widget/discontinue_service_widget.dart';
+import 'package:DDD/widget/viral_load_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -43,13 +44,13 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
     final outlets = await _database.outletDao.findAll();
     setState(() {
       _model.patient = patient;
+      _model.outlets = outlets;
 
       if (devolve == null) {
         devolve = Devolve.instance();
       }
       _model.devolve = devolve;
       _model.dispenses = dispenses;
-
       if (FFAppState().outlet) {
         _model.refOrganisation = facilities
             .firstWhere((f) => f.code == _model.patient!.facilityCode,
@@ -64,16 +65,23 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
     });
   }
 
+  formatVL() {
+    if (_model.patient?.viralLoadDate == null ||
+        _model.patient?.viralLoadDate == DateTime(1900)) {
+      return '';
+    }
+    return '${_model.patient!.lastViralLoad} (${dateTimeFormat('yMMMd', _model.patient?.viralLoadDate)})';
+  }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => PatientProfileModel());
+    initialize();
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {});
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          initialize();
-        }));
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -496,6 +504,19 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                 ).then((value) => setState(() {
                                                       if (value != null) {
                                                         _model.devolve = value;
+                                                        _model.refOrganisation = _model
+                                                            .outlets
+                                                            .firstWhere(
+                                                                (o) =>
+                                                                    o.code ==
+                                                                    _model
+                                                                        .devolve!
+                                                                        .outletCode,
+                                                                orElse: () =>
+                                                                    Outlet
+                                                                        .fromJson(
+                                                                            {}))
+                                                            .name;
                                                       }
                                                     }));
                                               },
@@ -662,6 +683,99 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               ),
                                             ),
                                           ),
+                                        if (!FFAppState().outlet)
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    5, 0, 5, 5),
+                                            child: InkWell(
+                                              onTap: () async {
+                                                await showModalBottomSheet(
+                                                  isScrollControlled: true,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  enableDrag: false,
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return Padding(
+                                                      padding:
+                                                          MediaQuery.of(context)
+                                                              .viewInsets,
+                                                      child: ViralLoadWidget(
+                                                        patient: _model.patient,
+                                                      ),
+                                                    );
+                                                  },
+                                                ).then((value) => setState(() {
+                                                      if (value != null) {
+                                                        _model.patient!
+                                                                .viralLoadDate =
+                                                            value;
+                                                      }
+                                                    }));
+                                              },
+                                              child: Container(
+                                                height: 32,
+                                                constraints: BoxConstraints(
+                                                  maxHeight: 32,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      blurRadius: 4,
+                                                      color: Color(0x32171717),
+                                                      offset: Offset(0, 2),
+                                                    )
+                                                  ],
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(8, 0, 8, 0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(0, 0,
+                                                                    12, 0),
+                                                        child: Text(
+                                                          'Viral Load',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodyText1
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryBtnText,
+                                                                useGoogleFonts: GoogleFonts
+                                                                        .asMap()
+                                                                    .containsKey(
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyText1Family),
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      Icon(
+                                                        Icons.ac_unit,
+                                                        color: Colors.white,
+                                                        size: 12,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                       ],
                                     ),
                                   ],
@@ -779,7 +893,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                             height: 20,
                                             decoration: BoxDecoration(),
                                             child: Text(
-                                              'Last VL Date',
+                                              'Last Viral Load',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyText1
@@ -800,56 +914,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                             ),
                                           ),
                                           Text(
-                                            dateTimeFormat(
-                                                'yMMMd',
-                                                _model.patient
-                                                            ?.lastClinicVisit ==
-                                                        DateTime(1900)
-                                                    ? null
-                                                    : _model.patient
-                                                        ?.lastClinicVisit),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText1,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Container(
-                                            width: 180,
-                                            height: 20,
-                                            decoration: BoxDecoration(),
-                                            child: Text(
-                                              'Last Clinic',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText1
-                                                      .override(
-                                                        fontFamily:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyText1Family,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        useGoogleFonts: GoogleFonts
-                                                                .asMap()
-                                                            .containsKey(
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1Family),
-                                                      ),
-                                            ),
-                                          ),
-                                          Text(
-                                            dateTimeFormat(
-                                                'yMMMd',
-                                                _model.patient
-                                                            ?.lastClinicVisit ==
-                                                        DateTime(1900)
-                                                    ? null
-                                                    : _model.patient
-                                                        ?.lastClinicVisit),
+                                            formatVL(),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1,
                                           ),

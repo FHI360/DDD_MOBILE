@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:from_css_color/from_css_color.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:json_path/json_path.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
-import '../backend/floor/entities/entities.dart';
 import '../main.dart';
 
 export 'dart:convert' show jsonEncode, jsonDecode;
@@ -21,7 +19,6 @@ export 'package:page_transition/page_transition.dart';
 
 export '../app_state.dart';
 export 'flutter_flow_model.dart';
-export 'internationalization.dart' show FFLocalizations;
 export 'nav/nav.dart';
 export 'uploaded_file.dart';
 
@@ -211,7 +208,6 @@ const kTextValidatorEmailRegex =
 const kTextValidatorWebsiteRegex =
     r'(https?:\/\/)?(www\.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,10}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)|(https?:\/\/)?(www\.)?(?!ww)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,10}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)';
 
-
 extension FFTextEditingControllerExt on TextEditingController? {
   String get text => this == null ? '' : this!.text;
 
@@ -225,9 +221,6 @@ extension IterableExt<T> on Iterable<T> {
       .values
       .toList();
 }
-
-void setAppLanguage(BuildContext context, String language) =>
-    MyApp.of(context).setLocale(language);
 
 void setDarkModeSetting(BuildContext context, ThemeMode themeMode) =>
     MyApp.of(context).setThemeMode(themeMode);

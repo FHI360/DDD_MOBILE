@@ -23,6 +23,7 @@ class Patient {
   DateTime nextVisitDate;
   DateTime dateStarted;
   String uuid;
+  DateTime viralLoadDate;
   bool synced;
   String? lastClinicStage;
   String? lastViralLoad;
@@ -50,6 +51,7 @@ class Patient {
       this.lastClinicStage,
       required this.uuid,
       this.lastViralLoad,
+      required this.viralLoadDate,
       this.uniqueId,
       required this.synced});
 
@@ -78,6 +80,9 @@ class Patient {
       nextVisitDate: row['nextVisitDate'] != null
           ? DateTime.parse(row['nextVisitDate'])
           : DateTime(1900),
+      viralLoadDate: row['viralLoadDate'] != null
+          ? DateTime.parse(row['viralLoadDate'])
+          : DateTime(1900),
       dateStarted: row['dateStarted'] != null
           ? DateTime.parse(row['dateStarted'])
           : DateTime(1900),
@@ -99,7 +104,6 @@ class Patient {
         'address': address,
         'dateStarted': dateStarted.toIso8601String().substring(0, 10),
         'archived': deleted,
-        'lastViralLoad': lastViralLoad,
         'uniqueId': uniqueId,
         'clinicStage': lastClinicStage,
         'targetGroup': targetGroup
@@ -124,6 +128,7 @@ class Patient {
         nextAppointmentDate: DateTime(1900),
         nextVisitDate: DateTime(1900),
         dateStarted: DateTime(1900),
+        viralLoadDate: DateTime(1900),
         lastClinicStage: '',
         uuid: uuid.v4(),
         lastViralLoad: '',
@@ -188,8 +193,8 @@ class Dispense {
   }
 
   Medication? getArv() {
-    var meds =  medications.where((m) => m.arv).toList();
-    if(meds.isNotEmpty) {
+    var meds = medications.where((m) => m.arv).toList();
+    if (meds.isNotEmpty) {
       return meds.first;
     }
     return null;
@@ -266,6 +271,45 @@ class Clinic {
       };
 }
 
+@Entity(tableName: 'ViralLoad')
+class ViralLoad {
+  @PrimaryKey(autoGenerate: true)
+  int? id;
+  DateTime date;
+  String? value;
+  DateTime nextAppointment;
+  String patientId;
+  String uuid;
+  final bool synced;
+
+  ViralLoad(
+      {this.id,
+      required this.nextAppointment,
+      required this.patientId,
+      required this.date,
+      required this.uuid,
+      this.value,
+      required this.synced});
+
+  factory ViralLoad.instance() {
+    var uuid = Uuid();
+    return ViralLoad(
+        nextAppointment: DateTime(1900),
+        patientId: '',
+        date: DateTime.now(),
+        uuid: uuid.v4(),
+        synced: false);
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': uuid,
+        'value': value,
+        'patient': {'id': patientId},
+        'date': date.toIso8601String().substring(0, 10),
+        'nextAppointment': nextAppointment.toIso8601String().substring(0, 10)
+      };
+}
+
 @entity
 class Regimen {
   @PrimaryKey(autoGenerate: true)
@@ -304,7 +348,7 @@ class Outlet {
   Outlet(this.name, this.code, this.facilityCode);
 
   factory Outlet.fromJson(Map<String, dynamic> row) =>
-      Outlet(row['name'] ?? '', row['id'], row['facilityCode'] ?? '');
+      Outlet(row['name'] ?? '', row['id'] ?? '', row['facilityCode'] ?? '');
 }
 
 class Medication {

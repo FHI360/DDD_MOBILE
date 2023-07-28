@@ -1,5 +1,6 @@
 import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:DDD/main.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oktoast/oktoast.dart';
@@ -261,8 +262,9 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                         'yMMMd',
                                                                         _model
                                                                             .datePicked1,
-                                                                        locale:
-                                                                            FFLocalizations.of(context).languageCode,
+                                                                        locale: context
+                                                                            .locale
+                                                                            .languageCode,
                                                                       ),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
@@ -2695,8 +2697,9 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           'yMMMd',
                                                                           _model
                                                                               .datePicked,
-                                                                          locale:
-                                                                              FFLocalizations.of(context).languageCode,
+                                                                          locale: context
+                                                                              .locale
+                                                                              .languageCode,
                                                                         ),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1,
@@ -2905,7 +2908,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                       .datePicked!;
                                                               _model.patient!
                                                                       .lastRefillDate =
-                                                                  getCurrentTimestamp;
+                                                                  _model
+                                                                      .datePicked1!;
                                                               await value
                                                                   .patientDao
                                                                   .updateRecord(
