@@ -84,8 +84,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
       drawer: DDDDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Edit Patient',
+        title: Text(
+          'PAGES.PATIENT.TITLE'.tr(),
         ),
         backgroundColor: const Color(0xccdf6f3e),
       ),
@@ -116,7 +116,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 10.0, 8.0, 0.0, 10.0),
                             child: Text(
-                              'Edit Patient Profile',
+                              'PAGES.PATIENT.EDIT'.tr(),
                               style: FlutterFlowTheme.of(context).title3,
                             ),
                           ),
@@ -128,7 +128,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       5.0, 8.0, 0.0, 5.0),
                                   child: Text(
-                                    'Edit the fields below in order to change patient\'s profile.',
+                                    'PAGES.PATIENT.INTRO'.tr(),
                                     style:
                                         FlutterFlowTheme.of(context).bodyText1,
                                   ),
@@ -176,7 +176,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                       .fromSTEB(
                                                           5.0, 0.0, 0.0, 0.0),
                                                   child: Text(
-                                                    'Facility',
+                                                    'PAGES.PATIENT.FACILITY'
+                                                        .tr(),
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1
@@ -254,7 +255,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                           autofocus: true,
                                           obscureText: false,
                                           decoration: InputDecoration(
-                                            labelText: 'Given Name',
+                                            labelText:
+                                                'PAGES.PATIENT.GIVEN_NAME'.tr(),
                                             hintStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyText2,
@@ -326,7 +328,9 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                           autofocus: true,
                                           obscureText: false,
                                           decoration: InputDecoration(
-                                            labelText: 'Family Name',
+                                            labelText:
+                                                'PAGES.PATIENT.FAMILY_NAME'
+                                                    .tr(),
                                             hintStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyText2,
@@ -423,7 +427,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                     ),
                                   ),
                                   Text(
-                                    'Age unknown?',
+                                    'PAGES.PATIENT.AGE_UNKNOWN'.tr(),
                                     style:
                                         FlutterFlowTheme.of(context).bodyText1,
                                   ),
@@ -485,7 +489,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                                     0.0,
                                                                     0.0),
                                                         child: Text(
-                                                          'Estimated age',
+                                                          'PAGES.PATIENT.ESTIMATED_AGE'
+                                                              .tr(),
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyText1
@@ -671,11 +676,11 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                             now.month - 1, now.day);
                                         final _datePicked2Date =
                                             await showDatePicker(
-                                          context: context,
-                                          initialDate: max,
-                                          firstDate: DateTime(1940),
-                                          lastDate: max,
-                                        );
+                                                context: context,
+                                                initialDate: max,
+                                                firstDate: DateTime(1940),
+                                                lastDate: max,
+                                                locale: context.locale);
 
                                         if (_datePicked2Date != null) {
                                           setState(() {
@@ -708,7 +713,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    'Date of Birth',
+                                                    'PAGES.PATIENT.DATE_OF_BIRTH'
+                                                        .tr(),
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1,
@@ -762,11 +768,11 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                 onTap: () async {
                                   DateTime now = DateTime.now();
                                   final _datePicked2Date = await showDatePicker(
-                                    context: context,
-                                    initialDate: now,
-                                    firstDate: DateTime(2010),
-                                    lastDate: now,
-                                  );
+                                      context: context,
+                                      initialDate: now,
+                                      firstDate: DateTime(2010),
+                                      lastDate: now,
+                                      locale: context.locale);
 
                                   if (_datePicked2Date != null) {
                                     setState(() {
@@ -799,7 +805,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    'Date of Registration',
+                                                    'PAGES.PATIENT.DATE_OF_REGISTRATION'
+                                                        .tr(),
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1,
@@ -878,7 +885,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                             .fromSTEB(5.0, 0.0,
                                                                 0.0, 0.0),
                                                     child: Text(
-                                                      'Sex',
+                                                      'PAGES.PATIENT.SEX'.tr(),
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -913,6 +920,12 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                         options: [
                                                           'Female',
                                                           'Male'
+                                                        ],
+                                                        optionLabels: [
+                                                          'PAGES.PATIENT.FEMALE'
+                                                              .tr(),
+                                                          'PAGES.PATIENT.MALE'
+                                                              .tr()
                                                         ],
                                                         onChanged: (val) =>
                                                             setState(() =>
@@ -1004,7 +1017,9 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                           autofocus: true,
                                           obscureText: false,
                                           decoration: InputDecoration(
-                                            labelText: 'Hospital No.',
+                                            labelText:
+                                                'PAGES.PATIENT.HOSPITAL_NO'
+                                                    .tr(),
                                             hintStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyText2,
@@ -1103,7 +1118,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                           autofocus: true,
                                           obscureText: false,
                                           decoration: InputDecoration(
-                                            labelText: 'Unique ID',
+                                            labelText:
+                                                'PAGES.PATIENT.UNIQUE_ID'.tr(),
                                             hintStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyText2,
@@ -1187,7 +1203,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                 autofocus: true,
                                 obscureText: false,
                                 decoration: InputDecoration(
-                                  labelText: 'Address',
+                                  labelText: 'PAGES.PATIENT.ADDRESS'.tr(),
                                   hintStyle:
                                       FlutterFlowTheme.of(context).bodyText2,
                                   enabledBorder: OutlineInputBorder(
@@ -1260,7 +1276,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                 autofocus: false,
                                 obscureText: false,
                                 decoration: InputDecoration(
-                                  labelText: 'Phone Number',
+                                  labelText: 'PAGES.PATIENT.PHONE_NUMBER'.tr(),
                                   hintStyle:
                                       FlutterFlowTheme.of(context).bodyText2,
                                   enabledBorder: OutlineInputBorder(
@@ -1351,7 +1367,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Clinic stage',
+                                                'PAGES.PATIENT.CLINIC_STAGE'
+                                                    .tr(),
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyText1
@@ -1478,7 +1495,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Target group',
+                                                'PAGES.PATIENT.TARGET_GROUP'
+                                                    .tr(),
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyText1
@@ -1577,7 +1595,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                   onPressed: () async {
                                     Navigator.pop(context);
                                   },
-                                  text: 'Cancel',
+                                  text: 'CANCEL'.tr(),
                                   options: FFButtonOptions(
                                     width: 100.0,
                                     height: 50.0,
@@ -1617,7 +1635,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                       : () async {
                                           if (_model.datePicked1 == null) {
                                             showToast(
-                                              'Date of birth is required',
+                                              'PAGES.PATIENT.DATE_OF_BIRTH_REQUIRED'
+                                                  .tr(),
                                               duration: Duration(seconds: 2),
                                               position: ToastPosition.bottom,
                                               backgroundColor:
@@ -1633,7 +1652,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
 
                                           if (_model.datePicked2 == null) {
                                             showToast(
-                                              'Date of registration is required',
+                                              'PAGES.PATIENT.DATE_OF_REGISTRATION_REQUIRED'
+                                                  .tr(),
                                               duration: Duration(seconds: 2),
                                               position: ToastPosition.bottom,
                                               backgroundColor:
@@ -1649,7 +1669,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
 
                                           if (_model.clinicStageValue == null) {
                                             showToast(
-                                              'Please select clinic stage',
+                                              'PAGES.PATIENT.CLINIC_STAGE_REQUIRED'
+                                                  .tr(),
                                               duration: Duration(seconds: 2),
                                               position: ToastPosition.bottom,
                                               backgroundColor:
@@ -1665,7 +1686,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                           if (_model.sexValue == null ||
                                               _model.sexValue!.isEmpty) {
                                             showToast(
-                                              'Sex is required',
+                                              'PAGES.PATIENT.SEX_REQUIRED'.tr(),
                                               duration: Duration(seconds: 2),
                                               position: ToastPosition.bottom,
                                               backgroundColor:
@@ -1726,7 +1747,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                             }.withoutNulls,
                                           );
                                         },
-                                  text: 'Save Changes',
+                                  text: 'SAVE'.tr(),
                                   options: FFButtonOptions(
                                     width: 150.0,
                                     height: 50.0,

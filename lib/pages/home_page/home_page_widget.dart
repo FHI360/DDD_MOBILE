@@ -5,6 +5,7 @@ import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -76,8 +77,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Home',
+        title: Text(
+          'PAGES.HOME.WELCOME'.tr(),
         ),
         backgroundColor: FlutterFlowTheme.of(context).primaryColor,
       ),
@@ -87,7 +88,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Welcome',
+              'PAGES.HOME.WELCOME'.tr(),
               style: FlutterFlowTheme.of(context).bodyText1.override(
                 fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
                 fontSize: 18,

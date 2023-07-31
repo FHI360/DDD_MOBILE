@@ -2,11 +2,11 @@ import 'dart:ui';
 
 import 'package:DDD/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:DDD/reports/missed_appointments_report.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -104,7 +104,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     10.0, 8.0, 0.0, 30.0),
                                 child: Text(
-                                  'Missed Appointments Report',
+                                  'PAGES.REPORTS.MISSED_APPOINTMENTS'.tr(),
                                   style: FlutterFlowTheme.of(context).title3,
                                 ),
                               ),
@@ -163,7 +163,8 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                                   .fromSTEB(20,
                                                                       0, 0, 0),
                                                           child: Text(
-                                                            'Start Date',
+                                                            'REPORTS.START_DATE'
+                                                                .tr(),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText1
@@ -192,7 +193,10 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                             dateTimeFormat(
                                                                 'yMMMd',
                                                                 _model
-                                                                    .datePicked1),
+                                                                    .datePicked1,
+                                                                locale: context
+                                                                    .locale
+                                                                    .languageCode),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText2
@@ -244,19 +248,21 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                             size: 20,
                                                           ),
                                                           onPressed: () async {
-                                                            final _datePickedDate =
-                                                                await showDatePicker(
-                                                              context: context,
-                                                              initialDate:
-                                                                  DateTime.now(),
-                                                              firstDate:
-                                                                  DateTime(
-                                                                      2021),
-                                                              lastDate: _model
-                                                                      .datePicked2 ??
-                                                                  DateTime
-                                                                      .now(),
-                                                            );
+                                                            final _datePickedDate = await showDatePicker(
+                                                                context:
+                                                                    context,
+                                                                initialDate:
+                                                                    DateTime
+                                                                        .now(),
+                                                                firstDate:
+                                                                    DateTime(
+                                                                        2021),
+                                                                lastDate: _model
+                                                                        .datePicked2 ??
+                                                                    DateTime
+                                                                        .now(),
+                                                                locale: context
+                                                                    .locale);
 
                                                             if (_datePickedDate !=
                                                                 null) {
@@ -335,7 +341,8 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                                   .fromSTEB(20,
                                                                       0, 0, 0),
                                                           child: Text(
-                                                            'End Date',
+                                                            'REPORTS.END_DATE'
+                                                                .tr(),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText1
@@ -364,7 +371,10 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                             dateTimeFormat(
                                                                 'yMMMd',
                                                                 _model
-                                                                    .datePicked2),
+                                                                    .datePicked2,
+                                                                locale: context
+                                                                    .locale
+                                                                    .languageCode),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText2
@@ -416,20 +426,22 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                             size: 20,
                                                           ),
                                                           onPressed: () async {
-                                                            final _datePickedDate =
-                                                                await showDatePicker(
-                                                              context: context,
-                                                              initialDate: _model
-                                                                      .datePicked1 ??
-                                                                  DateTime(
-                                                                      2022),
-                                                              firstDate: _model
-                                                                      .datePicked1 ??
-                                                                  DateTime
-                                                                      .now(),
-                                                              lastDate: DateTime
-                                                                  .now(),
-                                                            );
+                                                            final _datePickedDate = await showDatePicker(
+                                                                context:
+                                                                    context,
+                                                                initialDate: _model
+                                                                        .datePicked1 ??
+                                                                    DateTime(
+                                                                        2022),
+                                                                firstDate: _model
+                                                                        .datePicked1 ??
+                                                                    DateTime
+                                                                        .now(),
+                                                                lastDate:
+                                                                    DateTime
+                                                                        .now(),
+                                                                locale: context
+                                                                    .locale);
 
                                                             if (_datePickedDate !=
                                                                 null) {
@@ -472,7 +484,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                       onPressed: () async {
                                         Navigator.pop(context);
                                       },
-                                      text: 'Cancel',
+                                      text: 'CANCEL'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,
@@ -519,6 +531,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                   await getApplicationDocumentsDirectory();
                                               var content =
                                                   await missedAppointmentPdf(
+                                                      context,
                                                       _model.datePicked1!,
                                                       _model.datePicked2!);
 //                                              await Printing.convertHtml(html: '')
@@ -529,12 +542,11 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                       'report');
                                               context.pushNamed(
                                                 'pdfPreview',
-                                                queryParams: {
-                                                  'path': file.path
-                                                }.withoutNulls,
+                                                queryParams: {'path': file.path}
+                                                    .withoutNulls,
                                               );
                                             },
-                                      text: 'View',
+                                      text: 'VIEW'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,

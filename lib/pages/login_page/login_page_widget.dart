@@ -96,7 +96,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Text(
-                                            'Login to access your account below.',
+                                            'PAGES.LOGIN.HERO'.tr(),
                                             style: FlutterFlowTheme.of(context)
                                                 .subtitle1,
                                           ),
@@ -111,11 +111,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             _model.emailAddressLoginController,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: 'LOGIN.USERNAME'.tr(),
+                                          labelText: 'PAGES.LOGIN.USERNAME'.tr(),
                                           labelStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,
-                                          hintText: 'Enter your username...',
+                                          hintText: 'PAGES.LOGIN.USERNAME_HINT'.tr(),
                                           hintStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,
@@ -176,11 +176,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         obscureText:
                                             !_model.passwordLoginVisibility,
                                         decoration: InputDecoration(
-                                          labelText: 'Password',
+                                          labelText: 'PAGES.LOGIN.PASSWORD'.tr(),
                                           labelStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,
-                                          hintText: 'Enter your password...',
+                                          hintText: 'PAGES.LOGIN.PASSWORD_HINT'.tr(),
                                           hintStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,
@@ -268,7 +268,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                       .baseUrl
                                                       .isEmpty) {
                                                     showToast(
-                                                      'Please set base URL first',
+                                                      'PAGES.LOGIN.URL_MESSAGE'.tr(),
                                                       duration:
                                                           Duration(seconds: 2),
                                                       position:
@@ -313,7 +313,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                   context.goNamedAuth(
                                                       'homePage', mounted);
                                                 },
-                                          text: 'Login',
+                                          text: 'PAGES.LOGIN.SIGN_IN'.tr(),
                                           options: FFButtonOptions(
                                             width: 120.0,
                                             height: 50.0,
@@ -366,10 +366,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     });
                                   },
                                   decoration: InputDecoration(
-                                    labelText: 'Base URL',
+                                    labelText: 'PAGES.LOGIN.BASE_URL'.tr(),
                                     labelStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
-                                    hintText: 'Enter the server IP address...',
+                                    hintText:  'PAGES.LOGIN.BASE_URL_HINT'.tr(),
                                     hintStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(

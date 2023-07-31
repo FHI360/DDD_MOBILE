@@ -1,5 +1,6 @@
 import 'package:DDD/backend/floor/entities/entities.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class PatientEditModel extends FlutterFlowModel {
@@ -29,7 +30,7 @@ class PatientEditModel extends FlutterFlowModel {
 
   String? _requiredControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Field is required';
+      return 'FIELD_REQUIRED'.tr();
     }
 
     return null;
@@ -37,7 +38,7 @@ class PatientEditModel extends FlutterFlowModel {
 
   String? _givenNameControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Field is required';
+      return 'FIELD_REQUIRED'.tr();
     }
 
     return null;
@@ -45,7 +46,7 @@ class PatientEditModel extends FlutterFlowModel {
 
   String? _familyNameControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Field is required';
+      return 'FIELD_REQUIRED'.tr();
     }
 
     return null;
@@ -55,11 +56,11 @@ class PatientEditModel extends FlutterFlowModel {
     if ((val == null || val.isEmpty) &&
         this.ageEstimatedValue != null &&
         this.ageEstimatedValue!) {
-      return 'Field is required';
+      return 'FIELD_REQUIRED'.tr();
     }
     int? age = int.tryParse(val!);
     if (age != null && age < 1) {
-      return 'Minimum age is 1';
+      return 'PAGES.PATIENT.AGE_MIN'.tr();
     }
 
     return null;
@@ -67,11 +68,11 @@ class PatientEditModel extends FlutterFlowModel {
 
   String? _phoneControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Field is required';
+      return 'FIELD_REQUIRED'.tr();
     }
 
     if(val.length < 5 || val.length > 13) {
-      return 'Length of phone number should be between 5 and 13 characters';
+      return 'PAGES.PATIENT.PHONE_NUMBER_LENGTH'.tr();
     }
 
     return null;

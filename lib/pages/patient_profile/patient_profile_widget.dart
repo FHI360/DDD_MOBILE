@@ -4,6 +4,7 @@ import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:DDD/widget/devolve_widget.dart';
 import 'package:DDD/widget/discontinue_service_widget.dart';
 import 'package:DDD/widget/viral_load_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -70,7 +71,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
         _model.patient?.viralLoadDate == DateTime(1900)) {
       return '';
     }
-    return '${_model.patient!.lastViralLoad} (${dateTimeFormat('yMMMd', _model.patient?.viralLoadDate)})';
+    return '${_model.patient!.lastViralLoad} (${dateTimeFormat('yMMMd', _model.patient?.viralLoadDate, locale: context.locale.languageCode)})';
   }
 
   @override
@@ -100,8 +101,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
       drawer: DDDDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Patient Profile',
+        title: Text(
+          'PAGES.PATIENT_PROFILE.TITLE'.tr(),
         ),
         backgroundColor: const Color(0xccdf6f3e),
       ),
@@ -186,9 +187,11 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 8, 0, 0),
                                         child: Text(
-                                          _model.patient?.sex == 'MALE'
-                                              ? 'Male'
-                                              : 'Female',
+                                          _model.patient?.sex == 'Male'
+                                              ? 'PAGES.PATIENT_PROFILE.MALE'
+                                                  .tr()
+                                              : 'PAGES.PATIENT_PROFILE.FEMALE'
+                                                  .tr(),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText1
                                               .override(
@@ -448,7 +451,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                 .fromSTEB(0, 0,
                                                                     12, 0),
                                                         child: Text(
-                                                          'Edit',
+                                                          'PAGES.PATIENT_PROFILE.EDIT'
+                                                              .tr(),
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyText1
@@ -552,7 +556,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                 .fromSTEB(0, 0,
                                                                     12, 0),
                                                         child: Text(
-                                                          'Devolve',
+                                                          'PAGES.PATIENT_PROFILE.DEVOLVE'
+                                                              .tr(),
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyText1
@@ -653,7 +658,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                 .fromSTEB(0, 0,
                                                                     12, 0),
                                                         child: Text(
-                                                          'Discontinue',
+                                                          'PAGES.PATIENT_PROFILE.DISCONTINUE'
+                                                              .tr(),
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyText1
@@ -746,7 +752,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                 .fromSTEB(0, 0,
                                                                     12, 0),
                                                         child: Text(
-                                                          'Viral Load',
+                                                          'PAGES.PATIENT_PROFILE.VIRAL_LOAD'
+                                                              .tr(),
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyText1
@@ -794,7 +801,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Appointments',
+                          'PAGES.PATIENT_PROFILE.APPOINTMENTS'.tr(),
                           style: FlutterFlowTheme.of(context)
                               .subtitle2
                               .override(
@@ -848,11 +855,12 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Container(
-                                            width: 180,
+                                            width: 230,
                                             height: 20,
                                             decoration: BoxDecoration(),
                                             child: Text(
-                                              'Last Refill',
+                                              'PAGES.PATIENT_PROFILE.LAST_REFILL'
+                                                  .tr(),
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyText1
@@ -878,7 +886,9 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               dateTimeFormat(
                                                   'yMMMd',
                                                   _model
-                                                      .patient?.lastRefillDate),
+                                                      .patient?.lastRefillDate,
+                                                  locale: context
+                                                      .locale.languageCode),
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyText1,
@@ -889,11 +899,12 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Container(
-                                            width: 180,
+                                            width: 230,
                                             height: 20,
                                             decoration: BoxDecoration(),
                                             child: Text(
-                                              'Last Viral Load',
+                                              'PAGES.PATIENT_PROFILE.LAST_VIRAL_LOAD'
+                                                  .tr(),
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyText1
@@ -924,11 +935,12 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           Container(
-                                            width: 180,
+                                            width: 230,
                                             height: 20,
                                             decoration: BoxDecoration(),
                                             child: Text(
-                                              'Next Appointment',
+                                              'PAGES.PATIENT_PROFILE.NEXT_APPOINTMENT'
+                                                  .tr(),
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyText1
@@ -956,7 +968,9 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                         DateTime(1900)
                                                     ? null
                                                     : _model.patient
-                                                        ?.nextAppointmentDate),
+                                                        ?.nextAppointmentDate,
+                                                locale: context
+                                                    .locale.languageCode),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1,
                                           ),
@@ -1012,7 +1026,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           0, 0, 12, 0),
                                       child: Text(
-                                        'Refill',
+                                        'PAGES.PATIENT_PROFILE.REFILL'.tr(),
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText1
                                             .override(
@@ -1052,7 +1066,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Refill history',
+                            'PAGES.PATIENT_PROFILE.REFILL_HISTORY'.tr(),
                             style: FlutterFlowTheme.of(context)
                                 .subtitle2
                                 .override(
@@ -1201,7 +1215,10 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                       dateTimeFormat(
                                                                           'yMMMd',
                                                                           listViewRefillRow
-                                                                              .date),
+                                                                              .date,
+                                                                          locale: context
+                                                                              .locale
+                                                                              .languageCode),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyText2
@@ -1225,7 +1242,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                           .spaceBetween,
                                                                   children: [
                                                                     Text(
-                                                                      'Regimen',
+                                                                      'PAGES.PATIENT_PROFILE.REGIMEN'
+                                                                          .tr(),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyText2
@@ -1270,7 +1288,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                           .spaceBetween,
                                                                   children: [
                                                                     Text(
-                                                                      'Prescribed Qty',
+                                                                      'PAGES.PATIENT_PROFILE.PRESCRIBED_QTY'
+                                                                          .tr(),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyText2
@@ -1300,8 +1319,9 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                               FormatType.custom,
                                                                           format:
                                                                               '#,##0',
-                                                                          locale:
-                                                                              '',
+                                                                          locale: context
+                                                                              .locale
+                                                                              .languageCode,
                                                                         ),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
@@ -1323,7 +1343,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                           .spaceBetween,
                                                                   children: [
                                                                     Text(
-                                                                      'Dispensed Qty',
+                                                                      'PAGES.PATIENT_PROFILE.DISPENSED_QTY'
+                                                                          .tr(),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyText2
@@ -1353,8 +1374,9 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                               FormatType.custom,
                                                                           format:
                                                                               '#,##0',
-                                                                          locale:
-                                                                              '',
+                                                                          locale: context
+                                                                              .locale
+                                                                              .languageCode,
                                                                         ),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1

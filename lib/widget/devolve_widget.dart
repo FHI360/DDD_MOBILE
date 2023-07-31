@@ -141,6 +141,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                         context: context,
                                         initialDate: getCurrentTimestamp,
                                         firstDate: DateTime(1900),
+                                        locale: context.locale,
                                         lastDate: getCurrentTimestamp,
                                       );
 
@@ -181,7 +182,8 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        'Date devolved',
+                                                        'PAGES.DEVOLVE.DATE'
+                                                            .tr(),
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -271,7 +273,8 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                                     0.0,
                                                                     0.0),
                                                         child: Text(
-                                                          'Outlet',
+                                                          'PAGES.DEVOLVE.OUTLET'
+                                                              .tr(),
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyText1
@@ -375,7 +378,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                       onPressed: () async {
                                         Navigator.pop(context);
                                       },
-                                      text: 'Cancel',
+                                      text: 'CANCEL'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,
@@ -418,38 +421,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                       .validate()) {
                                                 return;
                                               }
-                                              if (_model.datePicked == null) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Date is required',
-                                                      style: TextStyle(),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        Color(0xFFB7463A),
-                                                  ),
-                                                );
-                                                return;
-                                              }
-                                              if (_model.outletValue == null) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Please select outlet',
-                                                      style: TextStyle(),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        Color(0xFFB7463A),
-                                                  ),
-                                                );
-                                                return;
-                                              }
+
                                               DateTime now = DateTime.now();
                                               DateTime devolveDate = DateTime(
                                                   _model.datePicked!.year,
@@ -477,7 +449,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
 
                                               Navigator.pop(context, devolve);
                                             },
-                                      text: 'Devolve',
+                                      text: 'PAGES.DEVOLVE.DEVOLVE'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,

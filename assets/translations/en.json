@@ -1,6 +1,178 @@
 {
-    "LOGIN": {
-        "USERNAME": "Username",
-        "PASSWORD": "Password"
-    }
+    "PAGES": {
+        "LOGIN": {
+            "USERNAME": "Username",
+            "PASSWORD": "Password",
+            "PASSWORD_HINT": "Enter your password...",
+            "USERNAME_HINT": "Enter your username...",
+            "URL_MESSAGE": "Please set base URL first",
+            "SIGN_IN": "Sign in",
+            "BASE_URL": "Base URL",
+            "BASE_URL_HINT": "Enter the server IP address...",
+            "HERO": "Login to access your account below.",
+            "INVALID_URL": "Invalid URL"
+        }   ,
+        "DRAWER": {
+            "PATIENTS": "Patients",
+            "PATIENTS_SEARCH": "Search...",
+            "PATIENTS_NEW": "Add new",
+            "REPORTS": "Reports",
+            "SYNCHRONIZATION": "Synchronization",
+            "PREFERENCES": "Preferences",
+            "SIGN_OUT": "Sign out"
+        },
+        "HOME": {
+            "WELCOME": "Welcome,",
+            "TITLE": "Home"
+        },
+        "PATIENT": {
+            "TITLE": "Edit Patient",
+            "EDIT": "Edit Patient Profile",
+            "AGE_MIN": "Minimum age is 1",
+            "PHONE_NUMBER_LENGTH": "Length of phone number should be between 5 and 13 characters",
+            "INTRO": "Edit the fields below in order to change patient's profile.",
+            "FACILITY": "Facility",
+            "GIVEN_NAME": "Given name",
+            "FAMILY_NAME": "Family name",
+            "AGE_UNKNOWN": "Age unknown?",
+            "ESTIMATED_AGE": "Estimated age",
+            "DATE_OF_BIRTH": "Date of birth",
+            "DATE_OF_REGISTRATION": "Date of registration",
+            "SEX": "Sex",
+            "FEMALE": "Female",
+            "MALE": "Male",
+            "HOSPITAL_NO": "Hospital No.",
+            "UNIQUE_ID": "Unique ID",
+            "ADDRESS": "Address",
+            "PHONE_NUMBER": "Phone Number",
+            "CLINIC_STAGE": "Clinic Stage",
+            "TARGET_GROUP": "Target Group",
+            "DATE_OF_BIRTH_REQUIRED": "Date of birth is required",
+            "DATE_OF_REGISTRATION_REQUIRED": "Date of registration is required",
+            "CLINIC_STAGE_REQUIRED": "Clinic stage is required",
+            "SEX_REQUIRED": "Sex is required"
+        },
+        "PATIENT_LIST": {
+            "TITLE": "Patient List",
+            "SEARCH_HINT": "Search patients...",
+            "SEARCH": "Search",
+            "LAST_REFILL": "Last refill",
+            "VIEW": "View"
+        },
+        "PATIENT_PROFILE": {
+            "TITLE": "Patient Profile",
+            "MALE": "Male",
+            "FEMALE": "Female",
+            "EDIT": "Edit",
+            "DEVOLVE": "Devolve",
+            "DISCONTINUE": "Discontinue",
+            "VIRAL_LOAD": "Viral load",
+            "APPOINTMENTS": "Appointments",
+            "LAST_REFILL": "Last refill",
+            "LAST_VIRAL_LOAD": "Last vial load",
+            "NEXT_APPOINTMENT": "Next appointment",
+            "REFILL": "Refill",
+            "REFILL_HISTORY": "Refill history",
+            "REGIMEN": "Regimen",
+            "PRESCRIBED_QTY": "Prescribed QTY",
+            "DISPENSED_QTY": "Dispensed QTY"
+        },
+        "PREFERENCES": {
+            "TITLE": "Edit preferences",
+            "EDIT_FACILITY": "Edit facility preference",
+            "FACILITY": "Facility",
+            "FACILITY_REQUIRED": "Facility is required"
+        },
+        "REFILL": {
+            "TITLE": "Patient refill",
+            "VITALS": "Vitals",
+            "VISIT_DATE": "Visit date (required)",
+            "BODY_WEIGHT": "Body weight(kg)",
+            "SYSTOLIC": "BP (Systolic) (mmHg)",
+            "DIASTOLIC": "BP (Diastolic) (mmHg)",
+            "TEMPERATURE": "Temperature (°C)",
+            "TB_SCREENING": "TB screening",
+            "COUGHING": "Have you been coughing for 2 weeks or more?",
+            "FEVER": "Do you have fever for 2 weeks or more?",
+            "WEIGHT_LOSS": "Are you loosing weight?",
+            "NIGHT_SWEAT": "Are you having night sweat?",
+            "SWELLINGS": "Do you have any swellings in the neck or armpit?",
+            "TB_REFER": "Refer patient to TB diagnosis?",
+            "DRUG_REFILL": "Drug refill",
+            "REGIMEN": "Regimen (required)",
+            "PRESCRIBED_QTY": "Prescribed QTY (required)",
+            "DISPENSED_QTY": "Dispensed QTY (required)",
+            "MISSED_DOSES": "Missed doses?",
+            "ADVERSE_ISSUES": "Adverse issues?",
+            "YES": "Yes",
+            "NO": "No",
+            "NEXT_REFILL": "Next Refill Date (required)",
+            "SAVE_SUCCESS": "Dispense successfully saved",
+            "30_DAYS": "30 days",
+            "60_DAYS": "60 days",
+            "90_DAYS": "90 days",
+            "120_DAYS": "120 days",
+            "150_DAYS": "150 days",
+            "180_DAYS": "180 days"
+        },
+        "REPORTS": {
+            "TITLE": "Select Report to generate",
+            "RUN": "Run Report",
+            "MISSED_APPOINTMENTS": "Missed appointments Report",
+            "REFILL": "Refill Report",
+            "SUMMARY_REPORT": "Summary Report"
+        },
+        "SYNCHRONIZATION": {
+            "TITLE": "Synchronize data to and from server",
+            "SYNCHRONIZE": "Synchronize"
+        },
+        "DEVOLVE": {
+            "DATE": "Date devolved",
+            "OUTLET": "Outlet",
+            "DEVOLVE": "Devolve"
+        },
+        "DISCONTINUATION": {
+            "DATE": "Date discontinued",
+            "REASON": "Reason for discontinuing",
+            "DISCONTINUE": "Discontinue",
+            "REASONS": {
+                "PREGNANT": "Becomes pregnant",
+                "CO_MORBIDITIES": "Develops comorbidity",
+                "VIRAL_SUPPRESSION": "Loss of viral suppression",
+                "DECIDES_TO_RETURN_TO_HOSPITAL": "Decides to go back to hospital",
+                "NON_ADHERENT": "Becomes non-adherent",
+                "MISSED_VL_TEST": "Missed Viral Load test",
+                "MISSED_TPT_TEST": "Missed TPT test",
+                "MISSED_CERVICAL_CANCER_SCREENING": "Missed Cervical Cancel screening"
+            }
+        },
+        "VIRAL_LOAD": {
+            "DATE": "Date",
+            "VIRAL_LOAD": "Viral Load",
+            "NEXT_DATE": "Next Viral Load Date"
+        }
+    },
+    "REPORTS": {
+        "START_DATE": "Start Date",
+        "END_DATE": "End Date",
+        "MISSED_APPOINTMENTS": {
+            "TITLE": "Missed Appointments report between {} and {}"
+        },
+        "REFILL_APPOINTMENTS": {
+            "TITLE": "Refill Appointments report between {} and {}"
+        },
+        "PATIENT": "Patient",
+        "HOSPITAL_NO": "Hospital No.",
+        "DATE_OF_BIRTH": "Date Of Birth",
+        "SEX": "Sex",
+        "LAST_REFILL": "Last refill",
+        "APPOINTMENT_DATE": "Appointment Date",
+        "REGIMEN": "Regimen",
+        "DURATION": "Duration"
+    },
+    "FIELD_REQUIRED": "Field is required",
+    "CANCEL": "Cancel",
+    "SAVE": "Save changes",
+    "AGE": "{}yr(s)",
+    "VIEW": "View"
 }

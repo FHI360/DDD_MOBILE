@@ -128,11 +128,12 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                       onTap: () async {
                                         final _datePickedDate =
                                             await showDatePicker(
-                                          context: context,
-                                          initialDate: getCurrentTimestamp,
-                                          firstDate: _model.devolve!.date,
-                                          lastDate: getCurrentTimestamp,
-                                        );
+                                                context: context,
+                                                initialDate:
+                                                    getCurrentTimestamp,
+                                                firstDate: _model.devolve!.date,
+                                                lastDate: getCurrentTimestamp,
+                                                locale: context.locale);
 
                                         if (_datePickedDate != null) {
                                           setState(() {
@@ -170,7 +171,8 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          'Date discontinued',
+                                                          'PAGES.DISCONTINUATION.DATE'
+                                                              .tr(),
                                                           style: FlutterFlowTheme
                                                                   .of(context)
                                                               .bodyText1,
@@ -256,7 +258,8 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                                   0.0,
                                                                   0.0),
                                                       child: Text(
-                                                        'Reason for discontinuing',
+                                                        'PAGES.DISCONTINUATION.REASON'
+                                                            .tr(),
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -289,14 +292,32 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                                 String>(
                                                           initialOption: null,
                                                           options: [
-                                                            'Becomes pregnant',
-                                                            'Develops comorbidity',
-                                                            'Loss of Viral suppression',
-                                                            'Decides to go back to the hospital',
-                                                            'Becomes non-adherent',
-                                                            'Missed VL Test',
-                                                            'Missed TPT Test',
-                                                            'Missed Cervical Cancer Screening'
+                                                            'pregnant',
+                                                            'comorbidity',
+                                                            'viral_suppression',
+                                                            'self_discontinue',
+                                                            'non-adherent',
+                                                            'missed_vl',
+                                                            'missed_tpt',
+                                                            'missed_cc'
+                                                          ],
+                                                          optionLabels: [
+                                                            'PAGES.DISCONTINUATION.REASONS.PREGNANT'
+                                                                .tr(),
+                                                            'PAGES.DISCONTINUATION.REASONS.CO_MORBIDITIES'
+                                                                .tr(),
+                                                            'PAGES.DISCONTINUATION.REASONS.VIRAL_SUPPRESSION'
+                                                                .tr(),
+                                                            'PAGES.DISCONTINUATION.REASONS.DECIDES_TO_RETURN_TO_HOSPITAL'
+                                                                .tr(),
+                                                            'PAGES.DISCONTINUATION.REASONS.NON_ADHERENT'
+                                                                .tr(),
+                                                            'PAGES.DISCONTINUATION.REASONS.MISSED_VL_TEST'
+                                                                .tr(),
+                                                            'PAGES.DISCONTINUATION.REASONS.MISSED_TPT_TEST'
+                                                                .tr(),
+                                                            'PAGES.DISCONTINUATION.REASONS.MISSED_CERVICAL_CANCER_SCREENING'
+                                                                .tr(),
                                                           ],
                                                           onChanged: (val) =>
                                                               setState(() =>
@@ -363,7 +384,7 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                       onPressed: () async {
                                         Navigator.pop(context);
                                       },
-                                      text: 'Cancel',
+                                      text: 'CANCEL'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,
@@ -407,38 +428,7 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                       .validate()) {
                                                 return;
                                               }
-                                              if (_model.datePicked == null) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Date is required',
-                                                      style: TextStyle(),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        Color(0xFFB7463A),
-                                                  ),
-                                                );
-                                                return;
-                                              }
-                                              if (_model.reasonValue == null) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Select reason',
-                                                      style: TextStyle(),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        Color(0xFFB7463A),
-                                                  ),
-                                                );
-                                                return;
-                                              }
+
                                               final _database = await database;
                                               var devolve = Devolve.instance();
                                               devolve.patientId =
@@ -453,7 +443,8 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
 
                                               Navigator.pop(context, devolve);
                                             },
-                                      text: 'Discontinue',
+                                      text: 'PAGES.DISCONTINUATION.DISCONTINUE'
+                                          .tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,

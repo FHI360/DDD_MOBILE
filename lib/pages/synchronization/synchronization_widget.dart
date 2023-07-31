@@ -5,6 +5,7 @@ import 'package:DDD/backend/http/sync_service.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -63,7 +64,7 @@ class _SynchronizationWidget extends State<SynchronizationWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               10.0, 8.0, 0.0, 30.0),
                           child: Text(
-                            'Synchronize data to and from server',
+                            'PAGES.SYNCHRONIZATION.TITLE'.tr(),
                             style: FlutterFlowTheme.of(context).title3,
                           ),
                         ),
@@ -78,7 +79,7 @@ class _SynchronizationWidget extends State<SynchronizationWidget> {
                                 onPressed: () async {
                                   Navigator.pop(context);
                                 },
-                                text: 'Cancel',
+                                text: 'CANCEL'.tr(),
                                 options: FFButtonOptions(
                                   width: 130,
                                   height: 40,
@@ -119,7 +120,7 @@ class _SynchronizationWidget extends State<SynchronizationWidget> {
 
                                   context.pushNamed('patientList');
                                 },
-                                text: 'Synchronize',
+                                text: 'PAGES.SYNCHRONIZATION.SYNCHRONIZE'.tr(),
                                 options: FFButtonOptions(
                                   width: 130,
                                   height: 40,

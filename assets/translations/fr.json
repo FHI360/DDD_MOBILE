@@ -1,5 +1,178 @@
 {
-    "LOGIN": {
-        "USERNAME": "Nom d'utilisateur"
-    }
+    "PAGES": {
+        "LOGIN": {
+            "USERNAME": "Nom d'utilisateur",
+            "PASSWORD": "Mot de passe",
+            "PASSWORD_HINT": "Tapez votre mot de passe...",
+            "USERNAME_HINT": "Entrez votre nom d'utilisateur...",
+            "URL_MESSAGE": "Veuillez d'abord définir l'URL de base",
+            "SIGN_IN": "S'identifier",
+            "BASE_URL": "URL de base",
+            "BASE_URL_HINT": "Entrez l'adresse IP du serveur...",
+            "HERO": "Connectez-vous pour accéder à votre compte ci-dessous.",
+            "INVALID_URL": "URL invalide"
+        },
+        "DRAWER": {
+            "PATIENTS": "Les patients",
+            "PATIENTS_SEARCH": "Recherche...",
+            "PATIENTS_NEW": "Ajouter nouveau",
+            "REPORTS": "Rapports",
+            "SYNCHRONIZATION": "Synchronisation",
+            "PREFERENCES": "Préférences",
+            "SIGN_OUT": "se déconnecter"
+        },
+        "HOME": {
+            "WELCOME": "Accueillir,",
+            "TITLE": "Maison"
+        },
+        "PATIENT": {
+            "TITLE": "Modifier le patient",
+            "EDIT": "Modifier le profil du patient",
+            "AGE_MIN": "L'âge minimum est de 1",
+            "PHONE_NUMBER_LENGTH": "La longueur du numéro de téléphone doit être comprise entre 5 et 13 caractères",
+            "INTRO": "Modifiez les champs ci-dessous afin de modifier le profil du patient.",
+            "FACILITY": "Facilité",
+            "GIVEN_NAME": "Prénom",
+            "FAMILY_NAME": "Nom de famille",
+            "AGE_UNKNOWN": "Âge inconnu ?",
+            "ESTIMATED_AGE": "Âge estimé",
+            "DATE_OF_BIRTH": "Date de naissance",
+            "DATE_OF_REGISTRATION": "Date d'enregistrement",
+            "SEX": "Sexe",
+            "FEMALE": "Femme",
+            "MALE": "Homme",
+            "HOSPITAL_NO": "N° de l'hôpital",
+            "UNIQUE_ID": "Identifiant unique",
+            "ADDRESS": "Adresse",
+            "PHONE_NUMBER": "Numéro de téléphone",
+            "CLINIC_STAGE": "Étape de la clinique",
+            "TARGET_GROUP": "Groupe ciblé",
+            "DATE_OF_BIRTH_REQUIRED": "La date de naissance est obligatoire",
+            "DATE_OF_REGISTRATION_REQUIRED": "La date d'inscription est obligatoire",
+            "CLINIC_STAGE_REQUIRED": "L'étape clinique est requise",
+            "SEX_REQUIRED": "Le sexe est obligatoire"
+        },
+        "PATIENT_LIST": {
+            "TITLE": "Liste des patients",
+            "SEARCH_HINT": "Rechercher des patients...",
+            "SEARCH": "Recherche",
+            "LAST_REFILL": "Dernière recharge",
+            "VIEW": "Voir"
+        },
+        "PATIENT_PROFILE": {
+            "TITLE": "Profil du patient",
+            "MALE": "Homme",
+            "FEMALE": "Femme",
+            "EDIT": "Modifier",
+            "DEVOLVE": "Déléguer",
+            "DISCONTINUE": "Cesser",
+            "VIRAL_LOAD": "Charge virale",
+            "APPOINTMENTS": "Rendez-vous",
+            "LAST_REFILL": "Dernière recharge",
+            "LAST_VIRAL_LOAD": "Dernier chargement de flacon",
+            "NEXT_APPOINTMENT": "Prochain rendez-vous",
+            "REFILL": "Recharge",
+            "REFILL_HISTORY": "Historique de recharge",
+            "REGIMEN": "Régime",
+            "PRESCRIBED_QTY": "Qté prescrite",
+            "DISPENSED_QTY": "Qté distribuée"
+        },
+        "PREFERENCES": {
+            "TITLE": "Modifier les préférences",
+            "EDIT_FACILITY": "Modifier la préférence de l'établissement",
+            "FACILITY": "Facilité",
+            "FACILITY_REQUIRED": "L'installation est requise"
+        },
+        "REFILL": {
+            "TITLE": "Recharge patient",
+            "VITALS": "Vitals",
+            "VISIT_DATE": "Date de visite (obligatoire)",
+            "BODY_WEIGHT": "Poids corporel (kg)",
+            "SYSTOLIC": "PA (systolique) (mmHg)",
+            "DIASTOLIC": "PA (diastolique) (mmHg)",
+            "TEMPERATURE": "Température (°C)",
+            "TB_SCREENING": "Dépistage de la tuberculose",
+            "COUGHING": "Toussez-vous depuis 2 semaines ou plus ?",
+            "FEVER": "Avez-vous de la fièvre depuis 2 semaines ou plus ?",
+            "WEIGHT_LOSS": "Perdez-vous du poids?",
+            "NIGHT_SWEAT": "Avez-vous des sueurs nocturnes?",
+            "SWELLINGS": "Avez-vous des gonflements dans le cou ou les aisselles ?",
+            "TB_REFER": "Orienter le patient vers le diagnostic de TB?",
+            "DRUG_REFILL": "Recharge de médicaments",
+            "REGIMEN": "Régime (obligatoire)",
+            "PRESCRIBED_QTY": "QTÉ prescrite (obligatoire)",
+            "DISPENSED_QTY": "Quantité distribuée (obligatoire)",
+            "MISSED_DOSES": "Doses oubliées?",
+            "ADVERSE_ISSUES": "Problèmes indésirables?",
+            "YES": "Oui",
+            "NO": "Non",
+            "NEXT_REFILL": "Prochaine date de recharge (obligatoire)",
+            "SAVE_SUCCESS": "Distribution enregistrée avec succès",
+            "30_DAYS": "30 jours",
+            "60_DAYS": "60 jours",
+            "90_DAYS": "90 jours",
+            "120_DAYS": "120 jours",
+            "150_DAYS": "150 jours",
+            "180_DAYS": "180 jours"
+        },
+        "REPORTS": {
+            "TITLE": "Sélectionnez Rapport pour générer",
+            "RUN": "Rapport d'exécution",
+            "MISSED_APPOINTMENTS": "Rapport sur les rendez-vous manqués",
+            "REFILL": "Rapport de recharge",
+            "SUMMARY_REPORT": "Rapport sommaire"
+        },
+        "SYNCHRONIZATION": {
+            "TITLE": "Synchroniser les données vers et depuis le serveur",
+            "SYNCHRONIZE": "Synchroniser"
+        },
+        "DEVOLVE": {
+            "DATE": "Date de dévolution",
+            "OUTLET": "Sortie",
+            "DEVOLVE": "Déléguer"
+        },
+        "DISCONTINUATION": {
+            "DATE": "Date d'arrêt",
+            "REASON": "Raison de l'arrêt",
+            "DISCONTINUE": "Cesser",
+            "REASONS": {
+                "PREGNANT": "Tombe enceinte",
+                "CO_MORBIDITIES": "Développe la comorbidité",
+                "VIRAL_SUPPRESSION": "Perte de suppression virale",
+                "DECIDES_TO_RETURN_TO_HOSPITAL": "Décide de retourner à l'hôpital",
+                "NON_ADHERENT": "Devient non adhérent",
+                "MISSED_VL_TEST": "Test de charge virale manqué",
+                "MISSED_TPT_TEST": "Test TPT manqué",
+                "MISSED_CERVICAL_CANCER_SCREENING": "Dépistage d'annulation cervicale manqué"
+            }
+        },
+        "VIRAL_LOAD": {
+            "DATE": "Date",
+            "VIRAL_LOAD": "Charge virale",
+            "NEXT_DATE": "Date de la prochaine charge virale"
+        }
+    },
+    "REPORTS": {
+        "START_DATE": "Date de début",
+        "END_DATE": "Date de fin",
+        "MISSED_APPOINTMENTS": {
+            "TITLE": "Rapport sur les rendez-vous manqués entre le {} et le {}"
+        },
+        "REFILL_APPOINTMENTS": {
+            "TITLE": "Rapport sur les rendez-vous de renouvellement entre le {} et le {}"
+        },
+        "PATIENT": "Patient",
+        "HOSPITAL_NO": "N° de l'hôpital",
+        "DATE_OF_BIRTH": "Date de naissance",
+        "SEX": "Sexe",
+        "LAST_REFILL": "Dernière recharge",
+        "APPOINTMENT_DATE": "Date de rendez-vous",
+        "REGIMEN": "Régime",
+        "DURATION": "Durée"
+    },
+    "FIELD_REQUIRED": "Champ requis",
+    "CANCEL": "Annuler",
+    "SAVE": "Sauvegarder",
+    "AGE": "{}an(s)",
+    "VIEW": "Voir"
 }

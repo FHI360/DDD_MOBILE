@@ -1,6 +1,7 @@
 import 'package:DDD/custom_code/actions/filter_patients.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -50,8 +51,8 @@ class _PatientListWidgetState extends State<PatientListWidget> {
       drawer: DDDDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Patients',
+        title: Text(
+          'PAGES.PATIENT_LIST.TITLE'.tr(),
         ),
         backgroundColor: const Color(0xccdf6f3e),
       ),
@@ -81,7 +82,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                           autofocus: true,
                           obscureText: false,
                           decoration: InputDecoration(
-                            labelText: 'Search patients...',
+                            labelText: 'PAGES.PATIENT_LIST.SEARCH_HINT'.tr(),
                             labelStyle: FlutterFlowTheme.of(context).bodyText2,
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -118,7 +119,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                               onPressed: () {
                                 setState(() {
                                   _model.keywordController.text = '';
-                                  _model.patients =  [];
+                                  _model.patients = [];
                                 });
                               },
                             ),
@@ -133,15 +134,15 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                         padding: EdgeInsetsDirectional.fromSTEB(5, 0, 5, 5),
                         child: InkWell(
                           onTap: () async {
-                                  _model.patients = await filterPatients(
-                                    _model.keywordController.text,
-                                  );
-                                  setState(() {
-                                    _model.fullList = false;
-                                  });
+                            _model.patients = await filterPatients(
+                              _model.keywordController.text,
+                            );
+                            setState(() {
+                              _model.fullList = false;
+                            });
 
-                                  setState(() {});
-                                },
+                            setState(() {});
+                          },
                           child: Container(
                             height: 32,
                             constraints: BoxConstraints(
@@ -170,7 +171,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0, 0, 12, 0),
                                     child: Text(
-                                      'Search',
+                                      'PAGES.PATIENT_LIST.SEARCH'.tr(),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -286,7 +287,8 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                                       .fromSTEB(
                                                           0.0, 0.0, 5.0, 0.0),
                                                   child: Text(
-                                                    'Last Refill',
+                                                    'PAGES.PATIENT_LIST.LAST_REFILL'
+                                                        .tr(),
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1,
@@ -299,7 +301,9 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                                     dateTimeFormat(
                                                         'yMMMd',
                                                         patientListItem
-                                                            .lastRefillDate!),
+                                                            .lastRefillDate!,
+                                                        locale: context.locale
+                                                            .languageCode),
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1,
@@ -322,7 +326,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                           }.withoutNulls,
                                         );
                                       },
-                                      text: 'View',
+                                      text: 'PAGES.PATIENT_LIST.VIEW'.tr(),
                                       options: FFButtonOptions(
                                         width: 70.0,
                                         height: 36.0,

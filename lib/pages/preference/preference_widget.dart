@@ -8,6 +8,7 @@ import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:DDD/pages/preference/preference_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oktoast/oktoast.dart';
@@ -48,8 +49,8 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
       drawer: DDDDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Edit Preference',
+        title: Text(
+          'PAGES.PREFERENCES.TITLE'.tr(),
         ),
         backgroundColor: const Color(0xccdf6f3e),
       ),
@@ -77,7 +78,7 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                     padding:
                         EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 30.0),
                     child: Text(
-                      'Edit facility preference',
+                      'PAGES.PREFERENCES.EDIT_FACILITY'.tr(),
                       style: FlutterFlowTheme.of(context).title3,
                     ),
                   ),
@@ -119,7 +120,7 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                                               EdgeInsetsDirectional.fromSTEB(
                                                   5.0, 0.0, 0.0, 0.0),
                                           child: Text(
-                                            'Facility',
+                                            'PAGES.PREFERENCES.FACILITY'.tr(),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1
                                                 .override(
@@ -248,7 +249,7 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                               : () async {
                                   if (_model.facilityValue == null) {
                                     showToast(
-                                      'Facility is required',
+                                      'PAGES.PREFERENCES.FACILITY_REQUIRED'.tr(),
                                       duration: Duration(seconds: 2),
                                       position: ToastPosition.bottom,
                                       backgroundColor:
@@ -271,7 +272,7 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
 
                                   setState(() {});
                                 },
-                          text: 'Save Changes',
+                          text: 'SAVE'.tr(),
                           options: FFButtonOptions(
                             width: 150.0,
                             height: 50.0,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -14,7 +15,7 @@ class ViralLoadModel extends FlutterFlowModel {
 
   String? _valueControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Please enter a value';
+      return 'FIELD_REQUIRED'.tr();
     }
 
     return null;

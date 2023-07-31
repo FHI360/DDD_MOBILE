@@ -1,5 +1,6 @@
 import 'package:DDD/flutter_flow/flutter_flow_model.dart';
 import 'package:DDD/flutter_flow/instant_timer.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class LoginPageModel extends FlutterFlowModel {
@@ -22,7 +23,7 @@ class LoginPageModel extends FlutterFlowModel {
 
   String? _baseUrlControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
-      return 'Field is required';
+      return 'FIELD_REQUIRED'.tr();
     }
 
     final regExp = RegExp(
@@ -31,7 +32,7 @@ class LoginPageModel extends FlutterFlowModel {
         multiLine: false);
 
     if (!regExp.hasMatch(val)) {
-      return 'Invalid URL';
+      return 'PAGES.LOGIN.INVALID_URL'.tr();
     }
 
     return null;

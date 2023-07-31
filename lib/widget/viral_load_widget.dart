@@ -113,11 +113,11 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                     onTap: () async {
                                       final _datePickedDate =
                                           await showDatePicker(
-                                        context: context,
-                                        initialDate: getCurrentTimestamp,
-                                        firstDate: DateTime(2021),
-                                        lastDate: getCurrentTimestamp,
-                                      );
+                                              context: context,
+                                              initialDate: getCurrentTimestamp,
+                                              firstDate: DateTime(2021),
+                                              lastDate: getCurrentTimestamp,
+                                              locale: context.locale);
 
                                       if (_datePickedDate != null) {
                                         setState(() {
@@ -160,7 +160,8 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        'Date',
+                                                        'PAGES.VIRAL_LOAD.DATE'
+                                                            .tr(),
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -225,7 +226,8 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(5.0, 0.0, 0.0, 0.0),
                                               child: Text(
-                                                'Viral Load',
+                                                'PAGES.VIRAL_LOAD.VIRAL_LOAD'
+                                                    .tr(),
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyText1
@@ -263,7 +265,6 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                           .valueController,
                                                       keyboardType:
                                                           TextInputType.number,
-                                                      autofocus: true,
                                                       obscureText: false,
                                                       decoration:
                                                           InputDecoration(
@@ -384,12 +385,12 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                               4);
                                       final _datePickedDate =
                                           await showDatePicker(
-                                        context: context,
-                                        initialDate: _model.datePicked1 ??
-                                            getCurrentTimestamp,
-                                        firstDate: DateTime(2021),
-                                        lastDate: max,
-                                      );
+                                              context: context,
+                                              initialDate: _model.datePicked1 ??
+                                                  getCurrentTimestamp,
+                                              firstDate: DateTime(2021),
+                                              lastDate: max,
+                                              locale: context.locale);
 
                                       if (_datePickedDate != null) {
                                         setState(() {
@@ -426,7 +427,8 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        'Next VL Date',
+                                                        'PAGES.VIRAL_LOAD.NEXT_DATE'
+                                                            .tr(),
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -477,7 +479,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                       onPressed: () async {
                                         Navigator.pop(context);
                                       },
-                                      text: 'Cancel',
+                                      text: 'CANCEL'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,
@@ -522,22 +524,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                       .validate()) {
                                                 return;
                                               }
-                                              if (_model.datePicked == null) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Date is required',
-                                                      style: TextStyle(),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        Color(0xFFB7463A),
-                                                  ),
-                                                );
-                                                return;
-                                              }
+
                                               final _database = await database;
                                               var viralLoad =
                                                   ViralLoad.instance();
@@ -555,7 +542,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                               Navigator.pop(
                                                   context, viralLoad.date);
                                             },
-                                      text: 'Save',
+                                      text: 'SAVE'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,

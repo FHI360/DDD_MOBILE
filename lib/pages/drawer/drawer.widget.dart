@@ -1,5 +1,6 @@
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multilevel_drawer/multilevel_drawer.dart';
@@ -39,31 +40,31 @@ class DDDDrawer extends StatelessWidget {
             leading: Icon(
               Icons.person_2,
             ),
-            content: const Text('Patients'),
+            content: Text('PAGES.DRAWER.PATIENTS'.tr()),
             subMenuItems: [
               MLSubmenu(
                   onClick: () {
                     context.pushNamed('patientList');
                   },
-                  submenuContent: Text("Search")),
+                  submenuContent: Text('PAGES.DRAWER.PATIENTS_SEARCH'.tr())),
               if (!FFAppState().outlet)
                 MLSubmenu(
                     onClick: () {
                       context.pushNamed('patientEdit');
                     },
-                    submenuContent: Text('New')),
+                    submenuContent: Text('PAGES.DRAWER.PATIENTS_NEW'.tr())),
             ],
             onClick: () {}),
         MLMenuItem(
           leading: Icon(Icons.report_sharp),
-          content: Text("Reports"),
+          content: Text('PAGES.DRAWER.REPORTS'.tr()),
           onClick: () {
             context.pushNamed('reportList');
           },
         ),
         MLMenuItem(
           leading: Icon(Icons.sync),
-          content: Text('Synchronization'),
+          content: Text('PAGES.DRAWER.SYNCHRONIZATION'.tr()),
           onClick: () {
             context.pushNamed('synchronization');
           },
@@ -71,14 +72,14 @@ class DDDDrawer extends StatelessWidget {
         if (FFAppState().admin)
           MLMenuItem(
             leading: Icon(Icons.settings),
-            content: Text("Preferences"),
+            content: Text('PAGES.DRAWER.PREFERENCES'.tr()),
             onClick: () {
               context.pushNamed('preferences');
             },
           ),
         MLMenuItem(
           leading: Icon(Icons.exit_to_app),
-          content: Text('Sign out'),
+          content: Text('PAGES.DRAWER.SIGN_OUT'.tr()),
           onClick: () {
             FFAppState().refreshToken = '';
             FFAppState().accessToken = '';

@@ -345,6 +345,7 @@ class _MonthlySummaryReportWidgetState
                                                   await getApplicationDocumentsDirectory();
                                               var content =
                                                   await monthlySummaryReport(
+                                                      context,
                                                       _model.datePicked1!);
                                               var file = await FlutterHtmlToPdf
                                                   .convertFromHtmlContent(

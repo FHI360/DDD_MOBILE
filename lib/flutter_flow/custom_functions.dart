@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 import 'flutter_flow_util.dart';
 
 String formatSex(String? sex) {
@@ -16,7 +18,7 @@ String formatAge(DateTime? dob) {
   Duration difference = now.difference(dob);
   double age = difference.inDays / 365.25;
 
-  return '${age.toStringAsFixed(0)} Yrs';
+  return 'AGE'.tr(args: [age.toStringAsFixed(0)]);
 }
 
 String? formatDate(String? date) {
@@ -30,8 +32,8 @@ bool? booleanFromYesNo(String? value) {
   return value == 'Yes'
       ? true
       : value == 'No'
-      ? false
-      : null;
+          ? false
+          : null;
 }
 
 String formatJsonDate(String value) {
@@ -42,4 +44,3 @@ String formatJsonDate(String value) {
 DateTime? datetimeFromString(String value) {
   return DateTime.tryParse(value);
 }
-

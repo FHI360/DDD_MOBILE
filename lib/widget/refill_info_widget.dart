@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:DDD/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:DDD/reports/refill_info_report.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -104,7 +105,7 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     10.0, 8.0, 0.0, 30.0),
                                 child: Text(
-                                  'Refill Information Report',
+                                  'PAGES.REPORTS.REFILL'.tr(),
                                   style: FlutterFlowTheme.of(context).title3,
                                 ),
                               ),
@@ -163,7 +164,8 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                                   .fromSTEB(20,
                                                                       0, 0, 0),
                                                           child: Text(
-                                                            'Start Date',
+                                                            'REPORTS.START_DATE'
+                                                                .tr(),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText1
@@ -192,7 +194,10 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                             dateTimeFormat(
                                                                 'yMMMd',
                                                                 _model
-                                                                    .datePicked1),
+                                                                    .datePicked1,
+                                                                locale: context
+                                                                    .locale
+                                                                    .languageCode),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText2
@@ -336,7 +341,8 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                                   .fromSTEB(20,
                                                                       0, 0, 0),
                                                           child: Text(
-                                                            'End Date',
+                                                            'REPORTS.END_DATE'
+                                                                .tr(),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText1
@@ -365,7 +371,10 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                             dateTimeFormat(
                                                                 'yMMMd',
                                                                 _model
-                                                                    .datePicked2),
+                                                                    .datePicked2,
+                                                                locale: context
+                                                                    .locale
+                                                                    .languageCode),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyText2
@@ -417,20 +426,22 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                             size: 20,
                                                           ),
                                                           onPressed: () async {
-                                                            final _datePickedDate =
-                                                                await showDatePicker(
-                                                              context: context,
-                                                              initialDate: _model
-                                                                      .datePicked1 ??
-                                                                  DateTime(
-                                                                      2022),
-                                                              firstDate: _model
-                                                                      .datePicked1 ??
-                                                                  DateTime
-                                                                      .now(),
-                                                              lastDate: DateTime
-                                                                  .now(),
-                                                            );
+                                                            final _datePickedDate = await showDatePicker(
+                                                                context:
+                                                                    context,
+                                                                initialDate: _model
+                                                                        .datePicked1 ??
+                                                                    DateTime(
+                                                                        2022),
+                                                                firstDate: _model
+                                                                        .datePicked1 ??
+                                                                    DateTime
+                                                                        .now(),
+                                                                lastDate:
+                                                                    DateTime
+                                                                        .now(),
+                                                                locale: context
+                                                                    .locale);
 
                                                             if (_datePickedDate !=
                                                                 null) {
@@ -473,7 +484,7 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                       onPressed: () async {
                                         Navigator.pop(context);
                                       },
-                                      text: 'Cancel',
+                                      text: 'CANCEL'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,
@@ -519,6 +530,7 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                               var targetPath =
                                                   await getApplicationDocumentsDirectory();
                                               var content = await refillInfoPdf(
+                                                  context,
                                                   _model.datePicked1!,
                                                   _model.datePicked2!);
                                               var file = await FlutterHtmlToPdf
@@ -532,7 +544,7 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                     .withoutNulls,
                                               );
                                             },
-                                      text: 'View',
+                                      text: 'VIEW'.tr(),
                                       options: FFButtonOptions(
                                         width: 130,
                                         height: 40,

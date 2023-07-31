@@ -4,6 +4,7 @@ import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:DDD/widget/missed_appointments_widget.dart';
 import 'package:DDD/widget/monthly_summary_widget.dart';
 import 'package:DDD/widget/refill_info_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +21,8 @@ class _ReportWidget extends State<ReportWidget> {
       drawer: DDDDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Select Report to generate',
+        title: Text(
+          'PAGES.REPORTS.TITLE'.tr(),
         ),
         backgroundColor: const Color(0xccdf6f3e),
       ),
@@ -46,7 +47,7 @@ class _ReportWidget extends State<ReportWidget> {
                     padding:
                         EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 30.0),
                     child: Text(
-                      'Run report',
+                      'PAGES.REPORTS.RUN'.tr(),
                       style: FlutterFlowTheme.of(context).title3,
                     ),
                   ),
@@ -93,7 +94,7 @@ class _ReportWidget extends State<ReportWidget> {
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
                                 child: Text(
-                                  'Missed appointment report',
+                                  'PAGES.REPORTS.MISSED_APPOINTMENTS'.tr(),
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
@@ -157,7 +158,7 @@ class _ReportWidget extends State<ReportWidget> {
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
                                 child: Text(
-                                  'Refill report',
+                                  'PAGES.REPORTS.REFILL'.tr(),
                                   style: FlutterFlowTheme.of(context)
                                       .bodyText1
                                       .override(
@@ -178,7 +179,7 @@ class _ReportWidget extends State<ReportWidget> {
                       ),
                     ),
                   ),
-                  Padding(
+                  /*Padding(
                     padding:
                     EdgeInsetsDirectional.fromSTEB(10.0, 8.0, 0.0, 10.0),
                     child: InkWell(
@@ -231,7 +232,7 @@ class _ReportWidget extends State<ReportWidget> {
                                     .fromSTEB(
                                     0, 0, 12, 0),
                                 child: Text(
-                                  'Monthly summary report',
+                                  'PAGES.REPORTS.SUMMARY_REPORT'.tr(),
                                   style:
                                   FlutterFlowTheme.of(
                                       context)
@@ -256,7 +257,7 @@ class _ReportWidget extends State<ReportWidget> {
                         ),
                       ),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
