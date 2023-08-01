@@ -127,7 +127,8 @@
         "SYNCHRONIZATION": {
             "TITLE": "Synchroniser les données vers et depuis le serveur",
             "SYNCHRONIZE": "Synchroniser",
-            "SYNC_ERROR": "Un problème est survenu lors de la synchronisation des données, veuillez vous déconnecter et vous reconnecter"
+            "SYNC_ERROR": "Un problème est survenu lors de la synchronisation des données, veuillez vous déconnecter et vous reconnecter",
+            "SYNC_SUCCESS": "Enregistrements synchronisés avec succès"
         },
         "DEVOLVE": {
             "DATE": "Date de dévolution",

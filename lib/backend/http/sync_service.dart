@@ -57,7 +57,7 @@ class SyncService {
         final response = await _syncRecords();
         if (response != null && response) {
           showToast(
-            'Records synchronized successfully',
+            'PAGES.SYNCHRONIZATION.SYNC_SUCCESS'.tr(),
             duration: Duration(seconds: 10),
             position: ToastPosition.bottom,
             backgroundColor: Colors.green,

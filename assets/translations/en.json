@@ -127,7 +127,8 @@
         "SYNCHRONIZATION": {
             "TITLE": "Synchronize data to and from server",
             "SYNCHRONIZE": "Synchronize",
-            "SYNC_ERROR": "There was a problem synchronizing data, please sign out and sign in again"
+            "SYNC_ERROR": "There was a problem synchronizing data, please sign out and sign in again",
+            "SYNC_SUCCESS": "Records synchronized successfully"
         },
         "DEVOLVE": {
             "DATE": "Date devolved",
