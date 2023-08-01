@@ -1,18 +1,35 @@
 import 'package:DDD/app_state.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 
 import 'api.dart';
 
 class AuthAPIProvider {
   Future<dynamic> authenticate(
       {required String username, required String password}) async {
-    final response = await api.post(
-      '${FFAppState().baseUrl}/api/authenticate',
-      data: {
-        'username': username,
-        'password': password,
-      },
-    );
-    return response.data;
+    try {
+      final response = await api.post(
+        '${FFAppState().baseUrl}/api/authenticate',
+        data: {
+          'username': username,
+          'password': password,
+        },
+      );
+      return response.data;
+    } catch (e) {
+      if (e.toString().contains('Connection refused')) {
+        showToast(
+          'CONNECTION_ERROR'.tr(),
+          duration: Duration(seconds: 10),
+          position: ToastPosition.bottom,
+          backgroundColor: Colors.red,
+          radius: 3.0,
+          textStyle: TextStyle(fontSize: 15.0),
+        );
+      }
+      return null;
+    }
   }
 
   Future<void> processProfile() async {

@@ -310,6 +310,11 @@ class _$ClinicDao extends ClinicDao {
   }
 
   @override
+  Future<void> updateAllSynced() async {
+    await _queryAdapter.queryNoReturn('UPDATE Clinic SET synced = 1');
+  }
+
+  @override
   Future<void> insertRecord(Clinic clinic) async {
     await _clinicInsertionAdapter.insert(clinic, OnConflictStrategy.abort);
   }
@@ -379,6 +384,11 @@ class _$DevolveDao extends DevolveDao {
     return _queryAdapter.query(
         'SELECT COUNT(*) > 0 FROM Devolve WHERE synced= 0',
         mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
+  }
+
+  @override
+  Future<void> updateAllSynced() async {
+    await _queryAdapter.queryNoReturn('UPDATE Devolve SET synced = 1');
   }
 
   @override
@@ -590,6 +600,11 @@ class _$DispenseDao extends DispenseDao {
   }
 
   @override
+  Future<void> updateAllSynced() async {
+    await _queryAdapter.queryNoReturn('UPDATE Dispense SET synced = 1');
+  }
+
+  @override
   Future<void> insertRecord(Dispense dispense) async {
     await _dispenseInsertionAdapter.insert(dispense, OnConflictStrategy.abort);
   }
@@ -694,7 +709,7 @@ class _$PatientDao extends PatientDao {
     String keyword,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Patient WHERE (outletCode = ?1 OR facilityCode =          ?1) AND (LOWER(givenName) LIKE          LOWER(?2) OR LOWER(familyName) LIKE LOWER(?2) OR          LOWER(hospitalNo) LIKE LOWER(?2)) ORDER BY givenName,        familyName LIMIT 10',
+        'SELECT * FROM Patient WHERE (outletCode = ?1 OR facilityCode =          ?1) AND (LOWER(givenName) LIKE          LOWER(?2) OR LOWER(familyName) LIKE LOWER(?2) OR         LOWER(uniqueId) LIKE LOWER(?2) OR           LOWER(phone) LIKE LOWER(?2) OR          LOWER(hospitalNo) LIKE LOWER(?2)) ORDER BY givenName,        familyName LIMIT 10',
         mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, targetGroup: row['targetGroup'] as String?, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, viralLoadDate: _dateTimeConverter.decode(row['viralLoadDate'] as int), uniqueId: row['uniqueId'] as String?, synced: (row['synced'] as int) != 0),
         arguments: [activationCode, keyword]);
   }
@@ -774,6 +789,11 @@ class _$PatientDao extends PatientDao {
     await _queryAdapter.queryNoReturn(
         'UPDATE Patient SET synced = true WHERE id = ?1',
         arguments: [id]);
+  }
+
+  @override
+  Future<void> updateAllSynced() async {
+    await _queryAdapter.queryNoReturn('UPDATE Patient SET synced = 1');
   }
 
   @override
@@ -1181,6 +1201,11 @@ class _$ViralLoadDao extends ViralLoadDao {
     return _queryAdapter.query(
         'SELECT COUNT(*) > 0 FROM ViralLoad WHERE synced= 0',
         mapper: (Map<String, Object?> row) => (row.values.first as int) != 0);
+  }
+
+  @override
+  Future<void> updateAllSynced() async {
+    await _queryAdapter.queryNoReturn('UPDATE ViralLoad SET synced = 1');
   }
 
   @override

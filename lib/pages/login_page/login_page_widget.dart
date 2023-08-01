@@ -111,11 +111,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             _model.emailAddressLoginController,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: 'PAGES.LOGIN.USERNAME'.tr(),
+                                          labelText:
+                                              'PAGES.LOGIN.USERNAME'.tr(),
                                           labelStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,
-                                          hintText: 'PAGES.LOGIN.USERNAME_HINT'.tr(),
+                                          hintText:
+                                              'PAGES.LOGIN.USERNAME_HINT'.tr(),
                                           hintStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,
@@ -176,11 +178,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         obscureText:
                                             !_model.passwordLoginVisibility,
                                         decoration: InputDecoration(
-                                          labelText: 'PAGES.LOGIN.PASSWORD'.tr(),
+                                          labelText:
+                                              'PAGES.LOGIN.PASSWORD'.tr(),
                                           labelStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,
-                                          hintText: 'PAGES.LOGIN.PASSWORD_HINT'.tr(),
+                                          hintText:
+                                              'PAGES.LOGIN.PASSWORD_HINT'.tr(),
                                           hintStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyText2,
@@ -268,7 +272,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                       .baseUrl
                                                       .isEmpty) {
                                                     showToast(
-                                                      'PAGES.LOGIN.URL_MESSAGE'.tr(),
+                                                      'PAGES.LOGIN.URL_MESSAGE'
+                                                          .tr(),
                                                       duration:
                                                           Duration(seconds: 2),
                                                       position:
@@ -297,8 +302,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                                   .passwordLoginController!
                                                                   .text
                                                                   .trim());
-                                                  if (response['accessToken'] ==
-                                                      null) {
+                                                  if (response == null ||
+                                                      response['accessToken'] ==
+                                                          null) {
                                                     return;
                                                   }
 
@@ -369,7 +375,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     labelText: 'PAGES.LOGIN.BASE_URL'.tr(),
                                     labelStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
-                                    hintText:  'PAGES.LOGIN.BASE_URL_HINT'.tr(),
+                                    hintText: 'PAGES.LOGIN.BASE_URL_HINT'.tr(),
                                     hintStyle:
                                         FlutterFlowTheme.of(context).bodyText2,
                                     enabledBorder: OutlineInputBorder(
@@ -423,8 +429,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       0, 8, 0, 0),
                                   child: Text(
                                     '2023.1 14-07-2023',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyText1,
+                                    style:
+                                        FlutterFlowTheme.of(context).bodyText1,
                                   ),
                                 ),
                               ],

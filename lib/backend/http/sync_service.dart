@@ -1,5 +1,6 @@
 import 'package:DDD/app_state.dart';
 import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -26,6 +27,13 @@ class SyncService {
       '${FFAppState().baseUrl}/api/ddd/sync',
       data: payload,
     );
+
+    await _database.patientDao.updateAllSynced();
+    await _database.dispenseDao.updateAllSynced();
+    await _database.clinicDao.updateAllSynced();
+    await _database.devolveDao.updateAllSynced();
+    await _database.viralLoadDao.updateAllSynced();
+
     return response.data;
   }
 
@@ -45,26 +53,40 @@ class SyncService {
       hasData = await _database.viralLoadDao.hasUnSynced();
     }
     if (hasData ?? false) {
-      final response = await _syncRecords();
-      if (response != null && response) {
-        showToast(
-          'Records synchronized successfully',
-          duration: Duration(seconds: 10),
-          position: ToastPosition.bottom,
-          backgroundColor: Colors.green,
-          radius: 3.0,
-          textStyle: TextStyle(fontSize: 15.0),
-        );
-      } else {
-        showToast(
-          'There was problem synchronizing data, please sign out and sign in again',
-          duration: Duration(seconds: 10),
-          position: ToastPosition.bottom,
-          backgroundColor: Colors.red,
-          radius: 3.0,
-          textStyle: TextStyle(fontSize: 15.0),
-        );
+      try {
+        final response = await _syncRecords();
+        if (response != null && response) {
+          showToast(
+            'Records synchronized successfully',
+            duration: Duration(seconds: 10),
+            position: ToastPosition.bottom,
+            backgroundColor: Colors.green,
+            radius: 3.0,
+            textStyle: TextStyle(fontSize: 15.0),
+          );
+        } else {
+          showToast(
+            'PAGES.SYNCHRONIZATION.SYNC_ERROR'.tr(),
+            duration: Duration(seconds: 10),
+            position: ToastPosition.bottom,
+            backgroundColor: Colors.red,
+            radius: 3.0,
+            textStyle: TextStyle(fontSize: 15.0),
+          );
 
+          return false;
+        }
+      } catch (e) {
+        if (e.toString().contains('Connection refused')) {
+          showToast(
+            'CONNECTION_ERROR'.tr(),
+            duration: Duration(seconds: 10),
+            position: ToastPosition.bottom,
+            backgroundColor: Colors.red,
+            radius: 3.0,
+            textStyle: TextStyle(fontSize: 15.0),
+          );
+        }
         return false;
       }
     }

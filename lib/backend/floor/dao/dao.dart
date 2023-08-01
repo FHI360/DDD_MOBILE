@@ -98,7 +98,9 @@ abstract class PatientDao {
   @Query('''
       SELECT * FROM Patient WHERE (outletCode = :activationCode OR facilityCode = 
         :activationCode) AND (LOWER(givenName) LIKE 
-        LOWER(:keyword) OR LOWER(familyName) LIKE LOWER(:keyword) OR 
+        LOWER(:keyword) OR LOWER(familyName) LIKE LOWER(:keyword) OR
+        LOWER(uniqueId) LIKE LOWER(:keyword) OR  
+        LOWER(phone) LIKE LOWER(:keyword) OR 
         LOWER(hospitalNo) LIKE LOWER(:keyword)) ORDER BY givenName, 
       familyName LIMIT 10
       ''')
@@ -118,6 +120,9 @@ abstract class PatientDao {
 
   @Query("UPDATE Patient SET synced = true WHERE id = :id")
   Future<void> updateSynced(int id);
+
+  @Query("UPDATE Patient SET synced = 1")
+  Future<void> updateAllSynced();
 
   @Query('SELECT * FROM Patient WHERE synced = 0')
   Future<List<Patient>> findUnSynced();
@@ -215,6 +220,9 @@ abstract class DispenseDao {
 
   @Query('SELECT COUNT(*) > 0 FROM Dispense WHERE synced= 0')
   Future<bool?> hasUnSynced();
+
+  @Query("UPDATE Dispense SET synced = 1")
+  Future<void> updateAllSynced();
 }
 
 @dao
@@ -239,6 +247,9 @@ abstract class ClinicDao {
 
   @Query('SELECT COUNT(*) > 0 FROM Clinic WHERE synced= 0')
   Future<bool?> hasUnSynced();
+
+  @Query("UPDATE Clinic SET synced = 1")
+  Future<void> updateAllSynced();
 }
 
 @dao
@@ -258,6 +269,9 @@ abstract class DevolveDao {
 
   @Query('SELECT COUNT(*) > 0 FROM Devolve WHERE synced= 0')
   Future<bool?> hasUnSynced();
+
+  @Query("UPDATE Devolve SET synced = 1")
+  Future<void> updateAllSynced();
 }
 
 @dao
@@ -341,4 +355,7 @@ abstract class ViralLoadDao {
 
   @Query('SELECT COUNT(*) > 0 FROM ViralLoad WHERE synced= 0')
   Future<bool?> hasUnSynced();
+
+  @Query("UPDATE ViralLoad SET synced = 1")
+  Future<void> updateAllSynced();
 }

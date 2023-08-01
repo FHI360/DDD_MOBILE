@@ -126,7 +126,8 @@
         },
         "SYNCHRONIZATION": {
             "TITLE": "Synchronize data to and from server",
-            "SYNCHRONIZE": "Synchronize"
+            "SYNCHRONIZE": "Synchronize",
+            "SYNC_ERROR": "There was a problem synchronizing data, please sign out and sign in again"
         },
         "DEVOLVE": {
             "DATE": "Date devolved",
@@ -176,5 +177,6 @@
     "CANCEL": "Cancel",
     "SAVE": "Save changes",
     "AGE": "{}yr(s)",
-    "VIEW": "View"
+    "VIEW": "View",
+    "CONNECTION_ERROR": "There was an error connecting to server"
 }

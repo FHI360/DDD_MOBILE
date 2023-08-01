@@ -126,7 +126,8 @@
         },
         "SYNCHRONIZATION": {
             "TITLE": "Synchroniser les données vers et depuis le serveur",
-            "SYNCHRONIZE": "Synchroniser"
+            "SYNCHRONIZE": "Synchroniser",
+            "SYNC_ERROR": "Un problème est survenu lors de la synchronisation des données, veuillez vous déconnecter et vous reconnecter"
         },
         "DEVOLVE": {
             "DATE": "Date de dévolution",
@@ -176,5 +177,6 @@
     "CANCEL": "Annuler",
     "SAVE": "Sauvegarder",
     "AGE": "{}an(s)",
-    "VIEW": "Voir"
+    "VIEW": "Voir",
+    "CONNECTION_ERROR": "Une erreur s'est produite lors de la connexion au serveur"
 }
