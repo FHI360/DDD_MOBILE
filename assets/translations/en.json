@@ -57,7 +57,8 @@
             "SEARCH_HINT": "Search patients...",
             "SEARCH": "Search",
             "LAST_REFILL": "Last refill",
-            "VIEW": "View"
+            "VIEW": "View",
+            "NO_RESULTS": "No results from search..."
         },
         "PATIENT_PROFILE": {
             "TITLE": "Patient Profile",
@@ -75,7 +76,8 @@
             "REFILL_HISTORY": "Refill history",
             "REGIMEN": "Regimen",
             "PRESCRIBED_QTY": "Prescribed QTY",
-            "DISPENSED_QTY": "Dispensed QTY"
+            "DISPENSED_QTY": "Dispensed QTY",
+            "NO_RECORD": "No Record"
         },
         "PREFERENCES": {
             "TITLE": "Edit preferences",

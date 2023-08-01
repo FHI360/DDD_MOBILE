@@ -4,6 +4,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -79,7 +80,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                             Duration(milliseconds: 2000),
                             () => setState(() {}),
                           ),
-                          autofocus: true,
+                          autofocus: false,
                           obscureText: false,
                           decoration: InputDecoration(
                             labelText: 'PAGES.PATIENT_LIST.SEARCH_HINT'.tr(),
@@ -140,7 +141,26 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                             setState(() {
                               _model.fullList = false;
                             });
-
+                            if (_model.patients.isEmpty) {
+                              showToast(
+                                'PAGES.PATIENT_LIST.NO_RESULTS'.tr(),
+                                duration:
+                                Duration(
+                                    seconds:
+                                    10),
+                                position:
+                                ToastPosition
+                                    .bottom,
+                                backgroundColor:
+                                Colors
+                                    .green,
+                                radius: 3.0,
+                                textStyle:
+                                TextStyle(
+                                    fontSize:
+                                    15.0),
+                              );
+                            }
                             setState(() {});
                           },
                           child: Container(
@@ -304,6 +324,15 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                                             .lastRefillDate!,
                                                         locale: context.locale
                                                             .languageCode),
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyText1,
+                                                  ),
+                                                if (patientListItem
+                                                        .lastRefillDate ==
+                                                    DateTime(1900))
+                                                  Text(
+                                                    '--',
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1,

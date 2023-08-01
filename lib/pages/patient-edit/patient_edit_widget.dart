@@ -252,7 +252,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                         child: TextFormField(
                                           controller:
                                               _model.givenNameController,
-                                          autofocus: true,
+                                          autofocus: false,
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             labelText:
@@ -325,7 +325,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                         child: TextFormField(
                                           controller:
                                               _model.familyNameController,
-                                          autofocus: true,
+                                          autofocus: false,
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             labelText:
@@ -1014,7 +1014,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                         child: TextFormField(
                                           controller:
                                               _model.hospitalNoController,
-                                          autofocus: true,
+                                          autofocus: false,
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             labelText:
@@ -1115,7 +1115,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                         ),
                                         child: TextFormField(
                                           controller: _model.uniqueIdController,
-                                          autofocus: true,
+                                          autofocus: false,
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             labelText:
@@ -1200,7 +1200,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                               ),
                               child: TextFormField(
                                 controller: _model.addressController,
-                                autofocus: true,
+                                autofocus: false,
                                 obscureText: false,
                                 decoration: InputDecoration(
                                   labelText: 'PAGES.PATIENT.ADDRESS'.tr(),

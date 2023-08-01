@@ -540,7 +540,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                   .insertRecord(viralLoad);
 
                                               Navigator.pop(
-                                                  context, viralLoad.date);
+                                                  context, viralLoad);
                                             },
                                       text: 'SAVE'.tr(),
                                       options: FFButtonOptions(

@@ -57,7 +57,8 @@
             "SEARCH_HINT": "Rechercher des patients...",
             "SEARCH": "Recherche",
             "LAST_REFILL": "Dernière recharge",
-            "VIEW": "Voir"
+            "VIEW": "Voir",
+            "NO_RESULTS": "Aucun résultat de recherche..."
         },
         "PATIENT_PROFILE": {
             "TITLE": "Profil du patient",
@@ -75,7 +76,8 @@
             "REFILL_HISTORY": "Historique de recharge",
             "REGIMEN": "Régime",
             "PRESCRIBED_QTY": "Qté prescrite",
-            "DISPENSED_QTY": "Qté distribuée"
+            "DISPENSED_QTY": "Qté distribuée",
+            "NO_RECORD": "Aucun enregistrement"
         },
         "PREFERENCES": {
             "TITLE": "Modifier les préférences",
