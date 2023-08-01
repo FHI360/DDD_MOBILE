@@ -140,7 +140,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                           await showDatePicker(
                                         context: context,
                                         initialDate: getCurrentTimestamp,
-                                        firstDate: DateTime(1900),
+                                        firstDate: widget.patient!.dateStarted,
                                         locale: context.locale,
                                         lastDate: getCurrentTimestamp,
                                       );

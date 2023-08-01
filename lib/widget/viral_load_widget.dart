@@ -115,7 +115,8 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                           await showDatePicker(
                                               context: context,
                                               initialDate: getCurrentTimestamp,
-                                              firstDate: DateTime(2021),
+                                              firstDate:
+                                                  widget.patient!.dateStarted,
                                               lastDate: getCurrentTimestamp,
                                               locale: context.locale);
 
@@ -539,8 +540,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                               await _database.viralLoadDao
                                                   .insertRecord(viralLoad);
 
-                                              Navigator.pop(
-                                                  context, viralLoad);
+                                              Navigator.pop(context, viralLoad);
                                             },
                                       text: 'SAVE'.tr(),
                                       options: FFButtonOptions(

@@ -190,18 +190,13 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                 ),
                                                 child: InkWell(
                                                   onTap: () async {
-                                                    DateTime today =
-                                                        DateTime.now();
-                                                    DateTime min = DateTime(
-                                                        today.year - 1,
-                                                        today.month,
-                                                        today.day);
                                                     final _datePickedDate =
                                                         await showDatePicker(
                                                       context: context,
                                                       initialDate:
                                                           getCurrentTimestamp,
-                                                      firstDate: min,
+                                                      firstDate: _model
+                                                          .patient!.dateStarted,
                                                       locale: context.locale,
                                                       lastDate:
                                                           getCurrentTimestamp,
@@ -253,7 +248,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           .start,
                                                                   children: [
                                                                     Text(
-                                                                      'PAGES.REFILL.VISIT_DATE'.tr(),
+                                                                      'PAGES.REFILL.VISIT_DATE'
+                                                                          .tr(),
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
                                                                           .bodyText1,
@@ -339,7 +335,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                         0.0,
                                                                         0.0),
                                                             child: Text(
-                                                              'PAGES.REFILL.BODY_WEIGHT'.tr(),
+                                                              'PAGES.REFILL.BODY_WEIGHT'
+                                                                  .tr(),
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyText1
@@ -514,7 +511,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                         0.0,
                                                                         0.0),
                                                             child: Text(
-                                                              'PAGES.REFILL.SYSTOLIC'.tr(),
+                                                              'PAGES.REFILL.SYSTOLIC'
+                                                                  .tr(),
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyText1
@@ -689,7 +687,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                         0.0,
                                                                         0.0),
                                                             child: Text(
-                                                              'PAGES.REFILL.DIASTOLIC'.tr(),
+                                                              'PAGES.REFILL.DIASTOLIC'
+                                                                  .tr(),
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyText1
@@ -864,7 +863,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                         0.0,
                                                                         0.0),
                                                             child: Text(
-                                                              'PAGES.REFILL.TEMPERATURE'.tr(),
+                                                              'PAGES.REFILL.TEMPERATURE'
+                                                                  .tr(),
                                                               style: FlutterFlowTheme
                                                                       .of(context)
                                                                   .bodyText1
@@ -1032,23 +1032,23 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      'PAGES.REFILL.TB_SCREENING'.tr(),
+                                                      'PAGES.REFILL.TB_SCREENING'
+                                                          .tr(),
                                                       style:
-                                                      FlutterFlowTheme.of(
-                                                          context)
-                                                          .title2
-                                                          .override(
-                                                        fontFamily: FlutterFlowTheme.of(
-                                                            context)
-                                                            .bodyText1Family,
-                                                        fontSize:
-                                                        21.0,
-                                                        useGoogleFonts: GoogleFonts
-                                                            .asMap()
-                                                            .containsKey(
-                                                            FlutterFlowTheme.of(context)
-                                                                .bodyText1Family),
-                                                      ),
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .title2
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family,
+                                                                fontSize: 21.0,
+                                                                useGoogleFonts: GoogleFonts
+                                                                        .asMap()
+                                                                    .containsKey(
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyText1Family),
+                                                              ),
                                                     ),
                                                   ],
                                                 ),
@@ -1114,7 +1114,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.COUGHING'.tr(),
+                                                                        'PAGES.REFILL.COUGHING'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -1249,7 +1250,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.FEVER'.tr(),
+                                                                        'PAGES.REFILL.FEVER'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -1384,7 +1386,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.WEIGHT_LOSS'.tr(),
+                                                                        'PAGES.REFILL.WEIGHT_LOSS'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -1519,7 +1522,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.NIGHT_SWEAT'.tr(),
+                                                                        'PAGES.REFILL.NIGHT_SWEAT'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -1654,7 +1658,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.SWELLINGS'.tr(),
+                                                                        'PAGES.REFILL.SWELLINGS'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -1789,7 +1794,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.TB_REFER'.tr(),
+                                                                        'PAGES.REFILL.TB_REFER'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -1896,23 +1902,23 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      'PAGES.REFILL.DRUG_REFILL'.tr(),
+                                                      'PAGES.REFILL.DRUG_REFILL'
+                                                          .tr(),
                                                       style:
-                                                      FlutterFlowTheme.of(
-                                                          context)
-                                                          .title2
-                                                          .override(
-                                                        fontFamily: FlutterFlowTheme.of(
-                                                            context)
-                                                            .bodyText1Family,
-                                                        fontSize:
-                                                        21.0,
-                                                        useGoogleFonts: GoogleFonts
-                                                            .asMap()
-                                                            .containsKey(
-                                                            FlutterFlowTheme.of(context)
-                                                                .bodyText1Family),
-                                                      ),
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .title2
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family,
+                                                                fontSize: 21.0,
+                                                                useGoogleFonts: GoogleFonts
+                                                                        .asMap()
+                                                                    .containsKey(
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyText1Family),
+                                                              ),
                                                     ),
                                                   ],
                                                 ),
@@ -1978,7 +1984,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.REGIMEN'.tr(),
+                                                                        'PAGES.REFILL.REGIMEN'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -2111,7 +2118,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.PRESCRIBED_QTY'.tr(),
+                                                                        'PAGES.REFILL.PRESCRIBED_QTY'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -2258,7 +2266,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.DISPENSED_QTY'.tr(),
+                                                                        'PAGES.REFILL.DISPENSED_QTY'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -2410,7 +2419,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.MISSED_DOSES'.tr(),
+                                                                        'PAGES.REFILL.MISSED_DOSES'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -2545,7 +2555,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           0.0),
                                                                       child:
                                                                           Text(
-                                                                            'PAGES.REFILL.ADVERSE_ISSUES'.tr(),
+                                                                        'PAGES.REFILL.ADVERSE_ISSUES'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
                                                                             .override(
@@ -2706,7 +2717,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                             .start,
                                                                     children: [
                                                                       Text(
-                                                                        'PAGES.REFILL.NEXT_REFILL'.tr(),
+                                                                        'PAGES.REFILL.NEXT_REFILL'
+                                                                            .tr(),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1,
                                                                       ),
@@ -2934,7 +2946,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                       _model
                                                                           .patient!);
                                                               showToast(
-                                                                'PAGES.REFILL.SAVE_SUCCESS'.tr(),
+                                                                'PAGES.REFILL.SAVE_SUCCESS'
+                                                                    .tr(),
                                                                 duration:
                                                                     Duration(
                                                                         seconds:
