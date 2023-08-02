@@ -18,6 +18,22 @@ class ViralLoadModel extends FlutterFlowModel {
       return 'FIELD_REQUIRED'.tr();
     }
 
+    if (int.tryParse(val) == null) {
+      return 'PAGES.VIRAL_LOAD.INPUT_NUMBER'.tr();
+    }
+
+    if (int.parse(val) < 0) {
+      return 'PAGES.VIRAL_LOAD.MINIMUM'.tr();
+    }
+
+    if (int.parse(val) > 999 && datePicked != null) {
+      datePicked1 =
+          DateTime(datePicked!.year, datePicked!.month + 3, datePicked!.day);
+    } else if (datePicked != null) {
+      datePicked1 =
+          DateTime(datePicked!.year + 1, datePicked!.month, datePicked!.day);
+    }
+
     return null;
   }
 

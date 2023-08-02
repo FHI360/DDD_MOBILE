@@ -43,6 +43,14 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
     var dispenses = await _database.dispenseDao.findByPatient(patient.uuid);
     final facilities = await _database.facilityDao.findAll();
     final outlets = await _database.outletDao.findAll();
+    final viralLoads = await _database.viralLoadDao.findByPatient(patient.uuid);
+    if (viralLoads.isNotEmpty) {
+      patient.nextVisitDate = viralLoads.first.nextAppointment;
+      patient.viralLoadDate = viralLoads.first.date;
+      patient.lastViralLoad = viralLoads.first.value;
+
+      print('Viral Load: ${viralLoads.first.toJson()}');
+    }
     setState(() {
       _model.patient = patient;
       _model.outlets = outlets;
@@ -720,6 +728,10 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                         _model.patient!
                                                                 .lastViralLoad =
                                                             value.value;
+                                                        _model.patient!
+                                                                .nextVisitDate =
+                                                            value
+                                                                .nextAppointment;
                                                       }
                                                     }));
                                               },
@@ -961,7 +973,25 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                       .locale.languageCode),
                                               style:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyText1,
+                                                      .bodyText1
+                                                      .override(
+                                                        color: DateTime.now()
+                                                                .isAfter(_model
+                                                                    .patient!
+                                                                    .nextAppointmentDate)
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
                                             ),
                                           if (_model.patient!
                                                   .nextAppointmentDate ==
@@ -1017,37 +1047,139 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                       ),
                                             ),
                                           ),
-                                          if (_model.patient!
-                                              .viralLoadDate !=
+                                          if (_model.patient!.viralLoadDate !=
                                               DateTime(1900))
                                             Text(
                                               formatVL(),
                                               style:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyText1,
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        color: int.parse(_model
+                                                                        .patient!
+                                                                        .lastViralLoad ??
+                                                                    '0') >
+                                                                999
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontSize: 12,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
                                             ),
-                                          if (_model.patient!
-                                              .viralLoadDate ==
+                                          if (_model.patient!.viralLoadDate ==
                                               DateTime(1900))
                                             Text(
                                               'PAGES.PATIENT_PROFILE.NO_RECORD'
                                                   .tr(),
                                               style:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyText1
-                                                  .override(
-                                                fontFamily:
-                                                FlutterFlowTheme.of(
-                                                    context)
-                                                    .bodyText1Family,
-                                                fontSize: 11,
-                                                useGoogleFonts: GoogleFonts
-                                                    .asMap()
-                                                    .containsKey(
-                                                    FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyText1Family),
-                                              ),
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontSize: 11,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Container(
+                                            width: 230,
+                                            height: 20,
+                                            decoration: BoxDecoration(),
+                                            child: Text(
+                                              'PAGES.PATIENT_PROFILE.NEXT_VIRAL_LOAD_DATE'
+                                                  .tr(),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
+                                          ),
+                                          if (_model.patient!.nextVisitDate !=
+                                              DateTime(1900))
+                                            Text(
+                                              dateTimeFormat(
+                                                  'yMMMd',
+                                                  _model.patient
+                                                      ?.nextVisitDate,
+                                                  locale: context
+                                                      .locale.languageCode),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        color: DateTime.now()
+                                                                .isAfter(_model
+                                                                    .patient!
+                                                                    .nextVisitDate)
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
+                                            ),
+                                          if (_model.patient!.nextVisitDate ==
+                                              DateTime(1900))
+                                            Text(
+                                              'PAGES.PATIENT_PROFILE.NO_RECORD'
+                                                  .tr(),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontSize: 11,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
                                             ),
                                         ],
                                       ),

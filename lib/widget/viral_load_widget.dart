@@ -39,7 +39,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ViralLoadModel());
-    _model.valueController ??= TextEditingController();
+    _model.valueController ??= TextEditingController(text: '');
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -66,7 +66,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
           height: double.infinity,
           child: Form(
             key: _model.formKey,
-            autovalidateMode: AutovalidateMode.disabled,
+            autovalidateMode: AutovalidateMode.always,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -535,8 +535,10 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                   _model.datePicked!;
                                               viralLoad.nextAppointment =
                                                   _model.datePicked1!;
-                                              viralLoad.value =
-                                                  _model.valueController.text!;
+                                              viralLoad.value = int.tryParse(
+                                                      _model
+                                                          .valueController.text)
+                                                  .toString();
                                               await _database.viralLoadDao
                                                   .insertRecord(viralLoad);
 
