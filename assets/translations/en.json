@@ -71,6 +71,7 @@
             "APPOINTMENTS": "Appointments",
             "LAST_REFILL": "Last refill",
             "LAST_VIRAL_LOAD": "Last viral load",
+            "NEXT_VIRAL_LOAD_DATE": "Next Viral load date",
             "NEXT_APPOINTMENT": "Next appointment",
             "REFILL": "Refill",
             "REFILL_HISTORY": "Refill history",
@@ -115,7 +116,15 @@
             "90_DAYS": "90 days",
             "120_DAYS": "120 days",
             "150_DAYS": "150 days",
-            "180_DAYS": "180 days"
+            "180_DAYS": "180 days",
+            "INPUT_NUMBER": "Please input a number",
+            "MINIMUM_1": "Minimum value is 1",
+            "MINIMUM_WEIGHT": "Minimum weight is 1kg",
+            "MAXIMUM_WEIGHT": "Maximum weight is 500kg",
+            "MINIMUM_PRESSURE": "Minimum pressure is 60mmHg",
+            "MAXIMUM_PRESSURE": "Maximum pressure is 370mmHg",
+            "MINIMUM_TEMPERATURE": "Minimum temperature is 10°C",
+            "MAXIMUM_TEMPERATURE": "Maximum temperature is 46°C"
         },
         "REPORTS": {
             "TITLE": "Select Report to generate",
@@ -153,7 +162,9 @@
         "VIRAL_LOAD": {
             "DATE": "Date",
             "VIRAL_LOAD": "Viral Load",
-            "NEXT_DATE": "Next Viral Load Date"
+            "NEXT_DATE": "Next Viral Load Date",
+            "INPUT_NUMBER": "Please enter a number",
+            "MINIMUM": "Minimum permitted is 0"
         }
     },
     "REPORTS": {

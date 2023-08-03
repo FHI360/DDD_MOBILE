@@ -1,4 +1,5 @@
 import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -66,11 +67,11 @@ class RefillModel extends FlutterFlowModel {
 
   String? _numericControllerValidator(BuildContext context, String? val) {
     if (val != null && val.isNotEmpty && int.tryParse(val) == null) {
-      return 'Please input a number.';
+      return 'PAGES.REFILL.INPUT_NUMBER'.tr();
     }
 
     if (val != null && int.tryParse(val) != null && int.parse(val) < 1) {
-      return 'Minimum value is 1.';
+      return 'PAGES.REFILL.MINIMUM_1'.tr();
     }
 
     return null;
@@ -78,14 +79,14 @@ class RefillModel extends FlutterFlowModel {
 
   String? _weightControllerValidator(BuildContext context, String? val) {
     if (val != null && val.isNotEmpty && int.tryParse(val) == null) {
-      return 'Please input a number.';
+      return 'PAGES.REFILL.INPUT_NUMBER'.tr();
     }
 
     if (val != null && int.tryParse(val) != null) {
       if (int.parse(val) < 1) {
-        return 'Minimum value is 1kg';
+        return 'PAGES.REFILL.MINIMUM_WEIGHT'.tr();
       } else if (int.parse(val) > 500) {
-        return 'Maximum value is 500kg';
+        return 'PAGES.REFILL.MAXIMUM_WEIGHT'.tr();
       }
     }
 
@@ -94,14 +95,14 @@ class RefillModel extends FlutterFlowModel {
 
   String? _bpControllerValidator(BuildContext context, String? val) {
     if (val != null && val.isNotEmpty && int.tryParse(val) == null) {
-      return 'Please input a number.';
+      return 'PAGES.REFILL.INPUT_NUMBER'.tr();
     }
 
     if (val != null && int.tryParse(val) != null) {
       if (int.parse(val) < 60) {
-        return 'Minimum value is 60mmHg';
+        return 'PAGES.REFILL.MINIMUM_PRESSURE'.tr();
       } else if (int.parse(val) > 370) {
-        return 'Maximum value is 370mmHg';
+        return 'PAGES.REFILL.MAXIMUM_PRESSURE'.tr();
       }
     }
 
@@ -110,14 +111,14 @@ class RefillModel extends FlutterFlowModel {
 
   String? _temperatureControllerValidator(BuildContext context, String? val) {
     if (val != null && val.isNotEmpty && int.tryParse(val) == null) {
-      return 'Please input a number.';
+      return 'PAGES.REFILL.INPUT_NUMBER'.tr();
     }
 
     if (val != null && int.tryParse(val) != null) {
       if (int.parse(val) < 10) {
-        return 'Minimum value is 10°C';
+        return 'PAGES.REFILL.MINIMUM_TEMPERATURE'.tr();
       } else if (int.parse(val) > 46) {
-        return 'Maximum value is 46°C';
+        return 'PAGES.REFILL.MAXIMUM_TEMPERATURE'.tr();
       }
     }
 

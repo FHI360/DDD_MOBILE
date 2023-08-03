@@ -672,8 +672,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                     ? null
                                     : () async {
                                         DateTime now = DateTime.now();
-                                        DateTime max = DateTime(now.year - 1,
-                                            now.month - 1, now.day);
+                                        DateTime max = DateTime(now.year,
+                                            now.month, now.day - 1);
                                         final _datePicked2Date =
                                             await showDatePicker(
                                                 context: context,
@@ -1667,7 +1667,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                             return;
                                           }
 
-                                          if (_model.clinicStageValue == null) {
+                                          if (_model.clinicStageValue == null || _model.clinicStageValue!.isEmpty) {
                                             showToast(
                                               'PAGES.PATIENT.CLINIC_STAGE_REQUIRED'
                                                   .tr(),

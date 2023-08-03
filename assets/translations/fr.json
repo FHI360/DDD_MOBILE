@@ -71,6 +71,7 @@
             "APPOINTMENTS": "Rendez-vous",
             "LAST_REFILL": "Dernière recharge",
             "LAST_VIRAL_LOAD": "Dernier chargement de virale",
+            "NEXT_VIRAL_LOAD_DATE": "Prochaine date de charge virale",
             "NEXT_APPOINTMENT": "Prochain rendez-vous",
             "REFILL": "Recharge",
             "REFILL_HISTORY": "Historique de recharge",
@@ -115,7 +116,15 @@
             "90_DAYS": "90 jours",
             "120_DAYS": "120 jours",
             "150_DAYS": "150 jours",
-            "180_DAYS": "180 jours"
+            "180_DAYS": "180 jours",
+            "INPUT_NUMBER": "Veuillez entrer un nombre",
+            "MINIMUM_1": "La valeur minimale est 1",
+            "MINIMUM_WEIGHT": "Le poids minimum est de 1 kg",
+            "MAXIMUM_WEIGHT": "Le poids maximal est de 500 kg",
+            "MINIMUM_PRESSURE": "La pression minimale est de 60 mmHg",
+            "MAXIMUM_PRESSURE": "La pression maximale est de 370 mmHg",
+            "MINIMUM_TEMPERATURE": "La température minimale est de 10°C",
+            "MAXIMUM_TEMPERATURE": "La température maximale est de 46°C"
         },
         "REPORTS": {
             "TITLE": "Sélectionnez Rapport pour générer",
@@ -153,7 +162,9 @@
         "VIRAL_LOAD": {
             "DATE": "Date",
             "VIRAL_LOAD": "Charge virale",
-            "NEXT_DATE": "Date de la prochaine charge virale"
+            "NEXT_DATE": "Date de la prochaine charge virale",
+            "INPUT_NUMBER": "Veuillez entrer un nombre",
+            "MINIMUM": "Le minimum autorisé est 0"
         }
     },
     "REPORTS": {
