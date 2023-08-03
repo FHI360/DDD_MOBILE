@@ -2873,11 +2873,13 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                   functions.booleanFromYesNo(_model.tbReferValue),
                                                                   uuid.v4(),
                                                                   false);
-                                                              database.then(
-                                                                  (value) => value
-                                                                      .clinicDao
-                                                                      .insertRecord(
-                                                                          clinic));
+                                                              if (!clinic
+                                                                  .isEmpty()) {
+                                                                database.then((value) => value
+                                                                    .clinicDao
+                                                                    .insertRecord(
+                                                                        clinic));
+                                                              }
                                                               final medication =
                                                                   Medication
                                                                       .instance();
@@ -2902,49 +2904,102 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                           .qtyDispensedController
                                                                           .text) ??
                                                                       0;
-                                                              var refill = Dispense(
-                                                                  id: null,
-                                                                  patientId: _model
-                                                                      .patient!
-                                                                      .uuid,
-                                                                  date: _model
-                                                                      .datePicked1!,
-                                                                  medications: [
-                                                                    medication
-                                                                  ],
-                                                                  dateNextRefill:
-                                                                      _model
-                                                                          .datePicked!,
-                                                                  missedDoses: functions
-                                                                      .booleanFromYesNo(
-                                                                          _model
-                                                                              .missedDosesValue),
-                                                                  adverseIssues:
-                                                                      functions.booleanFromYesNo(
-                                                                          _model
-                                                                              .adverseIssuesValue),
-                                                                  synced: false,
-                                                                  uuid: uuid
-                                                                      .v4());
                                                               final value =
                                                                   await database;
-                                                              await value
+                                                              var dispense = await value
                                                                   .dispenseDao
-                                                                  .insertRecord(
-                                                                      refill);
-                                                              _model.patient!
-                                                                      .nextAppointmentDate =
-                                                                  _model
-                                                                      .datePicked!;
-                                                              _model.patient!
-                                                                      .lastRefillDate =
-                                                                  _model
-                                                                      .datePicked1!;
-                                                              await value
-                                                                  .patientDao
-                                                                  .updateRecord(
+                                                                  .findByPatientAndDate(
                                                                       _model
-                                                                          .patient!);
+                                                                          .patient!
+                                                                          .uuid,
+                                                                      _model
+                                                                          .datePicked1!);
+                                                              var nextAppointment;
+                                                              if (dispense ==
+                                                                  null) {
+                                                                var refill = Dispense(
+                                                                    id: null,
+                                                                    patientId: _model
+                                                                        .patient!
+                                                                        .uuid,
+                                                                    date: _model
+                                                                        .datePicked1!,
+                                                                    medications: [
+                                                                      medication
+                                                                    ],
+                                                                    dateNextRefill:
+                                                                        _model
+                                                                            .datePicked!,
+                                                                    missedDoses:
+                                                                        functions.booleanFromYesNo(_model
+                                                                            .missedDosesValue),
+                                                                    adverseIssues:
+                                                                        functions.booleanFromYesNo(_model
+                                                                            .adverseIssuesValue),
+                                                                    synced:
+                                                                        false,
+                                                                    uuid: uuid
+                                                                        .v4());
+                                                                await value
+                                                                    .dispenseDao
+                                                                    .insertRecord(
+                                                                        refill);
+                                                                dispense =
+                                                                    refill;
+                                                                if (medication
+                                                                    .arv) {
+                                                                  nextAppointment =
+                                                                      _model
+                                                                          .datePicked;
+                                                                }
+                                                              } else {
+                                                                dispense
+                                                                    .medications
+                                                                    .add(
+                                                                        medication);
+                                                                if (medication
+                                                                    .arv) {
+                                                                  dispense.dateNextRefill =
+                                                                      _model
+                                                                          .datePicked!;
+                                                                  nextAppointment =
+                                                                      dispense
+                                                                          .dateNextRefill;
+                                                                }
+
+                                                                await value
+                                                                    .dispenseDao
+                                                                    .updateRecord(
+                                                                        dispense);
+                                                              }
+                                                              var latest = await value
+                                                                  .dispenseDao
+                                                                  .findLatestByPatient(
+                                                                      _model
+                                                                          .patient!
+                                                                          .uuid);
+
+                                                              if (nextAppointment !=
+                                                                      null &&
+                                                                  (latest ==
+                                                                          null ||
+                                                                      !latest
+                                                                          .date
+                                                                          .isAfter(
+                                                                              _model.datePicked!))) {
+                                                                _model.patient!
+                                                                        .nextAppointmentDate =
+                                                                    nextAppointment;
+                                                                _model.patient!
+                                                                        .lastRefillDate =
+                                                                    _model
+                                                                        .datePicked1!;
+                                                                await value
+                                                                    .patientDao
+                                                                    .updateRecord(
+                                                                        _model
+                                                                            .patient!);
+                                                              }
                                                               showToast(
                                                                 'PAGES.REFILL.SAVE_SUCCESS'
                                                                     .tr(),

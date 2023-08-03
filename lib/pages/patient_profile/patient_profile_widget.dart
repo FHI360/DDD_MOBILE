@@ -82,6 +82,15 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
     return '${_model.patient!.lastViralLoad} (${dateTimeFormat('yMMMd', _model.patient?.viralLoadDate, locale: context.locale.languageCode)})';
   }
 
+  getFirstArvMedicationOrAny(Dispense dispense) {
+    var medication = dispense.getArv();
+    if (medication != null) {
+      return medication;
+    }
+
+    return dispense.medications.first;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -1131,10 +1140,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                           if (_model.patient!.nextVisitDate !=
                                               DateTime(1900))
                                             Text(
-                                              dateTimeFormat(
-                                                  'yMMMd',
-                                                  _model.patient
-                                                      ?.nextVisitDate,
+                                              dateTimeFormat('yMMMd',
+                                                  _model.patient?.nextVisitDate,
                                                   locale: context
                                                       .locale.languageCode),
                                               style:
@@ -1472,7 +1479,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                               0),
                                                                       child:
                                                                           Text(
-                                                                        listViewRefillRow.getArv()?.regimen ??
+                                                                            getFirstArvMedicationOrAny(listViewRefillRow)?.regimen ??
                                                                             '',
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1
@@ -1519,8 +1526,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                       child:
                                                                           Text(
                                                                         formatNumber(
-                                                                          listViewRefillRow
-                                                                              .getArv()
+                                                                          getFirstArvMedicationOrAny(listViewRefillRow)
                                                                               ?.quantityPrescribed,
                                                                           formatType:
                                                                               FormatType.custom,
@@ -1574,8 +1580,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                       child:
                                                                           Text(
                                                                         formatNumber(
-                                                                          listViewRefillRow
-                                                                              .getArv()
+                                                                          getFirstArvMedicationOrAny(listViewRefillRow)
                                                                               ?.quantityDispensed,
                                                                           formatType:
                                                                               FormatType.custom,

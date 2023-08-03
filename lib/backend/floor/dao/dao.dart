@@ -199,8 +199,11 @@ abstract class DispenseDao {
       'SELECT * FROM Dispense WHERE patientId = :patientId ORDER BY date DESC')
   Future<List<Dispense>> findByPatient(String patientId);
 
-  @Query('SELECT * FROM Dispense WHERE patientId = :patientId AND date = :date')
-  Future<List<Dispense>> findByPatientAndDate(String patientId, DateTime date);
+  @Query('SELECT * FROM Dispense WHERE patientId = :patientId AND date = :date ORDER BY date DESC LIMIT 1')
+  Future<Dispense?> findByPatientAndDate(String patientId, DateTime date);
+
+  @Query('SELECT * FROM Dispense WHERE patientId = :patientId ORDER BY date DESC LIMIT 1')
+  Future<Dispense?> findLatestByPatient(String patientId);
 
   @insert
   Future<void> insertRecord(Dispense dispense);

@@ -254,6 +254,18 @@ class Clinic {
       row['id'],
       true);
 
+  bool isEmpty() =>
+      systolic == null &&
+      diastolic == null &&
+      weight == null &&
+      temperature == null &&
+      coughing == null &&
+      swelling == null &&
+      sweating == null &&
+      fever == null &&
+      weightLoss == null &&
+      tbReferred == null;
+
   Map<String, dynamic> toJson() => {
         'id': uuid,
         'systolic': systolic,

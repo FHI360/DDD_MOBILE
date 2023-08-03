@@ -546,29 +546,22 @@ class _$DispenseDao extends DispenseDao {
   }
 
   @override
-  Future<List<Dispense>> findByPatientAndDate(
+  Future<Dispense?> findByPatientAndDate(
     String patientId,
     DateTime date,
   ) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM Dispense WHERE patientId = ?1 AND date = ?2',
-        mapper: (Map<String, Object?> row) => Dispense(
-            id: row['id'] as int?,
-            date: _dateTimeConverter.decode(row['date'] as int),
-            patientId: row['patientId'] as String,
-            dateNextRefill:
-                _dateTimeConverter.decode(row['dateNextRefill'] as int),
-            missedDoses: row['missedDoses'] == null
-                ? null
-                : (row['missedDoses'] as int) != 0,
-            adverseIssues: row['adverseIssues'] == null
-                ? null
-                : (row['adverseIssues'] as int) != 0,
-            medications:
-                _listMedicationConverter.decode(row['medications'] as String),
-            synced: (row['synced'] as int) != 0,
-            uuid: row['uuid'] as String),
+    return _queryAdapter.query(
+        'SELECT * FROM Dispense WHERE patientId = ?1 AND date = ?2 ORDER BY date DESC LIMIT 1',
+        mapper: (Map<String, Object?> row) => Dispense(id: row['id'] as int?, date: _dateTimeConverter.decode(row['date'] as int), patientId: row['patientId'] as String, dateNextRefill: _dateTimeConverter.decode(row['dateNextRefill'] as int), missedDoses: row['missedDoses'] == null ? null : (row['missedDoses'] as int) != 0, adverseIssues: row['adverseIssues'] == null ? null : (row['adverseIssues'] as int) != 0, medications: _listMedicationConverter.decode(row['medications'] as String), synced: (row['synced'] as int) != 0, uuid: row['uuid'] as String),
         arguments: [patientId, _dateTimeConverter.encode(date)]);
+  }
+
+  @override
+  Future<Dispense?> findLatestByPatient(String patientId) async {
+    return _queryAdapter.query(
+        'SELECT * FROM Dispense WHERE patientId = ?1 ORDER BY date DESC LIMIT 1',
+        mapper: (Map<String, Object?> row) => Dispense(id: row['id'] as int?, date: _dateTimeConverter.decode(row['date'] as int), patientId: row['patientId'] as String, dateNextRefill: _dateTimeConverter.decode(row['dateNextRefill'] as int), missedDoses: row['missedDoses'] == null ? null : (row['missedDoses'] as int) != 0, adverseIssues: row['adverseIssues'] == null ? null : (row['adverseIssues'] as int) != 0, medications: _listMedicationConverter.decode(row['medications'] as String), synced: (row['synced'] as int) != 0, uuid: row['uuid'] as String),
+        arguments: [patientId]);
   }
 
   @override
