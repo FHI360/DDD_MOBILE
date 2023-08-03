@@ -44,6 +44,10 @@ class PatientEditModel extends FlutterFlowModel {
     return null;
   }
 
+  String? _hospitalNoControllerValidator(BuildContext context, String? val) {
+    return null;
+  }
+
   String? _familyNameControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
       return 'FIELD_REQUIRED'.tr();
@@ -94,7 +98,7 @@ class PatientEditModel extends FlutterFlowModel {
     givenNameControllerValidator = _givenNameControllerValidator;
     familyNameControllerValidator = _familyNameControllerValidator;
     ageControllerValidator = _ageControllerValidator;
-    hospitalNoControllerValidator = _requiredControllerValidator;
+    hospitalNoControllerValidator = _hospitalNoControllerValidator;
     uniqueIdControllerValidator = _requiredControllerValidator;
     addressControllerValidator = _requiredControllerValidator;
     phoneControllerValidator = _phoneControllerValidator;

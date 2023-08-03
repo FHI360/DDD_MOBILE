@@ -8,8 +8,8 @@ class Patient {
   int? id;
   String givenName;
   String familyName;
-  String hospitalNo;
-  String? uniqueId;
+  String? hospitalNo;
+  String uniqueId;
   DateTime dateOfBirth;
   String sex;
   String? phone;
@@ -34,7 +34,7 @@ class Patient {
       {this.id,
       required this.givenName,
       required this.familyName,
-      required this.hospitalNo,
+      this.hospitalNo,
       required this.dateOfBirth,
       required this.sex,
       this.targetGroup,
@@ -52,7 +52,7 @@ class Patient {
       required this.uuid,
       this.lastViralLoad,
       required this.viralLoadDate,
-      this.uniqueId,
+      required this.uniqueId,
       required this.synced});
 
   factory Patient.fromJson(Map<String, dynamic> row) => Patient(

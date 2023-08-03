@@ -292,7 +292,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
                                                 Text(
-                                                  patientListItem.hospitalNo,
+                                                  patientListItem.uniqueId ?? '',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyText2,

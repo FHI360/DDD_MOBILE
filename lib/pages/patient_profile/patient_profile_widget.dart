@@ -176,7 +176,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 8, 0, 0),
                                         child: Text(
-                                          _model.patient?.hospitalNo ?? '',
+                                          _model.patient?.uniqueId ?? '',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText1,
                                         ),

@@ -43,7 +43,9 @@ class ViralLoadModel extends FlutterFlowModel {
     valueControllerValidator = _valueControllerValidator;
   }
 
-  void dispose() {}
+  void dispose() {
+    valueController?.dispose();
+  }
 
   /// Additional helper methods are added here.
 }

@@ -105,7 +105,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Outlet` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `code` TEXT NOT NULL, `facilityCode` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT NOT NULL, `uniqueId` TEXT, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT, `facility` TEXT, `outletCode` TEXT, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `viralLoadDate` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT, `lastViralLoad` TEXT, `deleted` INTEGER, `targetGroup` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Patient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `givenName` TEXT NOT NULL, `familyName` TEXT NOT NULL, `hospitalNo` TEXT, `uniqueId` TEXT NOT NULL, `dateOfBirth` INTEGER NOT NULL, `sex` TEXT NOT NULL, `phone` TEXT, `facility` TEXT, `outletCode` TEXT, `facilityCode` TEXT NOT NULL, `address` TEXT NOT NULL, `lastClinicVisit` INTEGER NOT NULL, `lastRefillDate` INTEGER NOT NULL, `nextAppointmentDate` INTEGER NOT NULL, `nextVisitDate` INTEGER NOT NULL, `dateStarted` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `viralLoadDate` INTEGER NOT NULL, `synced` INTEGER NOT NULL, `lastClinicStage` TEXT, `lastViralLoad` TEXT, `deleted` INTEGER, `targetGroup` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Regimen` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `regimenType` TEXT NOT NULL, `arv` INTEGER NOT NULL)');
         await database.execute(
@@ -710,7 +710,7 @@ class _$PatientDao extends PatientDao {
   ) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Patient WHERE (outletCode = ?1 OR facilityCode =          ?1) AND (LOWER(givenName) LIKE          LOWER(?2) OR LOWER(familyName) LIKE LOWER(?2) OR         LOWER(uniqueId) LIKE LOWER(?2) OR           LOWER(phone) LIKE LOWER(?2) OR          LOWER(hospitalNo) LIKE LOWER(?2)) ORDER BY givenName,        familyName LIMIT 10',
-        mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, targetGroup: row['targetGroup'] as String?, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, viralLoadDate: _dateTimeConverter.decode(row['viralLoadDate'] as int), uniqueId: row['uniqueId'] as String?, synced: (row['synced'] as int) != 0),
+        mapper: (Map<String, Object?> row) => Patient(id: row['id'] as int?, givenName: row['givenName'] as String, familyName: row['familyName'] as String, hospitalNo: row['hospitalNo'] as String?, dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int), sex: row['sex'] as String, targetGroup: row['targetGroup'] as String?, phone: row['phone'] as String?, facility: row['facility'] as String?, outletCode: row['outletCode'] as String?, facilityCode: row['facilityCode'] as String, address: row['address'] as String, lastClinicVisit: _dateTimeConverter.decode(row['lastClinicVisit'] as int), lastRefillDate: _dateTimeConverter.decode(row['lastRefillDate'] as int), nextAppointmentDate: _dateTimeConverter.decode(row['nextAppointmentDate'] as int), nextVisitDate: _dateTimeConverter.decode(row['nextVisitDate'] as int), dateStarted: _dateTimeConverter.decode(row['dateStarted'] as int), lastClinicStage: row['lastClinicStage'] as String?, uuid: row['uuid'] as String, lastViralLoad: row['lastViralLoad'] as String?, viralLoadDate: _dateTimeConverter.decode(row['viralLoadDate'] as int), uniqueId: row['uniqueId'] as String, synced: (row['synced'] as int) != 0),
         arguments: [activationCode, keyword]);
   }
 
@@ -721,7 +721,7 @@ class _$PatientDao extends PatientDao {
             id: row['id'] as int?,
             givenName: row['givenName'] as String,
             familyName: row['familyName'] as String,
-            hospitalNo: row['hospitalNo'] as String,
+            hospitalNo: row['hospitalNo'] as String?,
             dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
             sex: row['sex'] as String,
             targetGroup: row['targetGroup'] as String?,
@@ -744,7 +744,7 @@ class _$PatientDao extends PatientDao {
             lastViralLoad: row['lastViralLoad'] as String?,
             viralLoadDate:
                 _dateTimeConverter.decode(row['viralLoadDate'] as int),
-            uniqueId: row['uniqueId'] as String?,
+            uniqueId: row['uniqueId'] as String,
             synced: (row['synced'] as int) != 0),
         arguments: [id]);
   }
@@ -756,7 +756,7 @@ class _$PatientDao extends PatientDao {
             id: row['id'] as int?,
             givenName: row['givenName'] as String,
             familyName: row['familyName'] as String,
-            hospitalNo: row['hospitalNo'] as String,
+            hospitalNo: row['hospitalNo'] as String?,
             dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
             sex: row['sex'] as String,
             targetGroup: row['targetGroup'] as String?,
@@ -779,7 +779,7 @@ class _$PatientDao extends PatientDao {
             lastViralLoad: row['lastViralLoad'] as String?,
             viralLoadDate:
                 _dateTimeConverter.decode(row['viralLoadDate'] as int),
-            uniqueId: row['uniqueId'] as String?,
+            uniqueId: row['uniqueId'] as String,
             synced: (row['synced'] as int) != 0),
         arguments: [uniqueId]);
   }
@@ -803,7 +803,7 @@ class _$PatientDao extends PatientDao {
             id: row['id'] as int?,
             givenName: row['givenName'] as String,
             familyName: row['familyName'] as String,
-            hospitalNo: row['hospitalNo'] as String,
+            hospitalNo: row['hospitalNo'] as String?,
             dateOfBirth: _dateTimeConverter.decode(row['dateOfBirth'] as int),
             sex: row['sex'] as String,
             targetGroup: row['targetGroup'] as String?,
@@ -826,7 +826,7 @@ class _$PatientDao extends PatientDao {
             lastViralLoad: row['lastViralLoad'] as String?,
             viralLoadDate:
                 _dateTimeConverter.decode(row['viralLoadDate'] as int),
-            uniqueId: row['uniqueId'] as String?,
+            uniqueId: row['uniqueId'] as String,
             synced: (row['synced'] as int) != 0));
   }
 
