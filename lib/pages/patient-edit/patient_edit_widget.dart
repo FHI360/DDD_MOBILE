@@ -203,7 +203,10 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                             .fromSTEB(10.0, 0.0,
                                                                 10.0, 0.0),
                                                     child: Text(
-                                                      FFAppState().name,
+                                                      FFAppState().admin
+                                                          ? FFAppState()
+                                                              .facility
+                                                          : FFAppState().name,
                                                     ),
                                                   ),
                                                 ),
@@ -672,8 +675,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                     ? null
                                     : () async {
                                         DateTime now = DateTime.now();
-                                        DateTime max = DateTime(now.year,
-                                            now.month, now.day - 1);
+                                        DateTime max = DateTime(
+                                            now.year, now.month, now.day - 1);
                                         final _datePicked2Date =
                                             await showDatePicker(
                                                 context: context,
@@ -1404,6 +1407,18 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                       'Stage IV',
                                                       'Stage V',
                                                     ],
+                                                    optionLabels: [
+                                                      'PAGES.PATIENT.CLINIC_STAGES.I'
+                                                          .tr(),
+                                                      'PAGES.PATIENT.CLINIC_STAGES.II'
+                                                          .tr(),
+                                                      'PAGES.PATIENT.CLINIC_STAGES.III'
+                                                          .tr(),
+                                                      'PAGES.PATIENT.CLINIC_STAGES.IV'
+                                                          .tr(),
+                                                      'PAGES.PATIENT.CLINIC_STAGES.V'
+                                                          .tr()
+                                                    ],
                                                     initialOption:
                                                         _model.clinicStageValue,
                                                     onChanged: (val) =>
@@ -1667,7 +1682,9 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                             return;
                                           }
 
-                                          if (_model.clinicStageValue == null || _model.clinicStageValue!.isEmpty) {
+                                          if (_model.clinicStageValue == null ||
+                                              _model
+                                                  .clinicStageValue!.isEmpty) {
                                             showToast(
                                               'PAGES.PATIENT.CLINIC_STAGE_REQUIRED'
                                                   .tr(),

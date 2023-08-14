@@ -50,7 +50,14 @@
             "DATE_OF_BIRTH_REQUIRED": "Date of birth is required",
             "DATE_OF_REGISTRATION_REQUIRED": "Date of registration is required",
             "CLINIC_STAGE_REQUIRED": "Clinic stage is required",
-            "SEX_REQUIRED": "Sex is required"
+            "SEX_REQUIRED": "Sex is required",
+            "CLINIC_STAGES": {
+                "I": "Stage I",
+                "II": "Stage II",
+                "III": "Stage III",
+                "IV": "Stage IV",
+                "V": "Stage V"
+            }
         },
         "PATIENT_LIST": {
             "TITLE": "Patient List",

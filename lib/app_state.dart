@@ -26,6 +26,7 @@ class FFAppState extends ChangeNotifier {
     _baseUrl = await secureStorage.getString('ff_baseUrl') ?? _baseUrl;
     _admin = await secureStorage.getBool('ff_admin') ?? _admin;
     _displayDame = await secureStorage.getString('ff_displayDame') ?? _displayDame;
+    _facility = await secureStorage.getString('ff_facility') ?? _facility;
   }
 
   void update(VoidCallback callback) {
@@ -105,6 +106,15 @@ class FFAppState extends ChangeNotifier {
   set admin(bool _value) {
     _admin = _value;
     secureStorage.setBool('ff_admin', _admin);
+  }
+
+  String _facility = '';
+
+  String get facility => _facility;
+
+  set facility(String _value) {
+    _facility = _value;
+    secureStorage.setString('ff_facility', _facility);
   }
 }
 

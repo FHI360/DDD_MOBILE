@@ -380,8 +380,8 @@ class Medication {
 
   factory Medication.fromJson(Map<String, dynamic> row) => Medication(
       regimen: row['regimen'],
-      quantityPrescribed: row['qtyPrescribed'],
-      quantityDispensed: row['qtyDispensed'],
+      quantityPrescribed: row['qtyPrescribed'] ?? 0,
+      quantityDispensed: row['qtyDispensed'] ?? 0,
       arv: row['arv']);
 
   Map<String, dynamic> toJson() => {

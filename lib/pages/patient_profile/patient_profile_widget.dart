@@ -375,6 +375,49 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                       ),
                                     ],
                                   ),
+                                  if (FFAppState().admin)
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0, 0, 5, 0),
+                                          child: Icon(
+                                              Icons.add_business_rounded,
+                                              size: 13),
+                                        ),
+                                        Container(
+                                          child: Wrap(
+                                            children: [
+                                              Text(
+                                                FFAppState().facility ?? '',
+                                                softWrap: true,
+                                                maxLines: 3,
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyText1
+                                                        .override(
+                                                          fontSize: 13,
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyText1Family,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryColor,
+                                                          useGoogleFonts: GoogleFonts
+                                                                  .asMap()
+                                                              .containsKey(
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family),
+                                                        ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                 ],
                               ),
                             ]),
@@ -499,7 +542,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               ),
                                             ),
                                           ),
-                                        if (!FFAppState().outlet)
+                                        if (!FFAppState().outlet && !FFAppState().admin)
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -613,7 +656,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                     .devolve!
                                                     .reasonDiscontinued!
                                                     .isEmpty) &&
-                                            FFAppState().outlet)
+                                            FFAppState().outlet && !FFAppState().admin)
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -1479,7 +1522,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                               0),
                                                                       child:
                                                                           Text(
-                                                                            getFirstArvMedicationOrAny(listViewRefillRow)?.regimen ??
+                                                                        getFirstArvMedicationOrAny(listViewRefillRow)?.regimen ??
                                                                             '',
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .bodyText1

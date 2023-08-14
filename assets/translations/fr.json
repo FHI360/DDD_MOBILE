@@ -50,7 +50,14 @@
             "DATE_OF_BIRTH_REQUIRED": "La date de naissance est obligatoire",
             "DATE_OF_REGISTRATION_REQUIRED": "La date d'inscription est obligatoire",
             "CLINIC_STAGE_REQUIRED": "L'étape clinique est requise",
-            "SEX_REQUIRED": "Le sexe est obligatoire"
+            "SEX_REQUIRED": "Le sexe est obligatoire",
+            "CLINIC_STAGES": {
+                "I": "Stade I",
+                "II": "Stade II",
+                "III": "Stade III",
+                "IV": "Stade IV",
+                "V": "Stade V"
+            }
         },
         "PATIENT_LIST": {
             "TITLE": "Liste des patients",

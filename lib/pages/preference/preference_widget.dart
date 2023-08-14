@@ -26,7 +26,7 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
 
   Future<void> initialize() async {
     final _database = await database;
-   var facilities = await _database.facilityDao.findAll();
+    var facilities = await _database.facilityDao.findAll();
     facilities.sort((f1, f2) => f1.name.compareTo(f2.name));
     setState(() {
       _model.facilities = facilities;
@@ -249,7 +249,8 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                               : () async {
                                   if (_model.facilityValue == null) {
                                     showToast(
-                                      'PAGES.PREFERENCES.FACILITY_REQUIRED'.tr(),
+                                      'PAGES.PREFERENCES.FACILITY_REQUIRED'
+                                          .tr(),
                                       duration: Duration(seconds: 2),
                                       position: ToastPosition.bottom,
                                       backgroundColor:
@@ -262,6 +263,12 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
                                   }
                                   FFAppState().activationCode =
                                       _model.facilityValue!;
+
+                                  FFAppState().facility = _model.facilities
+                                      .where((f) =>
+                                          f.code == FFAppState().activationCode)
+                                      .first
+                                      .name;
 
                                   final syncService = SyncService();
                                   syncService.processSync();

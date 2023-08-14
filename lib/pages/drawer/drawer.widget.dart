@@ -47,7 +47,7 @@ class DDDDrawer extends StatelessWidget {
                     context.pushNamed('patientList');
                   },
                   submenuContent: Text('PAGES.DRAWER.PATIENTS_SEARCH'.tr())),
-              if (!FFAppState().outlet)
+              if (!FFAppState().outlet && !FFAppState().admin)
                 MLSubmenu(
                     onClick: () {
                       context.pushNamed('patientEdit');
