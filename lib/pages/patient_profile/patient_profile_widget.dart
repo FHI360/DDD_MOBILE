@@ -166,7 +166,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        '${_model.patient?.givenName} ${_model.patient?.familyName}',
+                                        '${_model.patient?.givenName ?? ''} ${_model.patient?.familyName ?? ''}',
                                         style:
                                             FlutterFlowTheme.of(context).title3,
                                       ),

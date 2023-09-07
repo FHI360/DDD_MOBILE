@@ -1471,7 +1471,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                 ),
                               ),
                             ),
-                          if (_model.patient != null)
+                          if (_model.patient != null && FFAppState().showTargetGroups)
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   16.0, 12.0, 16.0, 0.0),
@@ -1741,7 +1741,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                           _model.patient!.facilityCode =
                                               FFAppState().activationCode;
                                           _model.patient!.targetGroup =
-                                              _model.targetGroupValue;
+                                              _model.targetGroupValue ?? '';
                                           _model.patient!.synced = false;
 
                                           final _database = await database;

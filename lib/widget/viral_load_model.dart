@@ -9,6 +9,7 @@ class ViralLoadModel extends FlutterFlowModel {
   final formKey = GlobalKey<FormState>();
   DateTime? datePicked;
   DateTime? datePicked1;
+  String? indicatorValue;
 
   TextEditingController? valueController;
   String? Function(BuildContext, String?)? valueControllerValidator;

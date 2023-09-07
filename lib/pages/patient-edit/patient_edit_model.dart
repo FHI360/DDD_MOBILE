@@ -37,7 +37,7 @@ class PatientEditModel extends FlutterFlowModel {
   }
 
   String? _givenNameControllerValidator(BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
+    if ((val == null || val.isEmpty) && FFAppState().requireName) {
       return 'FIELD_REQUIRED'.tr();
     }
 
@@ -49,7 +49,7 @@ class PatientEditModel extends FlutterFlowModel {
   }
 
   String? _familyNameControllerValidator(BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
+    if ((val == null || val.isEmpty) && FFAppState().requireName) {
       return 'FIELD_REQUIRED'.tr();
     }
 

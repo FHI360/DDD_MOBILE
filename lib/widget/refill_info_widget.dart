@@ -1,13 +1,15 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:DDD/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:DDD/reports/refill_info_report.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:webcontent_converter/webcontent_converter.dart';
+import 'package:path/path.dart' as path;
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -527,17 +529,24 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                                       .validate()) {
                                                 return;
                                               }
-                                              var targetPath =
+                                              var dir =
                                                   await getApplicationDocumentsDirectory();
                                               var content = await refillInfoPdf(
                                                   context,
                                                   _model.datePicked1!,
                                                   _model.datePicked2!);
-                                              var file = await FlutterHtmlToPdf
-                                                  .convertFromHtmlContent(
-                                                      content,
-                                                      targetPath.path,
-                                                      'report');
+
+
+                                              var savedPath = path.join(
+                                                  dir.path, "sample.pdf");
+                                              WebcontentConverter.contentToPDF(
+                                                  content: content,
+                                                  format: PaperFormat.inches(
+                                                      height: 11.7,
+                                                      width: 16.54),
+                                                  savedPath: savedPath);
+                                              var file = File(savedPath);
+
                                               context.pushNamed(
                                                 'pdfPreview',
                                                 queryParams: {'path': file.path}

@@ -292,6 +292,7 @@ class ViralLoad {
   DateTime nextAppointment;
   String patientId;
   String uuid;
+  String? type;
   final bool synced;
 
   ViralLoad(
@@ -301,6 +302,7 @@ class ViralLoad {
       required this.date,
       required this.uuid,
       this.value,
+      this.type,
       required this.synced});
 
   factory ViralLoad.instance() {
@@ -317,6 +319,7 @@ class ViralLoad {
         'id': uuid,
         'value': value,
         'patient': {'id': patientId},
+        'type': type,
         'date': date.toIso8601String().substring(0, 10),
         'nextAppointment': nextAppointment.toIso8601String().substring(0, 10)
       };

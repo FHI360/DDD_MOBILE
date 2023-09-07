@@ -113,7 +113,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Devolve` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `reasonDiscontinued` TEXT, `date` INTEGER NOT NULL, `outletCode` TEXT NOT NULL, `patientId` TEXT NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `ViralLoad` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `value` TEXT, `nextAppointment` INTEGER NOT NULL, `patientId` TEXT NOT NULL, `uuid` TEXT NOT NULL, `synced` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `ViralLoad` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `value` TEXT, `nextAppointment` INTEGER NOT NULL, `patientId` TEXT NOT NULL, `uuid` TEXT NOT NULL, `type` TEXT, `synced` INTEGER NOT NULL)');
 
         await database.execute(
             'CREATE VIEW IF NOT EXISTS `LastDispense` AS   WITH last_Dispense AS ( \n      SELECT * FROM (\n            SELECT patientId, date, dateNextRefill, ROW_NUMBER() OVER (PARTITION BY patientId \n            ORDER BY date DESC) rn FROM Dispense\n      ) r WHERE rn = 1\n  )\n  SELECT outletCode, facilityCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, \n    dateNextRefill FROM last_Dispense JOIN patient p ON patientId = p.uuid ORDER BY givenName, familyName\n');
@@ -1075,6 +1075,7 @@ class _$ViralLoadDao extends ViralLoadDao {
                       _dateTimeConverter.encode(item.nextAppointment),
                   'patientId': item.patientId,
                   'uuid': item.uuid,
+                  'type': item.type,
                   'synced': item.synced ? 1 : 0
                 },
             changeListener),
@@ -1090,6 +1091,7 @@ class _$ViralLoadDao extends ViralLoadDao {
                       _dateTimeConverter.encode(item.nextAppointment),
                   'patientId': item.patientId,
                   'uuid': item.uuid,
+                  'type': item.type,
                   'synced': item.synced ? 1 : 0
                 },
             changeListener);
@@ -1115,6 +1117,7 @@ class _$ViralLoadDao extends ViralLoadDao {
             date: _dateTimeConverter.decode(row['date'] as int),
             uuid: row['uuid'] as String,
             value: row['value'] as String?,
+            type: row['type'] as String?,
             synced: (row['synced'] as int) != 0));
   }
 
@@ -1129,6 +1132,7 @@ class _$ViralLoadDao extends ViralLoadDao {
             date: _dateTimeConverter.decode(row['date'] as int),
             uuid: row['uuid'] as String,
             value: row['value'] as String?,
+            type: row['type'] as String?,
             synced: (row['synced'] as int) != 0),
         arguments: [id],
         queryableName: 'ViralLoad',
@@ -1146,6 +1150,7 @@ class _$ViralLoadDao extends ViralLoadDao {
             date: _dateTimeConverter.decode(row['date'] as int),
             uuid: row['uuid'] as String,
             value: row['value'] as String?,
+            type: row['type'] as String?,
             synced: (row['synced'] as int) != 0));
   }
 
@@ -1161,6 +1166,7 @@ class _$ViralLoadDao extends ViralLoadDao {
             date: _dateTimeConverter.decode(row['date'] as int),
             uuid: row['uuid'] as String,
             value: row['value'] as String?,
+            type: row['type'] as String?,
             synced: (row['synced'] as int) != 0),
         arguments: [patientId]);
   }
@@ -1180,6 +1186,7 @@ class _$ViralLoadDao extends ViralLoadDao {
             date: _dateTimeConverter.decode(row['date'] as int),
             uuid: row['uuid'] as String,
             value: row['value'] as String?,
+            type: row['type'] as String?,
             synced: (row['synced'] as int) != 0),
         arguments: [patientId, _dateTimeConverter.encode(date)]);
   }

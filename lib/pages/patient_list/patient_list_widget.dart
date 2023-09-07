@@ -262,10 +262,10 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      patientListItem.givenName
+                                    (patientListItem.givenName ?? '  ')
                                               .substring(0, 1)
                                               .toUpperCase() +
-                                          patientListItem.familyName
+                                    (patientListItem.familyName ?? '  ')
                                               .substring(0, 1)
                                               .toUpperCase(),
                                       style: FlutterFlowTheme.of(context)
@@ -283,7 +283,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '${patientListItem.givenName} ${patientListItem.familyName}',
+                                              '${patientListItem.givenName ?? ''} ${patientListItem.familyName ?? ''}',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .subtitle1,

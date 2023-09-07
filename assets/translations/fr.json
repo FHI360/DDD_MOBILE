@@ -41,7 +41,7 @@
             "SEX": "Sexe",
             "FEMALE": "Femme",
             "MALE": "Homme",
-            "HOSPITAL_NO": "N° de l'hôpital",
+            "HOSPITAL_NO": "Numéro d'hôpital",
             "UNIQUE_ID": "Identifiant unique",
             "ADDRESS": "Adresse",
             "PHONE_NUMBER": "Numéro de téléphone",
@@ -171,7 +171,10 @@
             "VIRAL_LOAD": "Charge virale",
             "NEXT_DATE": "Date de la prochaine charge virale",
             "INPUT_NUMBER": "Veuillez entrer un nombre",
-            "MINIMUM": "Le minimum autorisé est 0"
+            "MINIMUM": "Le minimum autorisé est 0",
+            "INDICATION": "Type",
+            "ROUTINE": "Routine",
+            "TARGETED": "Ciblé"
         }
     },
     "REPORTS": {

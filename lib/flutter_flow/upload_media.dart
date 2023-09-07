@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime_type/mime_type.dart';
-import 'package:video_player/video_player.dart';
 import 'flutter_flow_util.dart';
 
 const allowedFormats = {'image/png', 'image/jpeg', 'video/mp4', 'image/gif'};
@@ -169,16 +168,11 @@ Future<List<SelectedMedia>?> selectMedia({
       final media = e.value;
       final mediaBytes = await media.readAsBytes();
       final path = _getStoragePath(storageFolderPath, media.name, false, index);
-      final dimensions = includeDimensions
-          ? isVideo
-              ? _getVideoDimensions(media.path)
-              : _getImageDimensions(mediaBytes)
-          : null;
+
       return SelectedMedia(
         storagePath: path,
         filePath: media.path,
-        bytes: mediaBytes,
-        dimensions: await dimensions,
+        bytes: mediaBytes
       );
     }));
   }
@@ -200,17 +194,12 @@ Future<List<SelectedMedia>?> selectMedia({
     return null;
   }
   final path = _getStoragePath(storageFolderPath, pickedMedia!.name, isVideo);
-  final dimensions = includeDimensions
-      ? isVideo
-          ? _getVideoDimensions(pickedMedia.path)
-          : _getImageDimensions(mediaBytes)
-      : null;
+
   return [
     SelectedMedia(
       storagePath: path,
       filePath: pickedMedia.path,
       bytes: mediaBytes,
-      dimensions: await dimensions,
     ),
   ];
 }
@@ -258,14 +247,6 @@ Future<MediaDimensions> _getImageDimensions(Uint8List mediaBytes) async {
     width: image.width.toDouble(),
     height: image.height.toDouble(),
   );
-}
-
-Future<MediaDimensions> _getVideoDimensions(String path) async {
-  final VideoPlayerController videoPlayerController =
-      VideoPlayerController.asset(path);
-  await videoPlayerController.initialize();
-  final size = videoPlayerController.value.size;
-  return MediaDimensions(width: size.width, height: size.height);
 }
 
 String _getStoragePath(

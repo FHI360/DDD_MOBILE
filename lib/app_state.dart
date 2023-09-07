@@ -25,8 +25,13 @@ class FFAppState extends ChangeNotifier {
     _name = await secureStorage.getString('ff_name') ?? _name;
     _baseUrl = await secureStorage.getString('ff_baseUrl') ?? _baseUrl;
     _admin = await secureStorage.getBool('ff_admin') ?? _admin;
-    _displayDame = await secureStorage.getString('ff_displayDame') ?? _displayDame;
+    _displayDame =
+        await secureStorage.getString('ff_displayDame') ?? _displayDame;
     _facility = await secureStorage.getString('ff_facility') ?? _facility;
+    _requireName =
+        await secureStorage.getBool('ff_requireName') ?? _requireName;
+    _showTargetGroups =
+        await secureStorage.getBool('ff_showTargetGroups') ?? _showTargetGroups;
   }
 
   void update(VoidCallback callback) {
@@ -97,6 +102,24 @@ class FFAppState extends ChangeNotifier {
   set outlet(bool _value) {
     _outlet = _value;
     secureStorage.setBool('ff_outlet', _outlet);
+  }
+
+  bool _requireName = true;
+
+  bool get requireName => _requireName;
+
+  set requireName(bool _value) {
+    _requireName = _value;
+    secureStorage.setBool('ff_requireName', _requireName);
+  }
+
+  bool _showTargetGroups = false;
+
+  bool get showTargetGroups => _showTargetGroups;
+
+  set showTargetGroups(bool _value) {
+    _showTargetGroups = _value;
+    secureStorage.setBool('ff_showTargetGroups', _showTargetGroups);
   }
 
   bool _admin = false;

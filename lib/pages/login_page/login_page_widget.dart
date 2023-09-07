@@ -36,15 +36,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     _model.baseUrlController ??=
         TextEditingController(text: FFAppState().baseUrl);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _model.instantTimer = InstantTimer.periodic(
-        duration: Duration(milliseconds: 1000),
-        callback: (timer) async {
-          if (FFAppState().refreshToken != '') {
-            context.pushNamed('homePage');
-          }
-        },
-        startImmediately: true,
-      );
       setState(() {});
     });
   }
@@ -265,7 +256,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                           .currentState ==
                                                       null ||
                                                   !_model.formKey.currentState!
-                                                      .validate())
+                                                      .validate() ||
+                                                  _model
+                                                      .passwordLoginController!
+                                                      .text
+                                                      .isEmpty ||
+                                                  _model
+                                                      .emailAddressLoginController!
+                                                      .text
+                                                      .isEmpty)
                                               ? null
                                               : () async {
                                                   if (FFAppState()
@@ -316,8 +315,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                   await AuthAPIProvider()
                                                       .processProfile();
 
-                                                  context.goNamedAuth(
-                                                      'homePage', mounted);
+                                                  context.pushNamed('homePage');
                                                 },
                                           text: 'PAGES.LOGIN.SIGN_IN'.tr(),
                                           options: FFButtonOptions(

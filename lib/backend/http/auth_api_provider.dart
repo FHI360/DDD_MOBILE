@@ -33,18 +33,29 @@ class AuthAPIProvider {
   }
 
   Future<void> processProfile() async {
-    final response = await api.get(
+    var response = await api.get(
       '${FFAppState().baseUrl}/api/account',
       options: Options(
         headers: {},
       ),
     );
 
-    final data = await response.data;
+    var data = await response.data;
     FFAppState().name = data['organisation']['name'];
     FFAppState().activationCode = data['organisation']['id'];
     FFAppState().outlet = data['organisation']['type'] == 'OUTLET';
     FFAppState().admin = data['organisation']['type'] == 'CO';
     FFAppState().displayDame = data['displayName'];
+
+    response = await api.get(
+      '${FFAppState().baseUrl}/api/ddd/customizations',
+      options: Options(
+        headers: {},
+      ),
+    );
+
+    data = await response.data;
+    FFAppState().requireName = data['requireName'];
+    FFAppState().showTargetGroups = data['showTargetGroups'];
   }
 }

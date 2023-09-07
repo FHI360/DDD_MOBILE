@@ -4,7 +4,6 @@ import 'package:DDD/flutter_flow/flutter_flow_icon_button.dart';
 import 'package:DDD/reports/missed_appointments_report.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -535,7 +534,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                       _model.datePicked1!,
                                                       _model.datePicked2!);
 //                                              await Printing.convertHtml(html: '')
-                                              var file = await FlutterHtmlToPdf
+                                             /* var file = await FlutterHtmlToPdf
                                                   .convertFromHtmlContent(
                                                       content,
                                                       targetPath.path,
@@ -544,7 +543,7 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                 'pdfPreview',
                                                 queryParams: {'path': file.path}
                                                     .withoutNulls,
-                                              );
+                                              );*/
                                             },
                                       text: 'VIEW'.tr(),
                                       options: FFButtonOptions(

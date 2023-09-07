@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/flutter_flow/flutter_flow_drop_down.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/widget/viral_load_model.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -374,6 +375,134 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                   width: double.infinity,
                                   height: 60.0,
                                   decoration: BoxDecoration(
+                                    color: Color(0xFF111417),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 100.0,
+                                          decoration: BoxDecoration(
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                            border: Border.all(
+                                              color: FlutterFlowTheme.of(context)
+                                                  .primaryBackground,
+                                              width: 2.0,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                10.0, 5.0, 5.0, 5.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'PAGES.VIRAL_LOAD.INDICATION'
+                                                      .tr(),
+                                                  style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                    fontFamily:
+                                                    FlutterFlowTheme.of(
+                                                        context)
+                                                        .bodyText1Family,
+                                                    fontSize: 12.0,
+                                                    useGoogleFonts: GoogleFonts
+                                                        .asMap()
+                                                        .containsKey(
+                                                        FlutterFlowTheme.of(
+                                                            context)
+                                                            .bodyText1Family),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    height: 100.0,
+                                                    decoration: BoxDecoration(
+                                                      color: FlutterFlowTheme.of(
+                                                          context)
+                                                          .secondaryBackground,
+                                                    ),
+                                                    child: FlutterFlowDropDown<
+                                                        String>(
+                                                      options: [
+                                                        'routine',
+                                                        'targeted'
+                                                      ],
+                                                      optionLabels: [
+                                                        'PAGES.VIRAL_LOAD.ROUTINE'.tr(),
+                                                        'PAGES.VIRAL_LOAD.TARGETED'.tr(),
+                                                      ],
+                                                      initialOption:
+                                                      _model.indicatorValue,
+                                                      onChanged: (val) =>
+                                                          setState(() => _model
+                                                              .indicatorValue =
+                                                              val),
+                                                      width: 180.0,
+                                                      height: 50.0,
+                                                      textStyle:
+                                                      FlutterFlowTheme.of(
+                                                          context)
+                                                          .bodyText1
+                                                          .override(
+                                                        fontFamily:
+                                                        FlutterFlowTheme.of(
+                                                            context)
+                                                            .bodyText1Family,
+                                                        color: FlutterFlowTheme
+                                                            .of(context)
+                                                            .primaryText,
+                                                        useGoogleFonts: GoogleFonts
+                                                            .asMap()
+                                                            .containsKey(
+                                                            FlutterFlowTheme.of(
+                                                                context)
+                                                                .bodyText1Family),
+                                                      ),
+                                                      fillColor: FlutterFlowTheme
+                                                          .of(context)
+                                                          .secondaryBackground,
+                                                      elevation: 2.0,
+                                                      borderColor:
+                                                      Colors.transparent,
+                                                      borderWidth: 0.0,
+                                                      borderRadius: 0.0,
+                                                      margin:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(12.0, 4.0,
+                                                          12.0, 4.0),
+                                                      hidesUnderline: true,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    12.0, 12.0, 12.0, 0.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 60.0,
+                                  decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
                                     borderRadius: BorderRadius.circular(8.0),
@@ -533,6 +662,8 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                   widget.patient!.uuid;
                                               viralLoad.date =
                                                   _model.datePicked!;
+                                              viralLoad.type =
+                                                  _model.indicatorValue;
                                               viralLoad.nextAppointment =
                                                   _model.datePicked1!;
                                               viralLoad.value = int.tryParse(

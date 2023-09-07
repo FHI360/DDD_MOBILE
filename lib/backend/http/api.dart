@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:DDD/app_state.dart';
 import 'package:awesome_dio_interceptor/awesome_dio_interceptor.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
 
 import 'interceptors/AuthTokenInterceptor.dart';
@@ -24,8 +23,6 @@ Dio _createHttpClient() {
         (X509Certificate cert, String host, int port) => true;
     return client;
   };
-  api.httpClientAdapter =
-      IOHttpClientAdapter(onHttpClientCreate: onHttpClientCreate);
 
   api
     ..interceptors.add(new ErrorDialogInterceptor())
