@@ -1,4 +1,5 @@
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/flutter_flow/flutter_flow_drop_down.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
+import 'package:drift/drift.dart' as df;
+import 'package:uuid/uuid.dart';
 
 class PatientEditWidget extends StatefulWidget {
   const PatientEditWidget({Key? key, this.patientId}) : super(key: key);
@@ -28,10 +31,21 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
   Future<void> initialize() async {
     var patient;
     if (widget.patientId != null && widget.patientId != 0) {
-      final _database = await database;
-      patient = await _database.patientDao.findById(widget.patientId!);
+      patient = await PatientDao(database).findById(widget.patientId!);
     } else {
-      patient = Patient.instance();
+      patient = PatientData(
+        dateOfBirth: DateTime.now(),
+        id: 0,
+        deleted: false,
+        givenName: '',
+        familyName: '',
+        hospitalNo: '',
+        sex: '',
+        facility: '',
+        facilityCode: '',
+        uuid: '',
+        synced: false,
+      );
     }
 
     setState(() {
@@ -1471,7 +1485,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                 ),
                               ),
                             ),
-                          if (_model.patient != null && FFAppState().showTargetGroups)
+                          if (_model.patient != null &&
+                              FFAppState().showTargetGroups)
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   16.0, 12.0, 16.0, 0.0),
@@ -1716,49 +1731,72 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
 
                                             return;
                                           }
-                                          _model.patient!.lastClinicStage =
-                                              _model.clinicStageValue;
-                                          _model.patient!.dateStarted =
-                                              _model.datePicked2!;
-                                          _model.patient!.dateOfBirth =
-                                              _model.datePicked1!;
-                                          _model.patient!.sex =
-                                              _model.sexValue!;
-                                          _model.patient!.familyName =
-                                              _model.familyNameController.text;
-                                          _model.patient!.givenName =
-                                              _model.givenNameController.text;
-                                          _model.patient!.phone =
-                                              _model.phoneController.text;
-                                          _model.patient!.address =
-                                              _model.addressController.text;
-                                          _model.patient!.hospitalNo =
-                                              _model.hospitalNoController.text;
-                                          _model.patient!.uniqueId =
-                                              _model.uniqueIdController.text;
-                                          _model.patient!.lastViralLoad =
-                                              _model.viralLoadController.text;
-                                          _model.patient!.facilityCode =
-                                              FFAppState().activationCode;
-                                          _model.patient!.targetGroup =
-                                              _model.targetGroupValue ?? '';
-                                          _model.patient!.synced = false;
 
-                                          final _database = await database;
-                                          if (_model.patient!.id == null) {
-                                            _model.patient!.id = await _database
-                                                .patientDao
-                                                .insertRecord(_model.patient!);
+                                          print('Hospital No: ${_model
+                                              .hospitalNoController.text}');
+                                          final patient = PatientCompanion.insert(
+                                              givenName:
+                                                  _model.givenNameController.text ??
+                                                      '',
+                                              familyName: _model
+                                                      .familyNameController
+                                                      .text ??
+                                                  '',
+                                              hospitalNo: _model
+                                                  .hospitalNoController.text,
+                                              dateOfBirth: _model.datePicked1!,
+                                              sex: _model.sexValue!,
+                                              dateStarted:
+                                                  df.Value(_model.datePicked2),
+                                              targetGroup: df.Value(
+                                                  _model.targetGroupValue),
+                                              lastClinicStage: df.Value(
+                                                  _model.clinicStageValue),
+                                              phone: df.Value(
+                                                  _model.phoneController.text),
+                                              address: df.Value(_model.addressController.text),
+                                              uniqueId: df.Value(_model.uniqueIdController.text),
+                                              facility: FFAppState().name,
+                                              facilityCode: FFAppState().activationCode,
+                                              uuid: Uuid().v4());
+                                          var id = _model.patient!.id;
+                                          if (_model.patient!.id == 0) {
+                                            id = await database
+                                                .into(database.patient)
+                                                .insert(patient);
                                           } else {
-                                            await _database.patientDao
-                                                .updateRecord(_model.patient!);
+                                            final _patient = _model.patient!.copyWith(
+                                                givenName: _model
+                                                        .givenNameController
+                                                        .text ??
+                                                    '',
+                                                familyName: _model
+                                                        .familyNameController
+                                                        .text ??
+                                                    '',
+                                                hospitalNo: _model
+                                                    .hospitalNoController.text,
+                                                dateOfBirth:
+                                                    _model.datePicked1!,
+                                                sex: _model.sexValue!,
+                                                dateStarted: df.Value(
+                                                    _model.datePicked2),
+                                                targetGroup: df.Value(
+                                                    _model.targetGroupValue),
+                                                lastClinicStage:
+                                                    df.Value(_model.clinicStageValue),
+                                                phone: df.Value(_model.phoneController.text),
+                                                address: df.Value(_model.addressController.text),
+                                                uniqueId: df.Value(_model.uniqueIdController.text),
+                                                synced: false);
+                                            await PatientDao(database)
+                                                .updateRecord(_patient);
                                           }
-
                                           context.pushNamed(
                                             'patientProfile',
                                             queryParams: {
                                               'patientId': serializeParam(
-                                                _model.patient!.id,
+                                                id,
                                                 ParamType.int,
                                               ),
                                             }.withoutNulls,

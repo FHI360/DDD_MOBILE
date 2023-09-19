@@ -1,5 +1,6 @@
 import 'package:DDD/app_state.dart';
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
@@ -9,48 +10,91 @@ import 'api.dart';
 
 class SyncService {
   Future<bool?> _syncRecords() async {
-    final _database = await database;
-    List<Patient> patients = await _database.patientDao.findUnSynced();
-    List<Dispense> dispenses = await _database.dispenseDao.findUnSynced();
-    List<Clinic> clinic = await _database.clinicDao.findUnSynced();
-    List<Devolve> devolves = await _database.devolveDao.findUnSynced();
-    List<ViralLoad> viralLoads = await _database.viralLoadDao.findUnSynced();
+    List<PatientData> patients = await PatientDao(database).findUnSynced();
+    List<DispenseData> dispenses = await DispenseDao(database).findUnSynced();
+    List<ClinicData> clinic = await ClinicDao(database).findUnSynced();
+    List<DevolveData> devolves = await DevolveDao(database).findUnSynced();
+    List<ViralLoadData> viralLoads =
+        await ViralLoadDao(database).findUnSynced();
 
     final Map<String, dynamic> payload = new Map<String, dynamic>();
-    payload['patients'] = patients.map((e) => e.toJson()).toList();
-    payload['dispenses'] = dispenses.map((d) => d.toJson()).toList();
-    payload['clinics'] = clinic.map((c) => c.toJson()).toList();
-    payload['devolves'] = devolves.map((d) => d.toJson()).toList();
-    payload['viralLoads'] = viralLoads.map((v) => v.toJson()).toList();
+    payload['patients'] = patients.map((e) {
+      var p = e.toJson();
+      p['id'] = p['uuid'];
+      p['clinicStage'] = p['lastClinicStage'];
+      p['organisation'] = {'id': p['facilityCode']};
+      p['archived'] = p['deleted'];
+      p['dateOfBirth'] = e.dateOfBirth.toIso8601String().substring(0, 10);
+      p['dateStarted'] = e.dateStarted != null
+          ? e.dateStarted!.toIso8601String().substring(0, 10)
+          : null;
+      return p;
+    }).toList();
+    payload['dispenses'] = dispenses.map((d) {
+      var p = d.toJson();
+      p['id'] = p['uuid'];
+      p['patient'] = {'id': p['patientId']};
+      p['organisation'] = {'id': FFAppState().activationCode};
+      p['date'] = d.date.toIso8601String().substring(0, 10);
+      p['dateNextRefill'] = d.dateNextRefill.toIso8601String().substring(0, 10);
+      return p;
+    }).toList();
+    payload['clinics'] = clinic.map((c) {
+      var p = c.toJson();
+      p['id'] = p['uuid'];
+      p['patient'] = {'id': p['patientId']};
+      p['organisation'] = {'id': FFAppState().activationCode};
+      p['date'] = c.date.toIso8601String().substring(0, 10);
+      return p;
+    }).toList();
+    payload['devolves'] = devolves.map((d) {
+      var p = d.toJson();
+      p['id'] = p['uuid'];
+      p['patient'] = {'id': p['patientId']};
+      p['organisation'] = {'id': p['outletCode']};
+      p['date'] = d.date.toIso8601String();
+      return p;
+    }).toList();
+    payload['viralLoads'] = viralLoads.map((v) {
+      var p = v.toJson();
+      p['id'] = p['uuid'];
+      p['patient'] = {'id': p['patientId']};
+      p['date'] = v.date.toIso8601String().substring(0, 10);
+      p['nextAppointment'] =
+          v.nextAppointment.toIso8601String().substring(0, 10);
+      return p;
+    }).toList();
 
     final response = await api.post(
       '${FFAppState().baseUrl}/api/ddd/sync',
       data: payload,
     );
 
-    await _database.patientDao.updateAllSynced();
-    await _database.dispenseDao.updateAllSynced();
-    await _database.clinicDao.updateAllSynced();
-    await _database.devolveDao.updateAllSynced();
-    await _database.viralLoadDao.updateAllSynced();
+    if (response.data == true) {
+      await PatientDao(database).updateAllSynced();
+      await DispenseDao(database).updateAllSynced();
+      await ClinicDao(database).updateAllSynced();
+      await DevolveDao(database).updateAllSynced();
+      await ViralLoadDao(database).updateAllSynced();
 
-    return response.data;
+      return true;
+    }
+    return false;
   }
 
   Future<bool> processSync() async {
-    final _database = await database;
-    var hasData = await _database.patientDao.hasUnSynced();
+    var hasData = await PatientDao(database).hasUnSynced();
     if (!(hasData ?? false)) {
-      hasData = await _database.dispenseDao.hasUnSynced();
+      hasData = await DispenseDao(database).hasUnSynced();
     }
     if (!(hasData ?? false)) {
-      hasData = await _database.clinicDao.hasUnSynced();
+      hasData = await ClinicDao(database).hasUnSynced();
     }
     if (!(hasData ?? false)) {
-      hasData = await _database.devolveDao.hasUnSynced();
+      hasData = await DevolveDao(database).hasUnSynced();
     }
     if (!(hasData ?? false)) {
-      hasData = await _database.viralLoadDao.hasUnSynced();
+      hasData = await ViralLoadDao(database).hasUnSynced();
     }
     if (hasData ?? false) {
       try {

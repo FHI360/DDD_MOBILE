@@ -1,4 +1,4 @@
-import 'package:DDD/backend/floor/dao/dao.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +8,7 @@ import '../main.dart';
 
 Future<String> monthlySummaryReport(BuildContext context, DateTime start) async {
   DateTime end = DateTime(start.year, start.month + 1, 0);
-  var _database = await database;
-  List<DispenseInfo> rows = await _database.dispenseDao
+  List<DispenseInfo> rows = await DispenseDao(database)
       .listDispenseInfo(FFAppState().activationCode, start, end);
   String style = await rootBundle.loadString('assets/css/bootstrap.min.css');
   String content = '''

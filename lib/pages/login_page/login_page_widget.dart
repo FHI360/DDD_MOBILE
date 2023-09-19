@@ -3,7 +3,6 @@ import 'package:DDD/backend/http/auth_api_provider.dart';
 import 'package:DDD/flutter_flow/flutter_flow_model.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
-import 'package:DDD/flutter_flow/instant_timer.dart';
 import 'package:DDD/flutter_flow/nav/nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

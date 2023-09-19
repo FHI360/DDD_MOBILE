@@ -112,6 +112,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               requireAuth: true,
               builder: (context, params) => RefillWidget(
                 patientId: params.getParam<int>('patientId', ParamType.int),
+                dispenseId: params.getParam<int>('dispenseId', ParamType.int),
               ),
             ),
             FFRoute(

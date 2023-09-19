@@ -1,13 +1,16 @@
 import 'dart:ui';
 
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/flutter_flow/flutter_flow_drop_down.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/widget/viral_load_model.dart';
+import 'package:drift/drift.dart' as df;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -21,7 +24,7 @@ class ViralLoadWidget extends StatefulWidget {
     this.patient,
   }) : super(key: key);
 
-  final Patient? patient;
+  final PatientData? patient;
 
   @override
   _ViralLoadWidgetState createState() => _ViralLoadWidgetState();
@@ -117,7 +120,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                               context: context,
                                               initialDate: getCurrentTimestamp,
                                               firstDate:
-                                                  widget.patient!.dateStarted,
+                                                  widget.patient!.dateStarted!,
                                               lastDate: getCurrentTimestamp,
                                               locale: context.locale);
 
@@ -381,7 +384,7 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Container(
@@ -391,47 +394,48 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
                                             border: Border.all(
-                                              color: FlutterFlowTheme.of(context)
-                                                  .primaryBackground,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryBackground,
                                               width: 2.0,
                                             ),
                                           ),
                                           child: Padding(
                                             padding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                10.0, 5.0, 5.0, 5.0),
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    10.0, 5.0, 5.0, 5.0),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   'PAGES.VIRAL_LOAD.INDICATION'
                                                       .tr(),
-                                                  style:
-                                                  FlutterFlowTheme.of(context)
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
                                                       .bodyText1
                                                       .override(
-                                                    fontFamily:
-                                                    FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyText1Family,
-                                                    fontSize: 12.0,
-                                                    useGoogleFonts: GoogleFonts
-                                                        .asMap()
-                                                        .containsKey(
-                                                        FlutterFlowTheme.of(
-                                                            context)
-                                                            .bodyText1Family),
-                                                  ),
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyText1Family,
+                                                        fontSize: 12.0,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family),
+                                                      ),
                                                 ),
                                                 Expanded(
                                                   child: Container(
                                                     width: double.infinity,
                                                     height: 100.0,
                                                     decoration: BoxDecoration(
-                                                      color: FlutterFlowTheme.of(
-                                                          context)
+                                                      color: FlutterFlowTheme
+                                                              .of(context)
                                                           .secondaryBackground,
                                                     ),
                                                     child: FlutterFlowDropDown<
@@ -441,48 +445,51 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                         'targeted'
                                                       ],
                                                       optionLabels: [
-                                                        'PAGES.VIRAL_LOAD.ROUTINE'.tr(),
-                                                        'PAGES.VIRAL_LOAD.TARGETED'.tr(),
+                                                        'PAGES.VIRAL_LOAD.ROUTINE'
+                                                            .tr(),
+                                                        'PAGES.VIRAL_LOAD.TARGETED'
+                                                            .tr(),
                                                       ],
                                                       initialOption:
-                                                      _model.indicatorValue,
+                                                          _model.indicatorValue,
                                                       onChanged: (val) =>
                                                           setState(() => _model
-                                                              .indicatorValue =
+                                                                  .indicatorValue =
                                                               val),
                                                       width: 180.0,
                                                       height: 50.0,
                                                       textStyle:
-                                                      FlutterFlowTheme.of(
-                                                          context)
-                                                          .bodyText1
-                                                          .override(
-                                                        fontFamily:
-                                                        FlutterFlowTheme.of(
-                                                            context)
-                                                            .bodyText1Family,
-                                                        color: FlutterFlowTheme
-                                                            .of(context)
-                                                            .primaryText,
-                                                        useGoogleFonts: GoogleFonts
-                                                            .asMap()
-                                                            .containsKey(
-                                                            FlutterFlowTheme.of(
-                                                                context)
-                                                                .bodyText1Family),
-                                                      ),
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyText1
+                                                              .override(
+                                                                fontFamily: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyText1Family,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryText,
+                                                                useGoogleFonts: GoogleFonts
+                                                                        .asMap()
+                                                                    .containsKey(
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyText1Family),
+                                                              ),
                                                       fillColor: FlutterFlowTheme
-                                                          .of(context)
+                                                              .of(context)
                                                           .secondaryBackground,
                                                       elevation: 2.0,
                                                       borderColor:
-                                                      Colors.transparent,
+                                                          Colors.transparent,
                                                       borderWidth: 0.0,
                                                       borderRadius: 0.0,
                                                       margin:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(12.0, 4.0,
-                                                          12.0, 4.0),
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  12.0,
+                                                                  4.0,
+                                                                  12.0,
+                                                                  4.0),
                                                       hidesUnderline: true,
                                                     ),
                                                   ),
@@ -654,26 +661,29 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                                       .validate()) {
                                                 return;
                                               }
-
-                                              final _database = await database;
-                                              var viralLoad =
-                                                  ViralLoad.instance();
-                                              viralLoad.patientId =
-                                                  widget.patient!.uuid;
-                                              viralLoad.date =
-                                                  _model.datePicked!;
-                                              viralLoad.type =
-                                                  _model.indicatorValue;
-                                              viralLoad.nextAppointment =
-                                                  _model.datePicked1!;
-                                              viralLoad.value = int.tryParse(
-                                                      _model
-                                                          .valueController.text)
-                                                  .toString();
-                                              await _database.viralLoadDao
-                                                  .insertRecord(viralLoad);
-
-                                              Navigator.pop(context, viralLoad);
+                                              final viralLoad =
+                                                  ViralLoadCompanion.insert(
+                                                      date: _model.datePicked!,
+                                                      patientId:
+                                                          widget.patient!.uuid,
+                                                      type: df.Value(
+                                                          _model
+                                                              .indicatorValue),
+                                                      nextAppointment:
+                                                          _model.datePicked1!,
+                                                      value: int.parse(_model
+                                                              .valueController
+                                                              .text)
+                                                          .toString(),
+                                                      uuid: Uuid().v4());
+                                              int id = await database
+                                                  .into(database.viralLoad)
+                                                  .insert(viralLoad);
+                                              final _viralLoad =
+                                                  await ViralLoadDao(database)
+                                                      .findById(id);
+                                              Navigator.pop(
+                                                  context, _viralLoad);
                                             },
                                       text: 'SAVE'.tr(),
                                       options: FFButtonOptions(

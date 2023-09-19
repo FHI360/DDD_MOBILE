@@ -1,4 +1,6 @@
 import 'package:DDD/app_state.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/backend/http/account_service.dart';
 import 'package:DDD/backend/http/sync_service.dart';
 import 'package:DDD/flutter_flow/flutter_flow_drop_down.dart';
@@ -25,8 +27,7 @@ class _PreferenceWidgetState extends State<PreferenceWidget> {
   late PreferenceModel _model;
 
   Future<void> initialize() async {
-    final _database = await database;
-    var facilities = await _database.facilityDao.findAll();
+    var facilities = await FacilityDao(database).findAll();
     facilities.sort((f1, f2) => f1.name.compareTo(f2.name));
     setState(() {
       _model.facilities = facilities;

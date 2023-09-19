@@ -1,4 +1,4 @@
-import 'package:DDD/backend/floor/dao/dao.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -7,9 +7,8 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '../main.dart';
 
 Future<String> refillInfoPdf(BuildContext context, DateTime start, DateTime end) async {
-  var _database = await database;
   List<DispenseInfo> rows =
-      await _database.dispenseDao.listDispenseInfo(FFAppState().activationCode, start, end);
+      await DispenseDao(database).listDispenseInfo(FFAppState().activationCode, start, end);
   String style = await rootBundle.loadString('assets/css/bootstrap.min.css');
   String content = '''
   <div class="row">

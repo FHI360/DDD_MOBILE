@@ -81,6 +81,7 @@
             "NEXT_VIRAL_LOAD_DATE": "Next Viral load date",
             "NEXT_APPOINTMENT": "Next appointment",
             "REFILL": "Refill",
+            "REFILL_EDIT": "Edit",
             "REFILL_HISTORY": "Refill history",
             "REGIMEN": "Regimen",
             "PRESCRIBED_QTY": "Prescribed QTY",
@@ -200,5 +201,8 @@
     "SAVE": "Save changes",
     "AGE": "{}yr(s)",
     "VIEW": "View",
-    "CONNECTION_ERROR": "There was an error connecting to server"
+    "CONNECTION_ERROR": "There was an error connecting to server",
+    "SESSION_EXPIRED": "Session expired, please sign in again",
+    "INVALID_CREDENTIALS": "Invalid username or password",
+    "PROCESSING_ERROR": "An error occurred accessing the backend"
 }

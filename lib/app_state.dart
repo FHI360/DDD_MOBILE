@@ -17,6 +17,7 @@ class FFAppState extends ChangeNotifier {
     secureStorage = FlutterSecureStorage();
     _refreshToken =
         await secureStorage.getString('ff_refreshToken') ?? _refreshToken;
+    _passphrase = await secureStorage.getString('ff_passphrase') ?? _passphrase;
     _accessToken =
         await secureStorage.getString('ff_accessToken') ?? _accessToken;
     _activationCode =
@@ -57,6 +58,15 @@ class FFAppState extends ChangeNotifier {
   set activationCode(String _value) {
     _activationCode = _value;
     secureStorage.setString('ff_activationCode', _value);
+  }
+
+  String _passphrase = '';
+
+  String get passphrase => _passphrase;
+
+  set passphrase(String _value) {
+    _passphrase = _value;
+    secureStorage.setString('ff_passphrase', _value);
   }
 
   String _refreshToken = '';

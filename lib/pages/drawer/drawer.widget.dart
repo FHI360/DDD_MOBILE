@@ -55,13 +55,13 @@ class DDDDrawer extends StatelessWidget {
                     submenuContent: Text('PAGES.DRAWER.PATIENTS_NEW'.tr())),
             ],
             onClick: () {}),
-        MLMenuItem(
+       /* MLMenuItem(
           leading: Icon(Icons.report_sharp),
           content: Text('PAGES.DRAWER.REPORTS'.tr()),
           onClick: () {
             context.pushNamed('reportList');
           },
-        ),
+        ),*/
         MLMenuItem(
           leading: Icon(Icons.sync),
           content: Text('PAGES.DRAWER.SYNCHRONIZATION'.tr()),

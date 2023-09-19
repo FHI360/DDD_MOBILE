@@ -1,4 +1,5 @@
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:DDD/widget/devolve_widget.dart';
@@ -15,8 +16,7 @@ import '/flutter_flow/custom_functions.dart' as functions;
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'patient_profile_model.dart';
-
-export 'patient_profile_model.dart';
+import 'package:drift/drift.dart' as df;
 
 class PatientProfileWidget extends StatefulWidget {
   const PatientProfileWidget({
@@ -37,58 +37,62 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
   final _unfocusNode = FocusNode();
 
   Future<void> initialize() async {
-    var _database = await database;
-    var patient = await _database.patientDao.findById(widget.patientId!);
-    var devolve = await _database.devolveDao.findByPatient(patient!.uuid);
-    var dispenses = await _database.dispenseDao.findByPatient(patient.uuid);
-    final facilities = await _database.facilityDao.findAll();
-    final outlets = await _database.outletDao.findAll();
-    final viralLoads = await _database.viralLoadDao.findByPatient(patient.uuid);
+    var patient = await PatientDao(database).findById(widget.patientId!);
+    var devolve = await DevolveDao(database).findByPatient(patient!.uuid);
+    var dispenses = await DispenseDao(database).findByPatient(patient.uuid);
+    final facilities = await FacilityDao(database).findAll();
+    final outlets = await OutletDao(database).findAll();
+    final viralLoads = await ViralLoadDao(database).findByPatient(patient.uuid);
     if (viralLoads.isNotEmpty) {
-      patient.nextVisitDate = viralLoads.first.nextAppointment;
-      patient.viralLoadDate = viralLoads.first.date;
-      patient.lastViralLoad = viralLoads.first.value;
-
-      print('Viral Load: ${viralLoads.first.toJson()}');
+      patient = patient.copyWith(
+          nextVisitDate: df.Value(viralLoads.first.nextAppointment),
+          viralLoadDate: df.Value(viralLoads.first.date),
+          lastViralLoad: df.Value(viralLoads.first.value));
     }
     setState(() {
       _model.patient = patient;
       _model.outlets = outlets;
 
       if (devolve == null) {
-        devolve = Devolve.instance();
+        devolve = DevolveData(
+            id: 0,
+            date: DateTime(1970),
+            outletCode: '',
+            patientId: '',
+            uuid: '',
+            synced: false);
       }
       _model.devolve = devolve;
       _model.dispenses = dispenses;
       if (FFAppState().outlet) {
         _model.refOrganisation = facilities
             .firstWhere((f) => f.code == _model.patient!.facilityCode,
-                orElse: () => Facility.fromJson({}))
+                orElse: () => FacilityData(id: 0, name: '', code: ''))
             .name;
       } else if (_model.patient!.outletCode != null) {
         _model.refOrganisation = outlets
             .firstWhere((o) => o.code == _model.patient!.outletCode,
-                orElse: () => Outlet.fromJson({}))
+                orElse: () => OutletData(id: 0, name: '', code: ''))
             .name;
       }
     });
   }
 
   formatVL() {
-    if (_model.patient?.viralLoadDate == null ||
-        _model.patient?.viralLoadDate == DateTime(1900)) {
+    if (_model.patient?.viralLoadDate == null) {
       return '';
     }
     return '${_model.patient!.lastViralLoad} (${dateTimeFormat('yMMMd', _model.patient?.viralLoadDate, locale: context.locale.languageCode)})';
   }
 
-  getFirstArvMedicationOrAny(Dispense dispense) {
-    var medication = dispense.getArv();
+  getFirstArvMedicationOrAny(DispenseData dispense) {
+    var medication =
+        dispense.medications!.where((element) => element.arv).firstOrNull;
     if (medication != null) {
       return medication;
     }
 
-    return dispense.medications.first;
+    return dispense.medications!.first;
   }
 
   @override
@@ -542,7 +546,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                               ),
                                             ),
                                           ),
-                                        if (!FFAppState().outlet && !FFAppState().admin)
+                                        if (!FFAppState().outlet &&
+                                            !FFAppState().admin)
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -577,9 +582,12 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                         .devolve!
                                                                         .outletCode,
                                                                 orElse: () =>
-                                                                    Outlet
-                                                                        .fromJson(
-                                                                            {}))
+                                                                    OutletData(
+                                                                        id: 0,
+                                                                        name:
+                                                                            '',
+                                                                        code:
+                                                                            ''))
                                                             .name;
                                                       }
                                                     }));
@@ -656,7 +664,8 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                     .devolve!
                                                     .reasonDiscontinued!
                                                     .isEmpty) &&
-                                            FFAppState().outlet && !FFAppState().admin)
+                                            FFAppState().outlet &&
+                                            !FFAppState().admin)
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -774,16 +783,18 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                   },
                                                 ).then((value) => setState(() {
                                                       if (value != null) {
-                                                        _model.patient!
-                                                                .viralLoadDate =
-                                                            value.date;
-                                                        _model.patient!
-                                                                .lastViralLoad =
-                                                            value.value;
-                                                        _model.patient!
-                                                                .nextVisitDate =
-                                                            value
-                                                                .nextAppointment;
+                                                        _model.patient = _model
+                                                            .patient!
+                                                            .copyWith(
+                                                                viralLoadDate: df
+                                                                    .Value(value
+                                                                        .date),
+                                                                lastViralLoad: df
+                                                                    .Value(value
+                                                                        .value),
+                                                                nextVisitDate: df
+                                                                    .Value(value
+                                                                        .nextAppointment));
                                                       }
                                                     }));
                                               },
@@ -948,7 +959,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                             ),
                                           ),
                                           if (_model.patient!.lastRefillDate !=
-                                              DateTime(1900))
+                                              null)
                                             Text(
                                               dateTimeFormat(
                                                   'yMMMd',
@@ -961,7 +972,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                       .bodyText1,
                                             ),
                                           if (_model.patient!.lastRefillDate ==
-                                              DateTime(1900))
+                                              null)
                                             Text(
                                               'PAGES.PATIENT_PROFILE.NO_RECORD'
                                                   .tr(),
@@ -1015,7 +1026,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                           ),
                                           if (_model.patient!
                                                   .nextAppointmentDate !=
-                                              DateTime(1900))
+                                              null)
                                             Text(
                                               dateTimeFormat(
                                                   'yMMMd',
@@ -1030,7 +1041,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                         color: DateTime.now()
                                                                 .isAfter(_model
                                                                     .patient!
-                                                                    .nextAppointmentDate)
+                                                                    .nextAppointmentDate!)
                                                             ? Colors.red
                                                             : Colors.green,
                                                         fontFamily:
@@ -1047,7 +1058,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                             ),
                                           if (_model.patient!
                                                   .nextAppointmentDate ==
-                                              DateTime(1900))
+                                              null)
                                             Text(
                                               'PAGES.PATIENT_PROFILE.NO_RECORD'
                                                   .tr(),
@@ -1100,7 +1111,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                             ),
                                           ),
                                           if (_model.patient!.viralLoadDate !=
-                                              DateTime(1900))
+                                              null)
                                             Text(
                                               formatVL(),
                                               style:
@@ -1128,7 +1139,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                       ),
                                             ),
                                           if (_model.patient!.viralLoadDate ==
-                                              DateTime(1900))
+                                              null)
                                             Text(
                                               'PAGES.PATIENT_PROFILE.NO_RECORD'
                                                   .tr(),
@@ -1181,7 +1192,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                             ),
                                           ),
                                           if (_model.patient!.nextVisitDate !=
-                                              DateTime(1900))
+                                              null)
                                             Text(
                                               dateTimeFormat('yMMMd',
                                                   _model.patient?.nextVisitDate,
@@ -1194,7 +1205,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                         color: DateTime.now()
                                                                 .isAfter(_model
                                                                     .patient!
-                                                                    .nextVisitDate)
+                                                                    .nextVisitDate!)
                                                             ? Colors.red
                                                             : Colors.green,
                                                         fontFamily:
@@ -1210,7 +1221,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                       ),
                                             ),
                                           if (_model.patient!.nextVisitDate ==
-                                              DateTime(1900))
+                                              null)
                                             Text(
                                               'PAGES.PATIENT_PROFILE.NO_RECORD'
                                                   .tr(),
@@ -1349,7 +1360,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                FutureBuilder<List<Dispense>>(
+                                FutureBuilder<List<DispenseData>>(
                                   future: Future.value(_model.dispenses),
                                   builder: (context, snapshot) {
                                     // Customize what your widget looks like when it's loading.
@@ -1366,7 +1377,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                         ),
                                       );
                                     }
-                                    List<Dispense> listViewRefillRowList =
+                                    List<DispenseData> listViewRefillRowList =
                                         snapshot.data!;
                                     return ListView.builder(
                                       padding: EdgeInsets.zero,
@@ -1460,6 +1471,76 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                   CrossAxisAlignment
                                                                       .start,
                                                               children: [
+                                                                if (!listViewRefillRow
+                                                                        .synced &&
+                                                                    FFAppState()
+                                                                        .outlet)
+                                                                  Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      InkWell(
+                                                                        onTap:
+                                                                            () async {
+                                                                          context
+                                                                              .pushNamed(
+                                                                            'refill',
+                                                                            queryParams:
+                                                                                {
+                                                                              'patientId': serializeParam(
+                                                                                _model.patient!.id!,
+                                                                                ParamType.int,
+                                                                              ),
+                                                                              'dispenseId': serializeParam(
+                                                                                listViewRefillRow!.id!,
+                                                                                ParamType.int,
+                                                                              ),
+                                                                            }.withoutNulls,
+                                                                          );
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              18,
+                                                                          constraints:
+                                                                              BoxConstraints(
+                                                                            maxHeight:
+                                                                                18,
+                                                                          ),
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryColor,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(20),
+                                                                          ),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                8,
+                                                                                0,
+                                                                                8,
+                                                                                0),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Icon(
+                                                                                  Icons.edit,
+                                                                                  color: Colors.white,
+                                                                                  size: 12,
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 Row(
                                                                   mainAxisSize:
                                                                       MainAxisSize

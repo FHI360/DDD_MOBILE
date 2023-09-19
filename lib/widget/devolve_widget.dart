@@ -1,19 +1,20 @@
 import 'dart:ui';
 
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/main.dart';
 import 'package:DDD/widget/devolve_model.dart';
+import 'package:drift/drift.dart' as df;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-
-export 'discontinue_service_model.dart';
 
 class DevolveWidget extends StatefulWidget {
   const DevolveWidget({
@@ -21,7 +22,7 @@ class DevolveWidget extends StatefulWidget {
     this.patient,
   }) : super(key: key);
 
-  final Patient? patient;
+  final PatientData? patient;
 
   @override
   _DevolveWidgetWidgetState createState() => _DevolveWidgetWidgetState();
@@ -31,11 +32,10 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
   late DevolveModel _model;
 
   Future<void> initialize() async {
-    final _database = await database;
-    _model.outlets = await _database.outletDao.findAll();
+    _model.outlets = await OutletDao(database).findAll();
     _model.outlets.sort((o1, o2) => o1.name.compareTo(o2.name));
     var devolve =
-        await _database.devolveDao.findByPatient(widget.patient!.uuid);
+        await DevolveDao(database).findByPatient(widget.patient!.uuid);
     var currentOutlet = _model.outlets.where((o) {
       if (devolve == null) {
         return false;
@@ -140,7 +140,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                           await showDatePicker(
                                         context: context,
                                         initialDate: getCurrentTimestamp,
-                                        firstDate: widget.patient!.dateStarted,
+                                        firstDate: widget.patient!.dateStarted!,
                                         locale: context.locale,
                                         lastDate: getCurrentTimestamp,
                                       );
@@ -302,7 +302,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                                       0.0),
                                                           child:
                                                               FlutterFlowDropDown<
-                                                                  Outlet>(
+                                                                  OutletData>(
                                                             initialOption:
                                                                 _model.outlet,
                                                             options:
@@ -430,24 +430,32 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
                                                   now.hour,
                                                   now.minute,
                                                   now.second);
-                                              final _database = await database;
-                                              var devolve = Devolve.instance();
-                                              devolve.patientId =
-                                                  widget.patient!.uuid;
-                                              devolve.date = devolveDate;
-                                              devolve.outletCode =
-                                                  _model.outletValue!.code;
+                                              var devolve =
+                                                  DevolveCompanion.insert(
+                                                      reasonDiscontinued:
+                                                          df.Value.absent(),
+                                                      date: devolveDate,
+                                                      outletCode: _model
+                                                          .outletValue!.code,
+                                                      patientId:
+                                                          widget.patient!.uuid,
+                                                      uuid: Uuid().v4());
 
-                                              await _database.devolveDao
-                                                  .insertRecord(devolve);
+                                              int id = await database
+                                                  .into(database.devolve)
+                                                  .insert(devolve);
 
-                                              widget.patient!.outletCode =
-                                                  _model.outletValue!.code;
-                                              await _database.patientDao
-                                                  .updateRecord(
-                                                      widget.patient!);
-
-                                              Navigator.pop(context, devolve);
+                                              final patient = widget.patient!
+                                                  .copyWith(
+                                                      outletCode: df.Value(
+                                                          _model.outletValue!
+                                                              .code));
+                                              await PatientDao(database)
+                                                  .updateRecord(patient);
+                                              final _devolve =
+                                                  await DevolveDao(database)
+                                                      .findById(id);
+                                              Navigator.pop(context, _devolve);
                                             },
                                       text: 'PAGES.DEVOLVE.DEVOLVE'.tr(),
                                       options: FFButtonOptions(

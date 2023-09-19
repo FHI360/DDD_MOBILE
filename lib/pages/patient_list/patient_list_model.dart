@@ -1,15 +1,8 @@
 
-import 'package:DDD/backend/floor/entities/entities.dart';
-
-import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import 'package:easy_debounce/easy_debounce.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+
+import '/flutter_flow/flutter_flow_util.dart';
 
 class PatientListModel extends FlutterFlowModel {
   ///  Local state fields for this page.
@@ -33,7 +26,7 @@ class PatientListModel extends FlutterFlowModel {
   TextEditingController? keywordController;
   String? Function(BuildContext, String?)? keywordControllerValidator;
   // Stores action output result for [Custom Action - filterPatients] action in IconButton widget.
-  List<Patient> patients = [];
+  List<PatientData> patients = [];
 
   /// Initialization and disposal methods.
 

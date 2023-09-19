@@ -1,7 +1,9 @@
 import 'dart:ui';
 
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/main.dart';
+import 'package:drift/drift.dart' as dr;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +14,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'discontinue_service_model.dart';
+import 'package:uuid/uuid.dart';
 
 export 'discontinue_service_model.dart';
 
@@ -21,7 +24,7 @@ class DiscontinueServiceWidget extends StatefulWidget {
     this.patient,
   }) : super(key: key);
 
-  final Patient? patient;
+  final PatientData? patient;
 
   @override
   _DiscontinueServiceWidgetState createState() =>
@@ -38,9 +41,8 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
   }
 
   Future<void> initialize() async {
-    final _database = await database;
     final devolve =
-        await _database.devolveDao.findByPatient(widget.patient!.uuid);
+        await DevolveDao(database).findByPatient(widget.patient!.uuid);
 
     setState(() {
       _model.devolve = devolve;
@@ -428,20 +430,39 @@ class _DiscontinueServiceWidgetState extends State<DiscontinueServiceWidget> {
                                                       .validate()) {
                                                 return;
                                               }
-
-                                              final _database = await database;
-                                              var devolve = Devolve.instance();
-                                              devolve.patientId =
-                                                  widget.patient!.uuid;
-                                              devolve.outletCode =
-                                                  FFAppState().activationCode;
-                                              devolve.date = _model.datePicked!;
-                                              devolve.reasonDiscontinued =
-                                                  _model.reasonValue!;
-                                              await _database.devolveDao
-                                                  .insertRecord(devolve);
-
-                                              Navigator.pop(context, devolve);
+                                              DateTime now = DateTime.now();
+                                              DateTime devolveDate = DateTime(
+                                                  _model.datePicked!.year,
+                                                  _model.datePicked!.month,
+                                                  _model.datePicked!.day,
+                                                  now.hour,
+                                                  now.minute,
+                                                  now.second);
+                                              var devolve =
+                                                  DevolveCompanion.insert(
+                                                      reasonDiscontinued:
+                                                          dr.Value(
+                                                              _model
+                                                                  .reasonValue),
+                                                      date: devolveDate,
+                                                      outletCode:
+                                                          FFAppState()
+                                                              .activationCode,
+                                                      patientId:
+                                                          widget.patient!.uuid,
+                                                      uuid: Uuid().v4());
+                                              int id = await database
+                                                  .into(database.devolve)
+                                                  .insert(devolve);
+                                              final _patient = widget.patient!
+                                                  .copyWith(
+                                                      outletCode: dr.Value(''));
+                                              await PatientDao(database)
+                                                  .updateRecord(_patient);
+                                              final _devolve =
+                                                  await DevolveDao(database)
+                                                      .findById(id);
+                                              Navigator.pop(context, _devolve);
                                             },
                                       text: 'PAGES.DISCONTINUATION.DISCONTINUE'
                                           .tr(),

@@ -1,4 +1,4 @@
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +8,10 @@ class RefillModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
   final formKey = GlobalKey<FormState>();
-  Patient? patient;
-  List<Regimen> regimen = [];
+  PatientData? patient;
+  DispenseData? dispense;
+  ClinicData? clinic;
+  List<RegimenData> regimen = [];
 
   // State field(s) for PageView widget.
   PageController? pageViewController;
@@ -51,7 +53,7 @@ class RefillModel extends FlutterFlowModel {
   // State field(s) for tbRefer widget.
   String? tbReferValue;
 
-  Regimen? regimenValue;
+  RegimenData? regimenValue;
 
   // State field(s) for qtyPrescribed widget.
   TextEditingController? qtyPrescribedController;

@@ -1,4 +1,4 @@
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:flutter/material.dart';
 
 import '/flutter_flow/flutter_flow_util.dart';
@@ -9,10 +9,10 @@ class DevolveModel extends FlutterFlowModel {
   final formKey = GlobalKey<FormState>();
   DateTime? datePicked;
   // State field(s) for reason widget.
-  Outlet? outletValue;
-  List<Outlet> outlets = [];
-  Devolve? devolve;
-  Outlet? outlet;
+  OutletData? outletValue;
+  List<OutletData> outlets = [];
+  DevolveData? devolve;
+  OutletData? outlet;
   bool initialized = false;
 
   /// Initialization and disposal methods.

@@ -1,5 +1,7 @@
 import 'package:DDD/app_state.dart';
+import 'package:DDD/main.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -25,7 +27,7 @@ class ErrorDialogInterceptor extends Interceptor {
     if (err.response?.statusCode == 403 &&
         data['path'] == '/api/authenticate') {
       showToast(
-        'Invalid username or password',
+        'INVALID_CREDENTIALS'.tr(),
         duration: Duration(seconds: 2),
         position: ToastPosition.bottom,
         backgroundColor: Colors.red,
@@ -37,7 +39,7 @@ class ErrorDialogInterceptor extends Interceptor {
 
     if (err.response?.statusCode == 401) {
       showToast(
-        'Session expired, please sign out and sign in again',
+        'SESSION_EXPIRED'.tr(),
         duration: Duration(seconds: 10),
         position: ToastPosition.bottom,
         backgroundColor: Colors.red,
@@ -45,10 +47,31 @@ class ErrorDialogInterceptor extends Interceptor {
         textStyle: TextStyle(fontSize: 15.0),
       );
 
+      router.pushNamed('loginPage');
+      return super.onError(err, handler);
+    }
+
+    if (err.response?.statusCode == 404 &&
+        err.response?.data['path'] == '/api/account' &&
+        router.location != '/login') {
+      showToast(
+        'SESSION_EXPIRED'.tr(),
+        duration: Duration(seconds: 10),
+        position: ToastPosition.bottom,
+        backgroundColor: Colors.red,
+        radius: 3.0,
+        textStyle: TextStyle(fontSize: 15.0),
+      );
+      router.pushNamed('loginPage');
+      return super.onError(err, handler);
+    }
+    if (err.response?.statusCode == 404 &&
+        err.response?.data['path'] == '/api/account' &&
+        router.location == '/login') {
       return super.onError(err, handler);
     }
     showToast(
-      'An error occurred accessing the backend',
+      'PROCESSING_ERROR'.tr(),
       duration: Duration(seconds: 2),
       position: ToastPosition.bottom,
       backgroundColor: Colors.redAccent,

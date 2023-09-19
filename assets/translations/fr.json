@@ -81,6 +81,7 @@
             "NEXT_VIRAL_LOAD_DATE": "Prochaine date de charge virale",
             "NEXT_APPOINTMENT": "Prochain rendez-vous",
             "REFILL": "Recharge",
+            "REFILL_EDIT": "Modifier",
             "REFILL_HISTORY": "Historique de recharge",
             "REGIMEN": "Régime",
             "PRESCRIBED_QTY": "Qté prescrite",
@@ -200,5 +201,8 @@
     "SAVE": "Sauvegarder",
     "AGE": "{}an(s)",
     "VIEW": "Voir",
-    "CONNECTION_ERROR": "Une erreur s'est produite lors de la connexion au serveur"
+    "CONNECTION_ERROR": "Une erreur s'est produite lors de la connexion au serveur",
+    "SESSION_EXPIRED": "Session expirée, veuillez vous reconnecter",
+    "INVALID_CREDENTIALS": "Nom d'utilisateur ou mot de passe invalide",
+    "PROCESSING_ERROR": "Une erreur s'est produite lors de l'accès au backend"
 }

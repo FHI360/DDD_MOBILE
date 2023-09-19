@@ -144,21 +144,11 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                             if (_model.patients.isEmpty) {
                               showToast(
                                 'PAGES.PATIENT_LIST.NO_RESULTS'.tr(),
-                                duration:
-                                Duration(
-                                    seconds:
-                                    10),
-                                position:
-                                ToastPosition
-                                    .bottom,
-                                backgroundColor:
-                                Colors
-                                    .green,
+                                duration: Duration(seconds: 10),
+                                position: ToastPosition.bottom,
+                                backgroundColor: Colors.green,
                                 radius: 3.0,
-                                textStyle:
-                                TextStyle(
-                                    fontSize:
-                                    15.0),
+                                textStyle: TextStyle(fontSize: 15.0),
                               );
                             }
                             setState(() {});
@@ -262,10 +252,14 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                    (patientListItem.givenName ?? '  ')
+                                      (patientListItem.givenName.isNotEmpty
+                                                  ? patientListItem.givenName
+                                                  : ' ')
                                               .substring(0, 1)
                                               .toUpperCase() +
-                                    (patientListItem.familyName ?? '  ')
+                                          (patientListItem.familyName.isNotEmpty
+                                                  ? patientListItem.familyName
+                                                  : ' ')
                                               .substring(0, 1)
                                               .toUpperCase(),
                                       style: FlutterFlowTheme.of(context)
@@ -292,7 +286,8 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
                                                 Text(
-                                                  patientListItem.uniqueId ?? '',
+                                                  patientListItem.uniqueId ??
+                                                      '',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyText2,
@@ -316,7 +311,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                                 ),
                                                 if (patientListItem
                                                         .lastRefillDate !=
-                                                    DateTime(1900))
+                                                    null)
                                                   Text(
                                                     dateTimeFormat(
                                                         'yMMMd',
@@ -330,7 +325,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                                                   ),
                                                 if (patientListItem
                                                         .lastRefillDate ==
-                                                    DateTime(1900))
+                                                    null)
                                                   Text(
                                                     '--',
                                                     style: FlutterFlowTheme.of(

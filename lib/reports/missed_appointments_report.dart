@@ -1,4 +1,4 @@
-import 'package:DDD/backend/floor/dao/dao.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +8,7 @@ import '../main.dart';
 
 Future<String> missedAppointmentPdf(
     BuildContext context, DateTime start, DateTime end) async {
-  var _database = await database;
-  List<LastDispense> rows = await _database.patientDao
+  List<LastDispense> rows = await PatientDao(database)
       .listMissedDispense(FFAppState().activationCode, start, end);
 
   String style = await rootBundle.loadString('assets/css/bootstrap.min.css');

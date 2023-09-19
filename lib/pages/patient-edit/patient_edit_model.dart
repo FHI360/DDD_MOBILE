@@ -1,11 +1,11 @@
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class PatientEditModel extends FlutterFlowModel {
   final formKey = GlobalKey<FormState>();
-  Patient? patient;
+  PatientData? patient;
   TextEditingController? givenNameController;
   TextEditingController? familyNameController;
   TextEditingController? uniqueIdController;

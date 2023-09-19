@@ -1,40 +1,16 @@
-import 'dart:io';
-
 import 'package:DDD/backend/http/account_service.dart';
+import 'package:DDD/backend/http/api.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
-import 'package:DDD/main.dart';
+import 'package:DDD/flutter_flow/instant_timer.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:oktoast/oktoast.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../backend/http/sync_service.dart';
 import 'home_page_model.dart';
-
-export 'home_page_model.dart';
-
-Future<void> downloadDatabase() async {
-  final dbPath = await sqfliteDatabaseFactory.getDatabasePath(databaseName);
-
-  var dir = await getExternalStorageDirectory();
-  int idx = dir!.path.indexOf('Android');
-  String path = dir.path.substring(0, idx) + 'Download/backup.db';
-
-  File(dbPath).copySync(path);
-  showToast(
-    'Database successfully backed up to the Download folder',
-    duration: Duration(seconds: 3),
-    position: ToastPosition.bottom,
-    backgroundColor: Colors.green,
-    radius: 3.0,
-    textStyle: TextStyle(fontSize: 15.0),
-  );
-}
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({Key? key}) : super(key: key);
@@ -61,8 +37,27 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
-    //initialize();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if(_model.instantTimer == null || !_model.instantTimer.isActive) {
+        _model.instantTimer = InstantTimer.periodic(
+          duration: Duration(minutes: 30),
+          callback: (timer) async {
+            try {
+              var response = await api.get(
+                '${FFAppState().baseUrl}/api/account',
+                options: Options(
+                  headers: {},
+                ),
+              );
+            } catch (e) {
+
+            }
+          },
+          startImmediately: true,
+        );
+      }
+      setState(() {});
+    });
   }
 
   @override
@@ -90,12 +85,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             Text(
               'PAGES.HOME.WELCOME'.tr(),
               style: FlutterFlowTheme.of(context).bodyText1.override(
-                fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                useGoogleFonts: GoogleFonts.asMap().containsKey(
-                    FlutterFlowTheme.of(context).bodyText1Family),
-              ),
+                    fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    useGoogleFonts: GoogleFonts.asMap().containsKey(
+                        FlutterFlowTheme.of(context).bodyText1Family),
+                  ),
             ),
             Text(
               FFAppState().name,

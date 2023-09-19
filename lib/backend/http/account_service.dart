@@ -1,4 +1,5 @@
-import 'package:DDD/backend/floor/entities/entities.dart';
+import 'package:DDD/backend/drift/dao/dao.dart';
+import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:DDD/main.dart';
 import 'package:flutter/material.dart';
@@ -11,44 +12,66 @@ class AccountService {
     final response =
         await api.get('${FFAppState().baseUrl}/api/ddd/data-services');
     final data = await response.data;
-    final _database = await database;
     final patients = data['patients'];
-    await _database.patientDao.deleteAll();
+    await PatientDao(database).deleteAll();
+    int id = 1;
     patients.forEach((p) async {
-      await _database.patientDao.insertRecord(Patient.fromJson(p));
+      p['uuid'] = p['id'];
+      p['id'] = id++;
+      p['synced'] = true;
+      p['deleted'] = false;
+      p['lastViralLoad'] = p['viralLoad'];
+      p['nextAppointmentDate'] = p['nextRefillDate'];
+      p['givenName'] = p['givenName'] ?? '';
+      p['familyName'] = p['familyName'] ?? '';
+      p['lastClinicStage'] = p['clinicStage'];
+      await PatientDao(database).insertRecord(PatientData.fromJson(p));
     });
 
-    await _database.facilityDao.deleteAll();
+    await FacilityDao(database).deleteAll();
     final facilities = data['facilities'];
     facilities.forEach((f) async {
-      await _database.facilityDao.insertRecord(Facility.fromJson(f));
+      f['code'] = f['id'];
+      f['id'] = id++;
+      await FacilityDao(database).insertRecord(FacilityData.fromJson(f));
     });
 
-    await _database.outletDao.deleteAll();
+    await OutletDao(database).deleteAll();
     final outlets = data['outlets'];
     outlets.forEach((o) async {
-      await _database.outletDao.insertRecord(Outlet.fromJson(o));
+      o['code'] = o['id'];
+      o['id'] = id++;
+      await OutletDao(database).insertRecord(OutletData.fromJson(o));
     });
 
     final regimens = data['regimens'];
-    await _database.regimenDao.deleteAll();
+    await RegimenDao(database).deleteAll();
     regimens.forEach((r) async {
-      await _database.regimenDao.insertRecord(Regimen.fromJson(r));
+      r['id'] = id++;
+      r['regimenType'] = r['type']['name'];
+      await RegimenDao(database).insertRecord(RegimenData.fromJson(r));
     });
 
     final dispenses = data['dispenses'];
-    await _database.dispenseDao.deleteAll();
+    await DispenseDao(database).deleteAll();
     dispenses.forEach((r) async {
-      await _database.dispenseDao.insertRecord(Dispense.fromJson(r));
+      r['uuid'] = r['id'];
+      r['id'] = id++;
+      r['synced'] = true;
+      await DispenseDao(database).insertRecord(DispenseData.fromJson(r));
     });
 
     final devolves = data['devolves'];
-    await _database.devolveDao.deleteAll();
+    await DevolveDao(database).deleteAll();
     devolves.forEach((r) async {
-      await _database.devolveDao.insertRecord(Devolve.fromJson(r));
+      r['uuid'] = r['id'];
+      r['id'] = id++;
+      r['synced'] = true;
+      r['outletCode'] = r['outlet'];
+      await DevolveDao(database).insertRecord(DevolveData.fromJson(r));
     });
 
-    await _database.clinicDao.deleteAll();
+    await ClinicDao(database).deleteAll();
 
     showToast(
       'Data from server successfully processed',

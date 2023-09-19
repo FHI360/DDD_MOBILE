@@ -1,18 +1,26 @@
+import 'dart:ffi';
+
+import 'package:DDD/app_state.dart';
+import 'package:DDD/backend/drift/database.dart';
+import 'package:DDD/flutter_flow/nav/nav.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
-
-import 'backend/floor/database.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
-import 'flutter_flow/flutter_flow_util.dart';
+//import 'flutter_flow/flutter_flow_util.dart';
+import 'package:sqlite3/open.dart';
 
 String currentVersion = '1.0.0';
 String databaseName = 'ddd.db';
 
-final database =
-    $FloorAppDatabase.databaseBuilder(databaseName).addMigrations([]).build();
+void setupSqlCipher() {
+  open.overrideFor(
+      OperatingSystem.android, () => DynamicLibrary.open('libsqlcipher.so'));
+}
+
+final database = Database();
 
 final _appStateNotifier = AppStateNotifier();
 final router = createRouter(_appStateNotifier);
@@ -23,6 +31,7 @@ void main() async {
   await FlutterFlowTheme.initialize();
 
   final appState = FFAppState(); // Initialize FFAppState
+  setupSqlCipher();
 
   runApp(ChangeNotifierProvider(
     create: (context) => appState,
