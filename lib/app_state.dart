@@ -33,6 +33,10 @@ class FFAppState extends ChangeNotifier {
         await secureStorage.getBool('ff_requireName') ?? _requireName;
     _showTargetGroups =
         await secureStorage.getBool('ff_showTargetGroups') ?? _showTargetGroups;
+    _currentLockWait =
+        await secureStorage.getInt('ff_currentLockWait') ?? _currentLockWait;
+    _activeLockWait =
+        await secureStorage.getInt('ff_activeLockWait') ?? _activeLockWait;
   }
 
   void update(VoidCallback callback) {
@@ -67,6 +71,24 @@ class FFAppState extends ChangeNotifier {
   set passphrase(String _value) {
     _passphrase = _value;
     secureStorage.setString('ff_passphrase', _value);
+  }
+
+  int _currentLockWait = 230;
+
+  int get currentLockWait => _currentLockWait;
+
+  set currentLockWait(int _value) {
+    _currentLockWait = _value;
+    secureStorage.setInt('ff_currentLockWait', _value);
+  }
+
+  int _activeLockWait = 230;
+
+  int get activeLockWait => _activeLockWait;
+
+  set activeLockWait(int _value) {
+    _activeLockWait = _value;
+    secureStorage.setInt('ff_activeLockWait', _value);
   }
 
   String _refreshToken = '';

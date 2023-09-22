@@ -38,9 +38,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     super.initState();
     _model = createModel(context, () => HomePageModel());
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if(_model.instantTimer == null || !_model.instantTimer.isActive) {
+      if (_model.instantTimer == null || !_model.instantTimer.isActive) {
         _model.instantTimer = InstantTimer.periodic(
-          duration: Duration(minutes: 30),
+          duration: Duration(minutes: FFAppState().currentLockWait),
           callback: (timer) async {
             try {
               var response = await api.get(
@@ -49,13 +49,28 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   headers: {},
                 ),
               );
-            } catch (e) {
-
-            }
+            } catch (e) {}
           },
           startImmediately: true,
         );
-      }
+        FFAppState().activeLockWait = FFAppState().currentLockWait;
+      } else if (FFAppState().activeLockWait != FFAppState().currentLockWait) {
+        _model.instantTimer = InstantTimer.periodic(
+          duration: Duration(minutes: FFAppState().currentLockWait),
+          callback: (timer) async {
+            try {
+              var response = await api.get(
+                '${FFAppState().baseUrl}/api/account',
+                options: Options(
+                  headers: {},
+                ),
+              );
+            } catch (e) {}
+          },
+          startImmediately: true,
+        );
+        FFAppState().activeLockWait = FFAppState().currentLockWait;
+       }
       setState(() {});
     });
   }
