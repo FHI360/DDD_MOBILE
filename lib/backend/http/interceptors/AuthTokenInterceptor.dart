@@ -80,6 +80,12 @@ class AuthTokenInterceptor extends Interceptor {
         radius: 3.0,
         textStyle: TextStyle(fontSize: 15.0),
       );
+
+      FFAppState().refreshToken = '';
+      FFAppState().accessToken = '';
+      FFAppState().activationCode = '';
+      FFAppState().name = '';
+
       router.pushNamed('loginPage');
       return super.onError(err, handler);
     }

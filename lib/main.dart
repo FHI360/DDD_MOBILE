@@ -81,6 +81,7 @@ class _MyAppState extends State<MyApp> {
     return OKToast(
       child: MaterialApp.router(
         title: 'DDD',
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: [
           ...context.localizationDelegates,
           MonthYearPickerLocalizations.delegate,

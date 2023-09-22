@@ -1,0 +1,26 @@
+// ignore_for_file: type=lint
+mixin _$ClinicDaoMixin on DatabaseAccessor<Database> {
+  $ClinicTable get clinic => attachedDatabase.clinic;
+}
+mixin _$DevolveDaoMixin on DatabaseAccessor<Database> {
+  $DevolveTable get devolve => attachedDatabase.devolve;
+}
+mixin _$DispenseDaoMixin on DatabaseAccessor<Database> {
+  $DispenseTable get dispense => attachedDatabase.dispense;
+}
+mixin _$FacilityDaoMixin on DatabaseAccessor<Database> {
+  $FacilityTable get facility => attachedDatabase.facility;
+}
+mixin _$OutletDaoMixin on DatabaseAccessor<Database> {
+  $OutletTable get outlet => attachedDatabase.outlet;
+}
+mixin _$PatientDaoMixin on DatabaseAccessor<Database> {
+  $PatientTable get patient => attachedDatabase.patient;
+  $DispenseTable get dispense => attachedDatabase.dispense;
+}
+mixin _$RegimenDaoMixin on DatabaseAccessor<Database> {
+  $RegimenTable get regimen => attachedDatabase.regimen;
+}
+mixin _$ViralLoadDaoMixin on DatabaseAccessor<Database> {
+  $ViralLoadTable get viralLoad => attachedDatabase.viralLoad;
+}
