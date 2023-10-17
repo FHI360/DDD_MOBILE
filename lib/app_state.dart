@@ -14,9 +14,9 @@ class FFAppState extends ChangeNotifier {
   }
 
   Future initializePersistedState() async {
-    secureStorage = FlutterSecureStorage();
-    _refreshToken =
-        await secureStorage.getString('ff_refreshToken') ?? _refreshToken;
+    secureStorage = FlutterSecureStorage(
+        aOptions: AndroidOptions(encryptedSharedPreferences: true));
+    _rememberMe = await secureStorage.getBool('ff_rememberMe') ?? _rememberMe;
     _passphrase = await secureStorage.getString('ff_passphrase') ?? _passphrase;
     _accessToken =
         await secureStorage.getString('ff_accessToken') ?? _accessToken;
@@ -28,15 +28,19 @@ class FFAppState extends ChangeNotifier {
     _admin = await secureStorage.getBool('ff_admin') ?? _admin;
     _displayDame =
         await secureStorage.getString('ff_displayDame') ?? _displayDame;
+    _phoneRegex =
+        await secureStorage.getString('ff_phoneRegex') ?? _phoneRegex;
     _facility = await secureStorage.getString('ff_facility') ?? _facility;
+    _username = await secureStorage.getString('ff_username') ?? _username;
     _requireName =
         await secureStorage.getBool('ff_requireName') ?? _requireName;
     _showTargetGroups =
         await secureStorage.getBool('ff_showTargetGroups') ?? _showTargetGroups;
-    _currentLockWait =
-        await secureStorage.getInt('ff_currentLockWait') ?? _currentLockWait;
-    _activeLockWait =
-        await secureStorage.getInt('ff_activeLockWait') ?? _activeLockWait;
+    _heartbeat = await secureStorage.getInt('ff_heartbeat') ?? _heartbeat;
+    _activeHeartbeat =
+        await secureStorage.getInt('ff_activeHeartbeat') ?? _activeHeartbeat;
+    _phoneRequired =
+        await secureStorage.getBool('ff_phoneRequired') ?? _phoneRequired;
   }
 
   void update(VoidCallback callback) {
@@ -73,31 +77,31 @@ class FFAppState extends ChangeNotifier {
     secureStorage.setString('ff_passphrase', _value);
   }
 
-  int _currentLockWait = 230;
+  String _username = '';
 
-  int get currentLockWait => _currentLockWait;
+  String get username => _username;
 
-  set currentLockWait(int _value) {
-    _currentLockWait = _value;
-    secureStorage.setInt('ff_currentLockWait', _value);
+  set username(String _value) {
+    _username = _value;
+    secureStorage.setString('ff_username', _value);
   }
 
-  int _activeLockWait = 230;
+  int _heartbeat = 2;
 
-  int get activeLockWait => _activeLockWait;
+  int get heartbeat => _heartbeat;
 
-  set activeLockWait(int _value) {
-    _activeLockWait = _value;
-    secureStorage.setInt('ff_activeLockWait', _value);
+  set heartbeat(int _value) {
+    _heartbeat = _value;
+    secureStorage.setInt('ff_heartbeat', _value);
   }
 
-  String _refreshToken = '';
+  int _activeHeartbeat = 0;
 
-  String get refreshToken => _refreshToken;
+  int get activeHeartbeat => _activeHeartbeat;
 
-  set refreshToken(String _value) {
-    _refreshToken = _value;
-    secureStorage.setString('ff_refreshToken', _value);
+  set activeHeartbeat(int _value) {
+    _activeHeartbeat = _value;
+    secureStorage.setInt('ff_activeHeartbeat', _value);
   }
 
   String _name = '';
@@ -136,6 +140,15 @@ class FFAppState extends ChangeNotifier {
     secureStorage.setBool('ff_outlet', _outlet);
   }
 
+  bool _rememberMe = false;
+
+  bool get rememberMe => _outlet;
+
+  set rememberMe(bool _value) {
+    _rememberMe = _value;
+    secureStorage.setBool('ff_rememberMe', _rememberMe);
+  }
+
   bool _requireName = true;
 
   bool get requireName => _requireName;
@@ -163,6 +176,15 @@ class FFAppState extends ChangeNotifier {
     secureStorage.setBool('ff_admin', _admin);
   }
 
+  bool _phoneRequired = false;
+
+  bool get phoneRequired => _phoneRequired;
+
+  set phoneRequired(bool _value) {
+    _phoneRequired = _value;
+    secureStorage.setBool('ff_phoneRequired', _phoneRequired);
+  }
+
   String _facility = '';
 
   String get facility => _facility;
@@ -170,6 +192,15 @@ class FFAppState extends ChangeNotifier {
   set facility(String _value) {
     _facility = _value;
     secureStorage.setString('ff_facility', _facility);
+  }
+
+  String _phoneRegex = '';
+
+  String get phoneRegex => _phoneRegex;
+
+  set phoneRegex(String _value) {
+    _phoneRegex = _value;
+    secureStorage.setString('ff_phoneRegex', _phoneRegex);
   }
 }
 

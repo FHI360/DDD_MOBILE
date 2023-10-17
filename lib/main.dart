@@ -12,7 +12,7 @@ import 'flutter_flow/flutter_flow_theme.dart';
 //import 'flutter_flow/flutter_flow_util.dart';
 import 'package:sqlite3/open.dart';
 
-String currentVersion = '1.0.0';
+String currentVersion = '2023.1 13-10-2023';
 String databaseName = 'ddd.db';
 
 void setupSqlCipher() {
@@ -30,7 +30,8 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await FlutterFlowTheme.initialize();
 
-  final appState = FFAppState(); // Initialize FFAppState
+  final appState = FFAppState();
+  await FFAppState(). initializePersistedState();
   setupSqlCipher();
 
   runApp(ChangeNotifierProvider(
@@ -54,7 +55,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _locale;
   ThemeMode _themeMode = FlutterFlowTheme.themeMode;
 
   @override

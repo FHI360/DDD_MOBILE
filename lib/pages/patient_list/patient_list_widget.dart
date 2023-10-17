@@ -1,4 +1,6 @@
+import 'package:DDD/backend/drift/dao/dao.dart';
 import 'package:DDD/custom_code/actions/filter_patients.dart';
+import 'package:DDD/main.dart';
 import 'package:DDD/pages/drawer/drawer.widget.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -27,10 +29,22 @@ class _PatientListWidgetState extends State<PatientListWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
 
+  Future<void> _countPatients() async {
+    int count =
+        await PatientDao(database).count(FFAppState().activationCode) ?? 0;
+    _model.patients = await filterPatients('');
+    setState(() {
+      _model.totalCount = count;
+      _model.patientCount = _model.patients.length;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => PatientListModel());
+
+    _countPatients();
 
     _model.keywordController ??= TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -139,7 +153,7 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                               _model.keywordController.text,
                             );
                             setState(() {
-                              _model.fullList = false;
+                              _model.patientCount = _model.patients.length;
                             });
                             if (_model.patients.isEmpty) {
                               showToast(
@@ -208,6 +222,29 @@ class _PatientListWidgetState extends State<PatientListWidget> {
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 16.0, 12.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        'PAGES.PATIENT_LIST.COUNT'.tr(args: [
+                          _model.patientCount.toString(),
+                          _model.totalCount.toString()
+                        ]),
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                              fontFamily:
+                                  FlutterFlowTheme.of(context).bodyText1Family,
+                              fontSize: 18,
+                              color: FlutterFlowTheme.of(context).secondaryColor,
+                              useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                  FlutterFlowTheme.of(context).bodyText1Family),
+                            ),
+                      )
                     ],
                   ),
                 ),

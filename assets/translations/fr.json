@@ -10,7 +10,8 @@
             "BASE_URL": "URL de base",
             "BASE_URL_HINT": "Entrez l'adresse IP du serveur...",
             "HERO": "Connectez-vous pour accéder à votre compte ci-dessous.",
-            "INVALID_URL": "URL invalide"
+            "INVALID_URL": "URL invalide",
+            "REMEMBER_ME": "Souviens-toi de moi"
         },
         "DRAWER": {
             "PATIENTS": "Les patients",
@@ -22,14 +23,14 @@
             "SIGN_OUT": "se déconnecter"
         },
         "HOME": {
-            "WELCOME": "Accueillir,",
+            "WELCOME": "Bienvenue à ",
             "TITLE": "Maison"
         },
         "PATIENT": {
             "TITLE": "Modifier le patient",
             "EDIT": "Modifier le profil du patient",
             "AGE_MIN": "L'âge minimum est de 1",
-            "PHONE_NUMBER_LENGTH": "La longueur du numéro de téléphone doit être comprise entre 5 et 13 caractères",
+            "INVALID_PHONE_NUMBER": "Numéro de téléphone invalide",
             "INTRO": "Modifiez les champs ci-dessous afin de modifier le profil du patient.",
             "FACILITY": "Facilité",
             "GIVEN_NAME": "Prénom",
@@ -43,6 +44,7 @@
             "MALE": "Homme",
             "HOSPITAL_NO": "Numéro d'hôpital",
             "UNIQUE_ID": "Identifiant unique",
+            "UNIQUE_ID_TAKEN": "Un autre patient est déjà lié à cet identifiant unique",
             "ADDRESS": "Adresse",
             "PHONE_NUMBER": "Numéro de téléphone",
             "CLINIC_STAGE": "Étape de la clinique",
@@ -61,11 +63,12 @@
         },
         "PATIENT_LIST": {
             "TITLE": "Liste des patients",
-            "SEARCH_HINT": "Rechercher des patients...",
+            "SEARCH_HINT": "Rechercher des Patients par nom/Numéro d'hôpital/ID Unique",
             "SEARCH": "Recherche",
             "LAST_REFILL": "Dernière recharge",
             "VIEW": "Voir",
-            "NO_RESULTS": "Aucun résultat de recherche..."
+            "NO_RESULTS": "Aucun résultat de recherche...",
+            "COUNT": "Affichage de {} sur {} patients"
         },
         "PATIENT_PROFILE": {
             "TITLE": "Profil du patient",
@@ -80,7 +83,7 @@
             "LAST_VIRAL_LOAD": "Dernier chargement de virale",
             "NEXT_VIRAL_LOAD_DATE": "Prochaine date de charge virale",
             "NEXT_APPOINTMENT": "Prochain rendez-vous",
-            "REFILL": "Recharge",
+            "REFILL": "Recharger le patient",
             "REFILL_EDIT": "Modifier",
             "REFILL_HISTORY": "Historique de recharge",
             "REGIMEN": "Régime",
@@ -201,8 +204,9 @@
     "SAVE": "Sauvegarder",
     "AGE": "{}an(s)",
     "VIEW": "Voir",
-    "CONNECTION_ERROR": "Une erreur s'est produite lors de la connexion au serveur",
+    "CONNECTION_ERROR": "Une erreur s'est produite lors de la connexion au serveur; S'il vous plait, vérifiez votre connexion internet",
     "SESSION_EXPIRED": "Session expirée, veuillez vous reconnecter",
     "INVALID_CREDENTIALS": "Nom d'utilisateur ou mot de passe invalide",
-    "PROCESSING_ERROR": "Une erreur s'est produite lors de l'accès au backend"
+    "PROCESSING_ERROR": "Une erreur s'est produite lors de l'accès au backend",
+    "DDD": "Distribution Décentralisée des ARV"
 }

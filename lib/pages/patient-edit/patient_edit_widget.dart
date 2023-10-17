@@ -62,10 +62,6 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
           TextEditingController(text: _model.patient?.address);
       _model.hospitalNoController ??=
           TextEditingController(text: _model.patient?.hospitalNo);
-      _model.uniqueIdController ??=
-          TextEditingController(text: _model.patient?.uniqueId);
-      _model.addressController ??=
-          TextEditingController(text: _model.patient?.lastViralLoad);
       _model.datePicked1 = _model.patient!.dateOfBirth != DateTime(1900)
           ? _model.patient!.dateOfBirth
           : null;
@@ -77,6 +73,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
       _model.sexValue = _model.patient!.sex;
       _model.targetGroupValue = _model.patient!.targetGroup;
     });
+
+    setState(() {});
   }
 
   @override
@@ -269,7 +267,7 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                         child: TextFormField(
                                           controller:
                                               _model.givenNameController,
-                                          autofocus: false,
+                                          autofocus: true,
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             labelText:
@@ -899,8 +897,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(5.0, 0.0,
-                                                                0.0, 0.0),
+                                                            .fromSTEB(10.0, 5.0,
+                                                                5.0, 5.0),
                                                     child: Text(
                                                       'PAGES.PATIENT.SEX'.tr(),
                                                       style:
@@ -935,8 +933,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                                         initialOption: _model
                                                             .sexValue ??= '',
                                                         options: [
-                                                          'Female',
-                                                          'Male'
+                                                          'female',
+                                                          'male'
                                                         ],
                                                         optionLabels: [
                                                           'PAGES.PATIENT.FEMALE'
@@ -1188,6 +1186,20 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                           ),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText1,
+                                          onChanged: (value) async {
+                                            final result =
+                                                await PatientDao(database)
+                                                    .findByUniqueId(
+                                                        FFAppState()
+                                                            .activationCode,
+                                                        value ?? '');
+                                            setState(() {
+                                              _model.uniqueIdTaken =
+                                                  result.isNotEmpty &&
+                                                      result.first.id !=
+                                                          _model.patient!.id;
+                                            });
+                                          },
                                           validator: _model
                                               .uniqueIdControllerValidator
                                               .asValidator(context),
@@ -1732,8 +1744,8 @@ class _PatientEditWidgetState extends State<PatientEditWidget> {
                                             return;
                                           }
 
-                                          print('Hospital No: ${_model
-                                              .hospitalNoController.text}');
+                                          print(
+                                              'Hospital No: ${_model.hospitalNoController.text}');
                                           final patient = PatientCompanion.insert(
                                               givenName:
                                                   _model.givenNameController.text ??

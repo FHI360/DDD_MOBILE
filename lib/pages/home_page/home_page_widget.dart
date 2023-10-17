@@ -1,3 +1,4 @@
+import 'package:DDD/backend/device_profile/device_profile_service.dart';
 import 'package:DDD/backend/http/account_service.dart';
 import 'package:DDD/backend/http/api.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
@@ -40,39 +41,50 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (_model.instantTimer == null || !_model.instantTimer.isActive) {
         _model.instantTimer = InstantTimer.periodic(
-          duration: Duration(minutes: FFAppState().currentLockWait),
+          duration: Duration(minutes: FFAppState().heartbeat),
           callback: (timer) async {
-            try {
-              var response = await api.get(
-                '${FFAppState().baseUrl}/api/account',
-                options: Options(
-                  headers: {},
-                ),
-              );
-            } catch (e) {}
+            if (FFAppState().accessToken.isEmpty &&
+                _model.instantTimer != null) {
+              _model.instantTimer!.cancel();
+            }
+            if (FFAppState().accessToken.isNotEmpty) {
+              await executeTimerEvent();
+            }
+            if (FFAppState().activeHeartbeat != FFAppState().heartbeat) {
+              await resetTimer();
+            }
           },
           startImmediately: true,
         );
-        FFAppState().activeLockWait = FFAppState().currentLockWait;
-      } else if (FFAppState().activeLockWait != FFAppState().currentLockWait) {
-        _model.instantTimer = InstantTimer.periodic(
-          duration: Duration(minutes: FFAppState().currentLockWait),
-          callback: (timer) async {
-            try {
-              var response = await api.get(
-                '${FFAppState().baseUrl}/api/account',
-                options: Options(
-                  headers: {},
-                ),
-              );
-            } catch (e) {}
-          },
-          startImmediately: true,
-        );
-        FFAppState().activeLockWait = FFAppState().currentLockWait;
-       }
+        FFAppState().activeHeartbeat = FFAppState().heartbeat;
+      }
       setState(() {});
     });
+  }
+
+  resetTimer() async {
+    _model.instantTimer = InstantTimer.periodic(
+      duration: Duration(minutes: FFAppState().heartbeat),
+      callback: (timer) async {
+        if (FFAppState().accessToken.isEmpty &&
+            _model.instantTimer != null) {
+          _model.instantTimer!.cancel();
+        }
+        if (FFAppState().accessToken.isNotEmpty) {
+          await executeTimerEvent();
+        }
+      },
+      startImmediately: true,
+    );
+    FFAppState().activeHeartbeat = FFAppState().heartbeat;
+  }
+
+  executeTimerEvent() async {
+    try {
+      final infoService = DeviceInfoService();
+      await infoService.syncProfile();
+    } catch (e) {
+    }
   }
 
   @override
@@ -88,7 +100,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'PAGES.HOME.WELCOME'.tr(),
+          'DDD'.tr(),
         ),
         backgroundColor: FlutterFlowTheme.of(context).primaryColor,
       ),
@@ -109,6 +121,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             ),
             Text(
               FFAppState().name,
+              textAlign: TextAlign.center,
               style: FlutterFlowTheme.of(context).bodyText1.override(
                     fontFamily: FlutterFlowTheme.of(context).bodyText1Family,
                     fontSize: 20,

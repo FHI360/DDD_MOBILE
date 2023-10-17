@@ -37,7 +37,7 @@ class AppStateNotifier extends ChangeNotifier {
   bool get loading => showSplashImage;
 
   bool get loggedIn {
-    return FFAppState().refreshToken != '';
+    return FFAppState().accessToken != '';
   }
 
   bool get shouldRedirect => loggedIn && _redirectLocation != null;

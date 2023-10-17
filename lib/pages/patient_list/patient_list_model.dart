@@ -8,11 +8,11 @@ class PatientListModel extends FlutterFlowModel {
   ///  Local state fields for this page.
 
   List<dynamic> clients = [];
+  int patientCount = 0;
+  int totalCount = 0;
   void addToClients(dynamic item) => clients.add(item);
   void removeFromClients(dynamic item) => clients.remove(item);
   void removeAtIndexFromClients(int index) => clients.removeAt(index);
-
-  bool fullList = true;
 
   List<dynamic> filteredClients = [];
   void addToFilteredClients(dynamic item) => filteredClients.add(item);

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:from_css_color/from_css_color.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:json_path/json_path.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -214,6 +215,49 @@ extension FFTextEditingControllerExt on TextEditingController? {
   set text(String newText) => this?.text = newText;
 }
 
+LatLng? cachedUserLocation;
+
+Future<LatLng> getCurrentUserLocation(
+    {required LatLng defaultLocation, bool cached = false}) async {
+  if (cached && cachedUserLocation != null) {
+    return cachedUserLocation!;
+  }
+  return queryCurrentUserLocation().then((loc) {
+    if (loc != null) {
+      cachedUserLocation = loc;
+    }
+    return loc ?? defaultLocation;
+  }).onError((error, _) {
+    print("Error querying user location: $error");
+    return defaultLocation;
+  });
+}
+
+Future<LatLng?> queryCurrentUserLocation() async {
+  final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return Future.error('Location services are disabled.');
+  }
+
+  var permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.');
+  }
+
+  final position = await Geolocator.getCurrentPosition();
+  return position != null && position.latitude != 0 && position.longitude != 0
+      ? LatLng(latitude: position.latitude, longitude: position.longitude)
+      : null;
+}
+
 extension IterableExt<T> on Iterable<T> {
   List<S> mapIndexed<S>(S Function(int, T) func) => toList()
       .asMap()
@@ -264,4 +308,17 @@ extension FFStringExt on String {
 
 extension ListFilterExt<T> on Iterable<T?> {
   List<T> get withoutNulls => where((s) => s != null).map((e) => e!).toList();
+}
+
+
+class LatLng {
+  double latitude;
+  double longitude;
+
+  LatLng({required this.latitude, required this.longitude});
+
+  factory LatLng.instance() => LatLng(latitude: 0, longitude: 0);
+
+  Map<String, dynamic> toJson() =>
+      {'latitude': latitude, 'longitude': longitude};
 }

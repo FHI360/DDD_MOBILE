@@ -19,6 +19,7 @@ class LoginPageModel extends FlutterFlowModel {
   String? Function(BuildContext, String?)? passwordLoginControllerValidator;
 
   TextEditingController? baseUrlController;
+  bool? rememberMe;
   String? Function(BuildContext, String?)? baseUrlControllerValidator;
 
   String? _baseUrlControllerValidator(BuildContext context, String? val) {

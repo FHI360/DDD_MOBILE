@@ -20,6 +20,7 @@ class PatientEditModel extends FlutterFlowModel {
   bool? ageEstimatedValue;
   TextEditingController? viralLoadController;
   TextEditingController? ageController;
+  bool uniqueIdTaken = false;
   String? Function(BuildContext, String?)? givenNameControllerValidator;
   String? Function(BuildContext, String?)? familyNameControllerValidator;
   String? Function(BuildContext, String?)? ageControllerValidator;
@@ -34,6 +35,14 @@ class PatientEditModel extends FlutterFlowModel {
     }
 
     return null;
+  }
+
+  String? _uniqueIdControllerValidator(BuildContext context, String? val) {
+    if (val == null || val.isEmpty) {
+      return 'FIELD_REQUIRED'.tr();
+    }
+
+    return uniqueIdTaken ? 'PAGES.PATIENT.UNIQUE_ID_TAKEN'.tr() : null;
   }
 
   String? _givenNameControllerValidator(BuildContext context, String? val) {
@@ -71,12 +80,16 @@ class PatientEditModel extends FlutterFlowModel {
   }
 
   String? _phoneControllerValidator(BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
+    if (FFAppState().phoneRequired && (val == null || val.isEmpty)) {
       return 'FIELD_REQUIRED'.tr();
     }
+    if (val != null && val.isNotEmpty) {
+      final phoneRegex = FFAppState().phoneRegex;
+      final regExp = RegExp(phoneRegex, caseSensitive: false, multiLine: false);
 
-    if(val.length < 5 || val.length > 13) {
-      return 'PAGES.PATIENT.PHONE_NUMBER_LENGTH'.tr();
+      if (!regExp.hasMatch(val)) {
+        return 'PAGES.PATIENT.INVALID_PHONE_NUMBER'.tr();
+      }
     }
 
     return null;
@@ -99,7 +112,7 @@ class PatientEditModel extends FlutterFlowModel {
     familyNameControllerValidator = _familyNameControllerValidator;
     ageControllerValidator = _ageControllerValidator;
     hospitalNoControllerValidator = _hospitalNoControllerValidator;
-    uniqueIdControllerValidator = _requiredControllerValidator;
+    uniqueIdControllerValidator = _uniqueIdControllerValidator;
     addressControllerValidator = _requiredControllerValidator;
     phoneControllerValidator = _phoneControllerValidator;
   }

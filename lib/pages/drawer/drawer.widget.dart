@@ -81,7 +81,6 @@ class DDDDrawer extends StatelessWidget {
           leading: Icon(Icons.exit_to_app),
           content: Text('PAGES.DRAWER.SIGN_OUT'.tr()),
           onClick: () {
-            FFAppState().refreshToken = '';
             FFAppState().accessToken = '';
             FFAppState().activationCode = '';
             FFAppState().name = '';

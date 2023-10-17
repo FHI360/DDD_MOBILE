@@ -4,14 +4,13 @@ import 'package:DDD/flutter_flow/flutter_flow_model.dart';
 import 'package:DDD/flutter_flow/flutter_flow_theme.dart';
 import 'package:DDD/flutter_flow/flutter_flow_widgets.dart';
 import 'package:DDD/flutter_flow/nav/nav.dart';
+import 'package:DDD/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import 'login_page_model.dart';
-
-export 'login_page_model.dart';
 
 class LoginPageWidget extends StatefulWidget {
   const LoginPageWidget({Key? key}) : super(key: key);
@@ -25,17 +24,26 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
   final _unfocusNode = FocusNode();
 
+  Future<void> initialize() async {
+    _model.baseUrlController!.text = FFAppState().baseUrl;
+    _model.emailAddressLoginController!.text = FFAppState().username;
+    setState(() {
+      _model.rememberMe = FFAppState().username.isNotEmpty;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => LoginPageModel());
-
     _model.emailAddressLoginController ??= TextEditingController();
     _model.passwordLoginController ??= TextEditingController();
-    _model.baseUrlController ??=
-        TextEditingController(text: FFAppState().baseUrl);
+    _model.baseUrlController ??= TextEditingController();
+
+    initialize();
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      setState(() {});
+
     });
   }
 
@@ -246,6 +254,57 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                             .asValidator(context),
                                       ),
                                     ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 12.0, 0.0, 0.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 60.0,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Theme(
+                                              data: ThemeData(
+                                                checkboxTheme:
+                                                    CheckboxThemeData(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            0.0),
+                                                  ),
+                                                ),
+                                                unselectedWidgetColor:
+                                                    Color(0xCCDF6F3E),
+                                              ),
+                                              child: Checkbox(
+                                                onChanged: (newValue) async {
+                                                  setState(() {
+                                                    _model.rememberMe =
+                                                        newValue;
+                                                  });
+                                                },
+                                                activeColor:
+                                                    const Color(0xccdf6f3e),
+                                                value: _model.rememberMe ??=
+                                                    false,
+                                              ),
+                                            ),
+                                            Text(
+                                              'PAGES.LOGIN.REMEMBER_ME'.tr(),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                     Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment: MainAxisAlignment.end,
@@ -266,9 +325,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                       .isEmpty)
                                               ? null
                                               : () async {
-                                                  if (FFAppState()
-                                                      .baseUrl
-                                                      .isEmpty) {
+                                                  if (_model.baseUrlController!
+                                                      .text.isEmpty) {
                                                     showToast(
                                                       'PAGES.LOGIN.URL_MESSAGE'
                                                           .tr(),
@@ -287,6 +345,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
                                                     return;
                                                   }
+
+                                                  FFAppState().baseUrl = _model
+                                                      .baseUrlController!.text;
+
                                                   GoRouter.of(context)
                                                       .prepareAuthEvent();
                                                   final response =
@@ -306,13 +368,27 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                     return;
                                                   }
 
-                                                  FFAppState().accessToken =
-                                                      response['accessToken'];
-                                                  FFAppState().refreshToken =
-                                                      response['refreshToken'];
+                                                  FFAppState().update(() {
+                                                    FFAppState().accessToken =
+                                                        response['accessToken'];
+                                                  });
 
                                                   await AuthAPIProvider()
                                                       .processProfile();
+
+                                                  if (_model.rememberMe ??
+                                                      false) {
+                                                    FFAppState().username = _model
+                                                        .emailAddressLoginController!
+                                                        .text
+                                                        .trim();
+                                                    FFAppState().rememberMe =
+                                                        true;
+                                                  } else {
+                                                    FFAppState().username = '';
+                                                    FFAppState().rememberMe =
+                                                        false;
+                                                  }
 
                                                   context.pushNamed('homePage');
                                                 },
@@ -364,9 +440,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     if (val.endsWith('/')) {
                                       val = val.substring(0, val.length - 1);
                                     }
-                                    FFAppState().update(() {
-                                      FFAppState().baseUrl = val;
-                                    });
                                   },
                                   decoration: InputDecoration(
                                     labelText: 'PAGES.LOGIN.BASE_URL'.tr(),
@@ -425,7 +498,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       0, 8, 0, 0),
                                   child: Text(
-                                    '2023.1 02-08-2023',
+                                    currentVersion,
                                     style:
                                         FlutterFlowTheme.of(context).bodyText1,
                                   ),

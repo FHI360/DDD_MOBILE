@@ -208,7 +208,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 8, 0, 0),
                                         child: Text(
-                                          _model.patient?.sex == 'Male'
+                                          _model.patient?.sex == 'male'
                                               ? 'PAGES.PATIENT_PROFILE.MALE'
                                                   .tr()
                                               : 'PAGES.PATIENT_PROFILE.FEMALE'
@@ -426,452 +426,419 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                               ),
                             ]),
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (_model.devolve != null &&
+                                  (_model.devolve!.reasonDiscontinued == null ||
+                                      _model.devolve!.reasonDiscontinued!
+                                          .isEmpty) &&
+                                  FFAppState().outlet &&
+                                  !FFAppState().admin)
+                                PopupMenuButton(
+                                    child: Icon(Icons.more_vert),
+                                    onSelected: (value) async {
+                                      await showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                        enableDrag: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return Padding(
+                                            padding: MediaQuery.of(context)
+                                                .viewInsets,
+                                            child: DiscontinueServiceWidget(
+                                              patient: _model.patient,
+                                            ),
+                                          );
+                                        },
+                                      ).then((value) => setState(() {
+                                            if (value != null) {
+                                              _model.devolve = value;
+                                            }
+                                          }));
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuEntry>[
+                                          PopupMenuItem(
+                                            value: 'discontinue',
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0),
+                                                  child:
+                                                      Icon(Icons.stop_circle),
+                                                ),
+                                                Text(
+                                                  'PAGES.PATIENT_PROFILE.DISCONTINUE'
+                                                      .tr(),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ]),
+                            ],
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                            child: Container(
-                              width: double.infinity,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).alternate,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Color(0x230F1113),
-                                    offset: Offset(0, 1),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    10, 5, 10, 5),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        if (!FFAppState().outlet)
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    10, 0, 5, 5),
-                                            child: InkWell(
-                                              onTap: () async {
-                                                context.pushNamed(
-                                                  'patientEdit',
-                                                  queryParams: {
-                                                    'patientId': serializeParam(
-                                                      _model.patient!.id,
-                                                      ParamType.int,
-                                                    ),
-                                                  }.withoutNulls,
-                                                );
-                                              },
-                                              child: Container(
-                                                height: 32,
-                                                constraints: BoxConstraints(
-                                                  maxHeight: 32,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryColor,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      blurRadius: 4,
-                                                      color: Color(0x32171717),
-                                                      offset: Offset(0, 2),
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(8, 0, 8, 0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(0, 0,
-                                                                    12, 0),
-                                                        child: Text(
-                                                          'PAGES.PATIENT_PROFILE.EDIT'
-                                                              .tr(),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText1
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1Family,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .white,
-                                                                useGoogleFonts: GoogleFonts
-                                                                        .asMap()
-                                                                    .containsKey(
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyText1Family),
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Icon(
-                                                        Icons.edit,
-                                                        color: Colors.white,
-                                                        size: 12,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        if (!FFAppState().outlet &&
-                                            !FFAppState().admin)
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    5, 0, 5, 5),
-                                            child: InkWell(
-                                              onTap: () async {
-                                                await showModalBottomSheet(
-                                                  isScrollControlled: true,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  enableDrag: false,
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return Padding(
-                                                      padding:
-                                                          MediaQuery.of(context)
-                                                              .viewInsets,
-                                                      child: DevolveWidget(
-                                                        patient: _model.patient,
-                                                      ),
-                                                    );
-                                                  },
-                                                ).then((value) => setState(() {
-                                                      if (value != null) {
-                                                        _model.devolve = value;
-                                                        _model.refOrganisation = _model
-                                                            .outlets
-                                                            .firstWhere(
-                                                                (o) =>
-                                                                    o.code ==
-                                                                    _model
-                                                                        .devolve!
-                                                                        .outletCode,
-                                                                orElse: () =>
-                                                                    OutletData(
-                                                                        id: 0,
-                                                                        name:
-                                                                            '',
-                                                                        code:
-                                                                            ''))
-                                                            .name;
-                                                      }
-                                                    }));
-                                              },
-                                              child: Container(
-                                                height: 32,
-                                                constraints: BoxConstraints(
-                                                  maxHeight: 32,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryColor,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      blurRadius: 4,
-                                                      color: Color(0x32171717),
-                                                      offset: Offset(0, 2),
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(8, 0, 8, 0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(0, 0,
-                                                                    12, 0),
-                                                        child: Text(
-                                                          'PAGES.PATIENT_PROFILE.DEVOLVE'
-                                                              .tr(),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText1
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1Family,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .white,
-                                                                useGoogleFonts: GoogleFonts
-                                                                        .asMap()
-                                                                    .containsKey(
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyText1Family),
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Icon(
-                                                        Icons
-                                                            .arrow_circle_right_outlined,
-                                                        color: Colors.white,
-                                                        size: 12,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        if (_model.devolve != null &&
-                                            (_model.devolve!
-                                                        .reasonDiscontinued ==
-                                                    null ||
-                                                _model
-                                                    .devolve!
-                                                    .reasonDiscontinued!
-                                                    .isEmpty) &&
-                                            FFAppState().outlet &&
-                                            !FFAppState().admin)
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    5, 0, 5, 5),
-                                            child: InkWell(
-                                              onTap: () async {
-                                                await showModalBottomSheet(
-                                                  isScrollControlled: true,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  enableDrag: false,
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return Padding(
-                                                      padding:
-                                                          MediaQuery.of(context)
-                                                              .viewInsets,
-                                                      child:
-                                                          DiscontinueServiceWidget(
-                                                        patient: _model.patient,
-                                                      ),
-                                                    );
-                                                  },
-                                                ).then((value) => setState(() {
-                                                      if (value != null) {
-                                                        _model.devolve = value;
-                                                      }
-                                                    }));
-                                              },
-                                              child: Container(
-                                                height: 32,
-                                                constraints: BoxConstraints(
-                                                  maxHeight: 32,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      blurRadius: 4,
-                                                      color: Color(0x32171717),
-                                                      offset: Offset(0, 2),
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(8, 0, 8, 0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(0, 0,
-                                                                    12, 0),
-                                                        child: Text(
-                                                          'PAGES.PATIENT_PROFILE.DISCONTINUE'
-                                                              .tr(),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText1
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1Family,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBtnText,
-                                                                useGoogleFonts: GoogleFonts
-                                                                        .asMap()
-                                                                    .containsKey(
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyText1Family),
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Icon(
-                                                        Icons.cancel_outlined,
-                                                        color: Colors.white,
-                                                        size: 12,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        if (!FFAppState().outlet)
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    5, 0, 5, 5),
-                                            child: InkWell(
-                                              onTap: () async {
-                                                await showModalBottomSheet(
-                                                  isScrollControlled: true,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  enableDrag: false,
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return Padding(
-                                                      padding:
-                                                          MediaQuery.of(context)
-                                                              .viewInsets,
-                                                      child: ViralLoadWidget(
-                                                        patient: _model.patient,
-                                                      ),
-                                                    );
-                                                  },
-                                                ).then((value) => setState(() {
-                                                      if (value != null) {
-                                                        _model.patient = _model
-                                                            .patient!
-                                                            .copyWith(
-                                                                viralLoadDate: df
-                                                                    .Value(value
-                                                                        .date),
-                                                                lastViralLoad: df
-                                                                    .Value(value
-                                                                        .value),
-                                                                nextVisitDate: df
-                                                                    .Value(value
-                                                                        .nextAppointment));
-                                                      }
-                                                    }));
-                                              },
-                                              child: Container(
-                                                height: 32,
-                                                constraints: BoxConstraints(
-                                                  maxHeight: 32,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      blurRadius: 4,
-                                                      color: Color(0x32171717),
-                                                      offset: Offset(0, 2),
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(8, 0, 8, 0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(0, 0,
-                                                                    12, 0),
-                                                        child: Text(
-                                                          'PAGES.PATIENT_PROFILE.VIRAL_LOAD'
-                                                              .tr(),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText1
-                                                              .override(
-                                                                fontFamily: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1Family,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBtnText,
-                                                                useGoogleFonts: GoogleFonts
-                                                                        .asMap()
-                                                                    .containsKey(
-                                                                        FlutterFlowTheme.of(context)
-                                                                            .bodyText1Family),
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Icon(
-                                                        Icons.ac_unit,
-                                                        color: Colors.white,
-                                                        size: 12,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
+                  if (!FFAppState().outlet)
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).alternate,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 4,
+                                      color: Color(0x230F1113),
+                                      offset: Offset(0, 1),
+                                    )
                                   ],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      10, 5, 10, 5),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          if (!FFAppState().outlet)
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(10, 0, 5, 5),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  context.pushNamed(
+                                                    'patientEdit',
+                                                    queryParams: {
+                                                      'patientId':
+                                                          serializeParam(
+                                                        _model.patient!.id,
+                                                        ParamType.int,
+                                                      ),
+                                                    }.withoutNulls,
+                                                  );
+                                                },
+                                                child: Container(
+                                                  height: 32,
+                                                  constraints: BoxConstraints(
+                                                    maxHeight: 32,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryColor,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        blurRadius: 4,
+                                                        color:
+                                                            Color(0x32171717),
+                                                        offset: Offset(0, 2),
+                                                      )
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                8, 0, 8, 0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(0,
+                                                                      0, 12, 0),
+                                                          child: Text(
+                                                            'PAGES.PATIENT_PROFILE.EDIT'
+                                                                .tr(),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyText1
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .white,
+                                                                  useGoogleFonts: GoogleFonts
+                                                                          .asMap()
+                                                                      .containsKey(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyText1Family),
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        Icon(
+                                                          Icons.edit,
+                                                          color: Colors.white,
+                                                          size: 12,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          if (!FFAppState().outlet &&
+                                              !FFAppState().admin)
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(5, 0, 5, 5),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  await showModalBottomSheet(
+                                                    isScrollControlled: true,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    enableDrag: false,
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Padding(
+                                                        padding: MediaQuery.of(
+                                                                context)
+                                                            .viewInsets,
+                                                        child: DevolveWidget(
+                                                          patient:
+                                                              _model.patient,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ).then(
+                                                      (value) => setState(() {
+                                                            if (value != null) {
+                                                              _model.devolve =
+                                                                  value;
+                                                              _model.refOrganisation = _model
+                                                                  .outlets
+                                                                  .firstWhere(
+                                                                      (o) =>
+                                                                          o.code ==
+                                                                          _model
+                                                                              .devolve!
+                                                                              .outletCode,
+                                                                      orElse: () => OutletData(
+                                                                          id: 0,
+                                                                          name:
+                                                                              '',
+                                                                          code:
+                                                                              ''))
+                                                                  .name;
+                                                            }
+                                                          }));
+                                                },
+                                                child: Container(
+                                                  height: 32,
+                                                  constraints: BoxConstraints(
+                                                    maxHeight: 32,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryColor,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        blurRadius: 4,
+                                                        color:
+                                                            Color(0x32171717),
+                                                        offset: Offset(0, 2),
+                                                      )
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                8, 0, 8, 0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(0,
+                                                                      0, 12, 0),
+                                                          child: Text(
+                                                            'PAGES.PATIENT_PROFILE.DEVOLVE'
+                                                                .tr(),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyText1
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .white,
+                                                                  useGoogleFonts: GoogleFonts
+                                                                          .asMap()
+                                                                      .containsKey(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyText1Family),
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .arrow_circle_right_outlined,
+                                                          color: Colors.white,
+                                                          size: 12,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          if (!FFAppState().outlet)
+                                            Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(5, 0, 5, 5),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  await showModalBottomSheet(
+                                                    isScrollControlled: true,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    enableDrag: false,
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Padding(
+                                                        padding: MediaQuery.of(
+                                                                context)
+                                                            .viewInsets,
+                                                        child: ViralLoadWidget(
+                                                          patient:
+                                                              _model.patient,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ).then(
+                                                      (value) => setState(() {
+                                                            if (value != null) {
+                                                              _model.patient = _model.patient!.copyWith(
+                                                                  viralLoadDate:
+                                                                      df.Value(value
+                                                                          .date),
+                                                                  lastViralLoad:
+                                                                      df.Value(value
+                                                                          .value),
+                                                                  nextVisitDate:
+                                                                      df.Value(value
+                                                                          .nextAppointment));
+                                                            }
+                                                          }));
+                                                },
+                                                child: Container(
+                                                  height: 32,
+                                                  constraints: BoxConstraints(
+                                                    maxHeight: 32,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        blurRadius: 4,
+                                                        color:
+                                                            Color(0x32171717),
+                                                        offset: Offset(0, 2),
+                                                      )
+                                                    ],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                8, 0, 8, 0),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(0,
+                                                                      0, 12, 0),
+                                                          child: Text(
+                                                            'PAGES.PATIENT_PROFILE.VIRAL_LOAD'
+                                                                .tr(),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodyText1
+                                                                .override(
+                                                                  fontFamily: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText1Family,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryBtnText,
+                                                                  useGoogleFonts: GoogleFonts
+                                                                          .asMap()
+                                                                      .containsKey(
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .bodyText1Family),
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        Icon(
+                                                          Icons.ac_unit,
+                                                          color: Colors.white,
+                                                          size: 12,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
                     child: Row(
@@ -1256,76 +1223,75 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                   if ((_model.devolve?.reasonDiscontinued == null ||
                           _model.devolve!.reasonDiscontinued!.isEmpty) &&
                       FFAppState().outlet)
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(10, 12, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                              context.pushNamed(
-                                'refill',
-                                queryParams: {
-                                  'patientId': serializeParam(
-                                    _model.patient!.id!,
-                                    ParamType.int,
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                    child: InkWell(
+                      onTap: () async {
+                        context.pushNamed(
+                          'refill',
+                          queryParams: {
+                            'patientId': serializeParam(
+                              _model.patient!.id!,
+                              ParamType.int,
+                            ),
+                          }.withoutNulls,
+                        );
+                      },
+                      child: Container(
+                        height: 32,
+                        constraints: BoxConstraints(
+                          maxHeight: 32,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                          FlutterFlowTheme.of(context).primaryColor,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color:
+                              FlutterFlowTheme.of(context).primaryColor,
+                              offset: Offset(0, 2),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0, 0, 12, 0),
+                                child: Text(
+                                  'PAGES.PATIENT_PROFILE.REFILL'.tr(),
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyText1
+                                      .override(
+                                    fontFamily:
+                                    FlutterFlowTheme.of(context)
+                                        .bodyText1Family,
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBtnText,
+                                    useGoogleFonts: GoogleFonts.asMap()
+                                        .containsKey(
+                                        FlutterFlowTheme.of(context)
+                                            .bodyText1Family),
                                   ),
-                                }.withoutNulls,
-                              );
-                            },
-                            child: Container(
-                              height: 32,
-                              constraints: BoxConstraints(
-                                maxHeight: 32,
-                              ),
-                              decoration: BoxDecoration(
-                                color:
-                                    FlutterFlowTheme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 0, 12, 0),
-                                      child: Text(
-                                        'PAGES.PATIENT_PROFILE.REFILL'.tr(),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText1
-                                            .override(
-                                              fontFamily:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText1Family,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryBtnText,
-                                              useGoogleFonts:
-                                                  GoogleFonts.asMap()
-                                                      .containsKey(
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyText1Family),
-                                            ),
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 12,
-                                    ),
-                                  ],
                                 ),
                               ),
-                            ),
+                              Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 12,
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
+                  ),
                   if (_model.patient != null)
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(16, 10, 16, 10),

@@ -57,5 +57,8 @@ class AuthAPIProvider {
     data = await response.data;
     FFAppState().requireName = data['requireName'];
     FFAppState().showTargetGroups = data['showTargetGroups'];
+    FFAppState().heartbeat = data['heartbeat'];
+    FFAppState().phoneRegex = data['phoneRegex'];
+    FFAppState().phoneRequired = data['phoneRequired'];
   }
 }

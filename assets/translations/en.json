@@ -10,7 +10,8 @@
             "BASE_URL": "Base URL",
             "BASE_URL_HINT": "Enter the server IP address...",
             "HERO": "Login to access your account below.",
-            "INVALID_URL": "Invalid URL"
+            "INVALID_URL": "Invalid URL",
+            "REMEMBER_ME": "Remember me"
         }   ,
         "DRAWER": {
             "PATIENTS": "Patients",
@@ -22,14 +23,14 @@
             "SIGN_OUT": "Sign out"
         },
         "HOME": {
-            "WELCOME": "Welcome,",
+            "WELCOME": "Welcome ",
             "TITLE": "Home"
         },
         "PATIENT": {
             "TITLE": "Edit Patient",
             "EDIT": "Edit Patient Profile",
             "AGE_MIN": "Minimum age is 1",
-            "PHONE_NUMBER_LENGTH": "Length of phone number should be between 5 and 13 characters",
+            "INVALID_PHONE_NUMBER": "Invalid phone number",
             "INTRO": "Edit the fields below in order to change patient's profile.",
             "FACILITY": "Facility",
             "GIVEN_NAME": "Given name",
@@ -43,6 +44,7 @@
             "MALE": "Male",
             "HOSPITAL_NO": "Hospital No.",
             "UNIQUE_ID": "Unique ID",
+            "UNIQUE_ID_TAKEN": "Another patient is already linked to this Unique ID",
             "ADDRESS": "Address",
             "PHONE_NUMBER": "Phone Number",
             "CLINIC_STAGE": "Clinic Stage",
@@ -61,11 +63,12 @@
         },
         "PATIENT_LIST": {
             "TITLE": "Patient List",
-            "SEARCH_HINT": "Search patients...",
+            "SEARCH_HINT": "Search Patients by Names/Hospital No./Unique ID",
             "SEARCH": "Search",
             "LAST_REFILL": "Last refill",
             "VIEW": "View",
-            "NO_RESULTS": "No results from search..."
+            "NO_RESULTS": "No results from search...",
+            "COUNT": "Showing {} of {} patients"
         },
         "PATIENT_PROFILE": {
             "TITLE": "Patient Profile",
@@ -80,7 +83,7 @@
             "LAST_VIRAL_LOAD": "Last viral load",
             "NEXT_VIRAL_LOAD_DATE": "Next Viral load date",
             "NEXT_APPOINTMENT": "Next appointment",
-            "REFILL": "Refill",
+            "REFILL": "Refill Patient",
             "REFILL_EDIT": "Edit",
             "REFILL_HISTORY": "Refill history",
             "REGIMEN": "Regimen",
@@ -201,8 +204,11 @@
     "SAVE": "Save changes",
     "AGE": "{}yr(s)",
     "VIEW": "View",
-    "CONNECTION_ERROR": "There was an error connecting to server",
+    "CONNECTION_ERROR": "There was an error connecting to the server; please check your internet connection",
     "SESSION_EXPIRED": "Session expired, please sign in again",
-    "INVALID_CREDENTIALS": "Invalid username or password",
-    "PROCESSING_ERROR": "An error occurred accessing the backend"
+    "INVALID_CREDENTIALS": "Wrong username or password",
+    "PROCESSING_ERROR": "An error occurred accessing the backend",
+    "LOCKED_FAILED_LOGINS": "Account has been locked for multiple failed login attempts; please contact administrator",
+    "ACCOUNT_LOCKED": "Your account has been locked; please contact administrator",
+    "DDD": "Decentralized Drug Distribution"
 }

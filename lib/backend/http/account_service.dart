@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:DDD/backend/drift/dao/dao.dart';
 import 'package:DDD/backend/drift/database.dart';
+import 'package:DDD/backend/drift/entities.dart';
 import 'package:DDD/flutter_flow/flutter_flow_util.dart';
 import 'package:DDD/main.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +61,23 @@ class AccountService {
       r['uuid'] = r['id'];
       r['id'] = id++;
       r['synced'] = true;
-      await DispenseDao(database).insertRecord(DispenseData.fromJson(r));
+
+      List<Medication> medications = [];
+      r['medications'].forEach((e) {
+        var medication = Medication.fromJson(e);
+        medications.add(medication);
+      });
+      var dispense = DispenseData(
+          id: r['id'],
+          date: DateTime.parse(r['date']),
+          patientId: r['patientId'],
+          dateNextRefill: DateTime.parse(r['dateNextRefill']),
+          medications: medications,
+          synced: r['synced'],
+          missedDoses: r['missedDoses'] ?? false,
+          adverseIssues: r['adverseIssues'] ?? false,
+          uuid: r['uuid']);
+      await DispenseDao(database).insertRecord(dispense);
     });
 
     final devolves = data['devolves'];

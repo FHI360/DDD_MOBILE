@@ -341,6 +341,29 @@ class PatientDao extends DatabaseAccessor<Database> with _$PatientDaoMixin {
         .get();
   }
 
+  Future<List<PatientData>> findByUniqueId(
+      String activationCode, String uniqueId) {
+    return (select(patient)
+          ..where((p) => p.uniqueId.lower().equals('$uniqueId'.toLowerCase()))
+          ..where((p) =>
+              p.outletCode.equals(activationCode) |
+              p.facilityCode.equals(activationCode))
+          ..orderBy([
+            (u) => OrderingTerm(expression: u.givenName, mode: OrderingMode.asc)
+          ])
+          ..limit(1))
+        .get();
+  }
+
+  Future<int?> count(String activationCode) {
+    final count = patient.id.count(
+        filter: patient.facilityCode.equals(activationCode) |
+            patient.outletCode.equals(activationCode));
+    final query = db.selectOnly(patient)..addColumns([count]);
+
+    return query.map((row) => row.read(count)).getSingle();
+  }
+
   Future<PatientData?> findById(int id) {
     return (select(patient)..where((tbl) => tbl.id.equals(id)))
         .getSingleOrNull();
@@ -429,8 +452,8 @@ class RegimenDao extends DatabaseAccessor<Database> with _$RegimenDaoMixin {
   }
 
   Future<RegimenData?> findByName(String name) async {
-    final list = await (select(regimen)..where((tbl) => tbl.name.equals(name)))
-        .get();
+    final list =
+        await (select(regimen)..where((tbl) => tbl.name.equals(name))).get();
     final iterator = list.iterator;
 
     if (!iterator.moveNext()) {
