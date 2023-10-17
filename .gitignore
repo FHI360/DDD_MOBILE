@@ -1,5 +1,5 @@
 /build
-/.dart_tool
+.dart_tool/
 /ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 /ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 /.idea
