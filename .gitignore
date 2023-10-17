@@ -3,5 +3,5 @@
 /ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 /ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 /.idea
-./.flutter-plugins-dependencies
-./.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins
