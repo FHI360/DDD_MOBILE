@@ -2902,11 +2902,14 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                                 DateTime
                                                                                 nrd =
                                                                                 DateTime(
-                                                                                    getCurrentTimestamp
+                                                                                    _model
+                                                                                        .datePicked1!
                                                                                         .year,
-                                                                                    getCurrentTimestamp
+                                                                                    _model
+                                                                                        .datePicked1!
                                                                                         .month,
-                                                                                    getCurrentTimestamp
+                                                                                    _model
+                                                                                        .datePicked1!
                                                                                         .day +
                                                                                         (int
                                                                                             .tryParse(
