@@ -433,7 +433,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                   (_model.devolve!.reasonDiscontinued == null ||
                                       _model.devolve!.reasonDiscontinued!
                                           .isEmpty) &&
-                                  FFAppState().outlet &&
+                                  !FFAppState().outlet &&
                                   !FFAppState().admin)
                                 PopupMenuButton(
                                     child: Icon(Icons.more_vert),
