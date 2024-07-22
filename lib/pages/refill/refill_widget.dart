@@ -54,6 +54,7 @@ class _RefillWidgetState extends State<RefillWidget> {
     _model.dispense =
     await DispenseDao(database).findById(widget.dispenseId ?? 0);
     if (_model.dispense != null) {
+      print(_model.dispense);
       _model.missedDosesValue = boolToString(_model.dispense!.missedDoses);
       _model.adverseIssuesValue = boolToString(_model.dispense!.adverseIssues);
       _model.datePicked1 = _model.dispense!.date;
@@ -268,7 +269,9 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                       _model.datePicked1 ??
                                                           getCurrentTimestamp,
                                                       firstDate: _model.patient!
-                                                          .dateStarted!,
+                                                          .dateStarted!.subtract(
+                                                          Duration(days: 365)
+                                                      ),
                                                       locale: context.locale,
                                                       lastDate:
                                                       getCurrentTimestamp,
@@ -286,6 +289,28 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                               _datePickedDate
                                                                   .day,
                                                             );
+
+                                                        DateTime
+                                                        nrd =
+                                                        DateTime(
+                                                            _model
+                                                                .datePicked1!
+                                                                .year,
+                                                            _model
+                                                                .datePicked1!
+                                                                .month,
+                                                            _model
+                                                                .datePicked1!
+                                                                .day +
+                                                                (int
+                                                                    .tryParse(
+                                                                    _model
+                                                                        .qtyDispensedController
+                                                                        .text) ??
+                                                                    0));
+                                                        _model
+                                                            .datePicked =
+                                                            nrd;
                                                       });
                                                     }
                                                   },
@@ -3373,7 +3398,8 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                         initialDate: _model
                                                             .datePicked ?? nrd,
                                                         firstDate:
-                                                        getCurrentTimestamp,
+                                                        _model
+                                                            .datePicked!,
                                                         locale: context.locale,
                                                         lastDate:
                                                         DateTime(2050),
@@ -3563,7 +3589,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                         }
                                                         final uuid =
                                                         Uuid();
-                                                        final clinic = ClinicCompanion
+                                                        var clinic = ClinicCompanion
                                                             .insert(
                                                             patientId: _model
                                                                 .patient!
@@ -3631,12 +3657,21 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                     .booleanFromYesNo(
                                                                     _model
                                                                         .tbReferValue)),
-                                                            uuid: uuid
+                                                            uuid: _model.clinic?.uuid ?? uuid
                                                                 .v4());
+
+                                                        if (_model.clinic != null) {
+                                                            clinic = clinic.copyWith(
+                                                              id: df.Value(_model.clinic!.id)
+                                                            );
+                                                        }
 
                                                         await database.into(
                                                             database.clinic)
-                                                            .insert(clinic);
+                                                            .insert(clinic,
+                                                            mode: df.InsertMode.replace
+                                                        );
+
                                                         final medication =
                                                         Medication
                                                             .instance();
@@ -3661,14 +3696,23 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                 .qtyDispensedController
                                                                 .text) ??
                                                                 0;
-                                                        var dispense = await
-                                                        DispenseDao(database)
-                                                            .findByPatientAndDate(
-                                                            _model
-                                                                .patient!
-                                                                .uuid,
-                                                            _model
-                                                                .datePicked1!);
+                                                        var dispense;
+                                                        if (widget.dispenseId != null) {
+                                                          dispense = await
+                                                          DispenseDao(database)
+                                                              .findById(widget.dispenseId!);
+                                                        }
+                                                        if (dispense == null) {
+                                                          dispense = await
+                                                          DispenseDao(database)
+                                                              .findByPatientAndDate(
+                                                              _model
+                                                                  .patient!
+                                                                  .uuid,
+                                                              _model
+                                                                  .datePicked1!);
+                                                        }
+
                                                         var nextAppointment;
                                                         if (dispense ==
                                                             null) {
@@ -3718,12 +3762,33 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                     .datePicked;
                                                           }
                                                         } else {
+                                                          dispense = dispense.copyWith(
+                                                            date: _model
+                                                                .datePicked1!,
+                                                            adverseIssues: functions
+                                                                .booleanFromYesNo(
+                                                                _model
+                                                                    .adverseIssuesValue),
+                                                            missedDoses: functions
+                                                                .booleanFromYesNo(
+                                                                _model
+                                                                    .missedDosesValue),
+                                                            dateNextRefill: _model
+                                                                .datePicked!,
+                                                          );
+
                                                           dispense
                                                               .medications!
                                                               .add(
                                                               medication);
                                                           if (medication
                                                               .arv) {
+                                                            final medications =
+                                                            dispense.medications!.where((med)=> !med.arv)
+                                                                .toList();
+                                                            medications.add(medication);
+                                                            dispense.medications!.clear();
+                                                            dispense.medications!.addAll(medications);
                                                             dispense = dispense
                                                                 .copyWith(
                                                                 dateNextRefill: _model

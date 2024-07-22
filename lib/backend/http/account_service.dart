@@ -90,7 +90,14 @@ class AccountService {
       await DevolveDao(database).insertRecord(DevolveData.fromJson(r));
     });
 
+    final clinic = data['clinicData'];
     await ClinicDao(database).deleteAll();
+    clinic.forEach((r) async {
+      r['uuid'] = r['id'];
+      r['id'] = id++;
+      r['synced'] = true;
+      await ClinicDao(database).insertRecord(ClinicData.fromJson(r));
+    });
 
     showToast(
       'Data from server successfully processed',
