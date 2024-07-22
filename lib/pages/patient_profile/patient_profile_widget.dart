@@ -1437,9 +1437,7 @@ class _PatientProfileWidgetState extends State<PatientProfileWidget> {
                                                                   CrossAxisAlignment
                                                                       .start,
                                                               children: [
-                                                                if (!listViewRefillRow
-                                                                        .synced &&
-                                                                    FFAppState()
+                                                                if (FFAppState()
                                                                         .outlet)
                                                                   Row(
                                                                     mainAxisSize:
