@@ -922,10 +922,10 @@ packages:
     dependency: "direct main"
     description:
       name: oktoast
-      sha256: fd5dd5c7dd02c41c56bdbdbc163351bd6cd59cba61c416daf255e35d1a86dce1
+      sha256: f1366c5c793ddfb8f55bc6fc3e45db43c45debf173b765fb4c5ec096cbdeb84a
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.1"
+    version: "3.4.0"
   package_config:
     dependency: transitive
     description:
@@ -1014,6 +1014,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.10.4"
+  pdf_widget_wrapper:
+    dependency: transitive
+    description:
+      name: pdf_widget_wrapper
+      sha256: c930860d987213a3d58c7ec3b7ecf8085c3897f773e8dc23da9cae60a5d6d0f5
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   pedantic:
     dependency: transitive
     description:
@@ -1106,10 +1114,10 @@ packages:
     dependency: "direct main"
     description:
       name: printing
-      sha256: e7c383dca95ee7b88c02dc1c66638628d3dcdc2fb2cc47e7a595facd47e46b56
+      sha256: cc4b256a5a89d5345488e3318897b595867f5181b8c5ed6fc63bfa5f2044aec3
       url: "https://pub.dev"
     source: hosted
-    version: "5.11.0"
+    version: "5.13.1"
   provider:
     dependency: "direct main"
     description:
@@ -1507,6 +1515,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  web:
+    dependency: transitive
+    description:
+      name: web
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1"
   web_socket_channel:
     dependency: transitive
     description:
