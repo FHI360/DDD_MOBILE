@@ -36,6 +36,13 @@ Future<String> missedAppointmentPdf(
             <th scope="col" colspan="3" class="text-center">${'REPORTS.HOSPITAL_NO'.tr()}</th>
             <th scope="col" colspan="2" class="text-center">${'REPORTS.DATE_OF_BIRTH'.tr()}</th>
             <th scope="col" class="text-center">${'REPORTS.SEX'.tr()}</th>
+            ''';
+  if (!FFAppState().outlet) {
+    content += '''
+            <th scope="col" colspan="4" class="text-center">${'REPORTS.OUTLET'.tr()}</th>
+    ''';
+  }
+  content += '''
             <th scope="col" colspan="2" class="text-center">${'REPORTS.LAST_REFILL'.tr()}</th>
             <th scope="col" colspan="2" class="text-center">${'REPORTS.APPOINTMENT_DATE'.tr()}</th>
         </tr>
@@ -49,7 +56,14 @@ Future<String> missedAppointmentPdf(
         <td class="justify-content-start" colspan="4">${e.givenName} ${e.familyName}</td>
         <td class="justify-content-start" colspan="3">${e.hospitalNo}</td>
         <td class="justify-content-start" colspan="2">${dateTimeFormat('yMMMd', e.dateOfBirth, locale: context.locale.languageCode)}</td>
-        <td class="justify-content-start">${e.sex}</td>
+        <td class="justify-content-start">${e.sex == 'female' ? 'PAGES.PATIENT.FEMALE'.tr() : 'PAGES.PATIENT.MALE'.tr()}</td>
+        ''';
+    if (!FFAppState().outlet) {
+      content += '''
+        <td class="justify-content-start" colspan="4">${e.outlet}</td>
+      ''';
+    }
+    content += '''
         <td class="justify-content-start" colspan="2">${dateTimeFormat('yMMMd', e.date, locale: context.locale.languageCode)}</td>
         <td class="justify-content-start" colspan="2">${dateTimeFormat('yMMMd', e.dateNextRefill, locale: context.locale.languageCode)}</td>
       </tr>

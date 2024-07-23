@@ -2,6 +2,8 @@ import 'package:DDD/backend/drift/database.dart';
 import 'package:DDD/backend/drift/entities.dart';
 import 'package:drift/drift.dart';
 
+import '../converters.dart';
+
 part 'dao.g.dart';
 
 class Disaggregate {
@@ -36,7 +38,7 @@ class Refill {
 }
 
 class DispenseInfo {
-  final String? outletCode;
+  final String? outlet;
   final String facilityCode;
   final String familyName;
   final String givenName;
@@ -48,7 +50,7 @@ class DispenseInfo {
   final String hospitalNo;
 
   DispenseInfo(
-      this.outletCode,
+      this.outlet,
       this.facilityCode,
       this.familyName,
       this.givenName,
@@ -61,7 +63,7 @@ class DispenseInfo {
 }
 
 class LastDispense {
-  final String? outletCode;
+  final String? outlet;
   final String facilityCode;
   final String givenName;
   final String familyName;
@@ -72,7 +74,7 @@ class LastDispense {
   final String hospitalNo;
 
   LastDispense(
-      this.outletCode,
+      this.outlet,
       this.facilityCode,
       this.givenName,
       this.familyName,
@@ -95,7 +97,9 @@ class ClinicDao extends DatabaseAccessor<Database> with _$ClinicDaoMixin {
   Future<ClinicData?> findByPatientAndDate(String patient, DateTime date) {
     return (select(clinic)
           ..where(
-              (tbl) => tbl.patientId.equals(patient) & tbl.date.equals(date)))
+              (tbl) => tbl.patientId.equals(patient) & tbl.date.equals(date))
+          ..limit(1)
+          )
         .getSingleOrNull();
   }
 
@@ -244,12 +248,16 @@ class DispenseDao extends DatabaseAccessor<Database> with _$DispenseDaoMixin {
       String code, DateTime start, DateTime end) async {
     final rows = await customSelect('''
         WITH DispenseInfo as (
-          SELECT givenName, familyName, sex, dateOfBirth, medications, 
-            hospitalNo, outletCode, facilityCode, dateNextRefill, date FROM Dispense 
-          JOIN Patient p ON patientId = p.uuid ORDER BY givenName, familyName, sex
-        ) 
-        SELECT * FROM DispenseInfo WHERE (outletCode = ? OR facilityCode = ?)
-        AND date BETWEEN ? AND ? ORDER BY givenName, familyName
+          SELECT given_Name givenName, family_Name familyName, sex,
+            strftime('%Y-%m-%d', DATETIME(dateOfBirth, 'unixepoch')) dateOfBirth, medications,
+            hospitalNo, outletCode, o.name AS outlet, facilityCode,
+            strftime('%Y-%m-%d', DATETIME(dateNextRefill, 'unixepoch')) dateNextRefill,
+            date FROM Dispense
+          JOIN Patient p ON patientId = p.uuid JOIN Outlet o ON o.code = p.outletCode
+          ORDER BY givenName, familyName, sex
+        )
+        SELECT *, strftime('%Y-%m-%d', DATETIME(date, 'unixepoch')) date FROM DispenseInfo 
+        WHERE (outletCode = ? OR facilityCode = ?) AND date BETWEEN ? AND ? ORDER BY givenName, familyName
     ''', variables: [
       Variable.withString(code),
       Variable.withString(code),
@@ -260,14 +268,14 @@ class DispenseDao extends DatabaseAccessor<Database> with _$DispenseDaoMixin {
     return [
       for (final row in rows)
         DispenseInfo(
-            row.data['outletCode'],
+            row.data['outlet'],
             row.data['facilityCode'],
             row.data['givenName'],
             row.data['familyName'],
-            row.data['medications'],
-            row.data['date'],
-            row.data['dateNextRefill'],
-            row.data['dateOfBirth'],
+            ListMedicationConverter().fromSql(row.data['medications']),
+            DateTime.parse(row.data['date']),
+            DateTime.parse(row.data['dateNextRefill']),
+            DateTime.parse(row.data['dateOfBirth']),
             row.data['sex'],
             row.data['hospitalNo']),
     ];
@@ -409,10 +417,14 @@ class PatientDao extends DatabaseAccessor<Database> with _$PatientDaoMixin {
           ) r WHERE rn = 1
       ),
       DATA AS(
-        SELECT outletCode, facilityCode, givenName, familyName, hospitalNo, sex, dateOfBirth, date, 
-          dateNextRefill FROM last_Dispense JOIN patient p ON patientId = p.uuid ORDER BY givenName, familyName
+        SELECT outletCode, o.name outlet, facilityCode, given_Name givenName, family_Name familyName, hospitalNo, sex,
+          strftime('%Y-%m-%d', DATETIME(dateOfBirth, 'unixepoch')) dateOfBirth, date, dateNextRefill 
+        FROM last_Dispense JOIN patient p ON patientId = p.uuid JOIN Outlet o ON o.code = outletCode 
+          ORDER BY givenName, familyName
       )
-      SELECT * FROM LastDispense WHERE (outletCode = ? OR facilityCode = ?)
+      SELECT *, strftime('%Y-%m-%d', DATETIME(date, 'unixepoch')) date,
+        strftime('%Y-%m-%d', DATETIME(dateNextRefill, 'unixepoch')) dateNextRefill  FROM 
+        DATA WHERE (outletCode = ? OR facilityCode = ?)
         AND dateNextRefill BETWEEN ? AND ?
     ''', variables: [
       Variable.withString(code),
@@ -429,9 +441,9 @@ class PatientDao extends DatabaseAccessor<Database> with _$PatientDaoMixin {
             row.data['givenName'],
             row.data['familyName'],
             row.data['sex'],
-            row.data['dateOfBirth'],
-            row.data['date'],
-            row.data['dateNextRefill'],
+            DateTime.parse(row.data['dateOfBirth']),
+            DateTime.parse(row.data['date']),
+            DateTime.parse(row.data['dateNextRefill']),
             row.data['hospitalNo']),
     ];
   }

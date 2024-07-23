@@ -197,7 +197,8 @@
         "LAST_REFILL": "Last refill",
         "APPOINTMENT_DATE": "Appointment Date",
         "REGIMEN": "Regimen",
-        "DURATION": "Duration"
+        "DURATION": "Duration",
+        "OUTLET": "Outlet"
     },
     "FIELD_REQUIRED": "Field is required",
     "CANCEL": "Cancel",

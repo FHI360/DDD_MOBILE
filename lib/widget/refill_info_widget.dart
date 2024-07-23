@@ -6,10 +6,10 @@ import 'package:DDD/reports/refill_info_report.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:webcontent_converter/webcontent_converter.dart';
-import 'package:path/path.dart' as path;
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -92,7 +92,7 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Column(
                             mainAxisSize: MainAxisSize.max,
@@ -111,7 +111,7 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
                                   style: FlutterFlowTheme.of(context).title3,
                                 ),
                               ),
-                              Row(
+                              Column(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -539,17 +539,18 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
 
                                               var savedPath = path.join(
                                                   dir.path, "sample.pdf");
-                                              WebcontentConverter.contentToPDF(
+                                              await File(savedPath).delete();
+
+                                              await WebcontentConverter.contentToPDF(
                                                   content: content,
                                                   format: PaperFormat.inches(
                                                       height: 11.7,
                                                       width: 16.54),
                                                   savedPath: savedPath);
-                                              var file = File(savedPath);
 
                                               context.pushNamed(
                                                 'pdfPreview',
-                                                queryParams: {'path': file.path}
+                                                queryParams: {'path': savedPath}
                                                     .withoutNulls,
                                               );
                                             },

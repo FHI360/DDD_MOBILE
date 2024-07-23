@@ -197,7 +197,8 @@
         "LAST_REFILL": "Dernière recharge",
         "APPOINTMENT_DATE": "Date de rendez-vous",
         "REGIMEN": "Régime",
-        "DURATION": "Durée"
+        "DURATION": "Durée",
+        "OUTLET": "Sortie"
     },
     "FIELD_REQUIRED": "Champ requis",
     "CANCEL": "Annuler",

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:DDD/flutter_flow/flutter_flow_icon_button.dart';
@@ -5,8 +6,10 @@ import 'package:DDD/reports/missed_appointments_report.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:webcontent_converter/webcontent_converter.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -107,10 +110,10 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                   style: FlutterFlowTheme.of(context).title3,
                                 ),
                               ),
-                              Row(
+                              Column(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.center,
                                 children: [
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
@@ -526,24 +529,29 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                       .validate()) {
                                                 return;
                                               }
-                                              var targetPath =
+                                              var dir =
                                                   await getApplicationDocumentsDirectory();
                                               var content =
                                                   await missedAppointmentPdf(
                                                       context,
                                                       _model.datePicked1!,
                                                       _model.datePicked2!);
-//                                              await Printing.convertHtml(html: '')
-                                             /* var file = await FlutterHtmlToPdf
-                                                  .convertFromHtmlContent(
-                                                      content,
-                                                      targetPath.path,
-                                                      'report');
+                                              var savedPath = path.join(
+                                                  dir.path, "sample.pdf");
+                                              await File(savedPath).delete();
+
+                                              await WebcontentConverter.contentToPDF(
+                                                  content: content,
+                                                  format: PaperFormat.inches(
+                                                      height: 11.7,
+                                                      width: 16.54),
+                                                  savedPath: savedPath);
+
                                               context.pushNamed(
                                                 'pdfPreview',
-                                                queryParams: {'path': file.path}
+                                                queryParams: {'path': savedPath}
                                                     .withoutNulls,
-                                              );*/
+                                              );
                                             },
                                       text: 'VIEW'.tr(),
                                       options: FFButtonOptions(
