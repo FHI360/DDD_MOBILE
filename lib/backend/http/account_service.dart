@@ -90,7 +90,7 @@ class AccountService {
       await DevolveDao(database).insertRecord(DevolveData.fromJson(r));
     });
 
-    final clinic = data['clinicData'];
+    final clinic = data['clinics'];
     await ClinicDao(database).deleteAll();
     clinic.forEach((r) async {
       r['uuid'] = r['id'];
