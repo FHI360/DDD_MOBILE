@@ -539,7 +539,9 @@ class _RefillInfoWidgetWidgetState extends State<RefillInfoWidget> {
 
                                               var savedPath = path.join(
                                                   dir.path, "sample.pdf");
-                                              await File(savedPath).delete();
+                                              try {
+                                                await File(savedPath).delete();
+                                              } catch(e) {}
 
                                               await WebcontentConverter.contentToPDF(
                                                   content: content,

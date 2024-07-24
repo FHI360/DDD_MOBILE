@@ -538,7 +538,9 @@ class _MissedAppointmentsWidgetState extends State<MissedAppointmentsWidget> {
                                                       _model.datePicked2!);
                                               var savedPath = path.join(
                                                   dir.path, "sample.pdf");
-                                              await File(savedPath).delete();
+                                              try {
+                                                await File(savedPath).delete();
+                                              } catch(e) {}
 
                                               await WebcontentConverter.contentToPDF(
                                                   content: content,
