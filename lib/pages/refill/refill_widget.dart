@@ -3662,7 +3662,8 @@ class _RefillWidgetState extends State<RefillWidget> {
 
                                                         if (_model.clinic != null) {
                                                             clinic = clinic.copyWith(
-                                                              id: df.Value(_model.clinic!.id)
+                                                              id: df.Value(_model.clinic!.id),
+                                                              synced: df.Value(false)
                                                             );
                                                         }
 
@@ -3775,6 +3776,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                                     .missedDosesValue),
                                                             dateNextRefill: _model
                                                                 .datePicked!,
+                                                            synced: false
                                                           );
 
                                                           dispense
