@@ -120,7 +120,9 @@ class _ViralLoadWidgetState extends State<ViralLoadWidget> {
                                               context: context,
                                               initialDate: getCurrentTimestamp,
                                               firstDate:
-                                                  widget.patient!.dateStarted!,
+                                                  widget.patient!.dateStarted!.subtract(
+                                                      Duration(days: 730)
+                                                  ),
                                               lastDate: getCurrentTimestamp,
                                               locale: context.locale);
 

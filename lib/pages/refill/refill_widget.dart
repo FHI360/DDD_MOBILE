@@ -270,7 +270,7 @@ class _RefillWidgetState extends State<RefillWidget> {
                                                           getCurrentTimestamp,
                                                       firstDate: _model.patient!
                                                           .dateStarted!.subtract(
-                                                          Duration(days: 365)
+                                                          Duration(days: 730)
                                                       ),
                                                       locale: context.locale,
                                                       lastDate:
