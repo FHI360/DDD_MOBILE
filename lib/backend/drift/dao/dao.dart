@@ -48,6 +48,7 @@ class DispenseInfo {
   final DateTime dateOfBirth;
   final String sex;
   final String hospitalNo;
+  final DateTime? nextAppointment;
 
   DispenseInfo(
       this.outlet,
@@ -59,7 +60,8 @@ class DispenseInfo {
       this.dateNextRefill,
       this.dateOfBirth,
       this.sex,
-      this.hospitalNo);
+      this.hospitalNo,
+      this.nextAppointment);
 }
 
 class LastDispense {
@@ -72,6 +74,7 @@ class LastDispense {
   final DateTime date;
   final DateTime dateNextRefill;
   final String hospitalNo;
+  final DateTime? nextAppointment;
 
   LastDispense(
       this.outlet,
@@ -82,7 +85,8 @@ class LastDispense {
       this.dateOfBirth,
       this.date,
       this.dateNextRefill,
-      this.hospitalNo);
+      this.hospitalNo,
+      this.nextAppointment);
 }
 
 @DriftAccessor(tables: [Clinic])
@@ -248,15 +252,23 @@ class DispenseDao extends DatabaseAccessor<Database> with _$DispenseDaoMixin {
       String code, DateTime start, DateTime end) async {
     final rows = await customSelect('''
         WITH DispenseInfo as (
-          SELECT given_Name givenName, family_Name familyName, sex,
+          SELECT given_Name givenName, family_Name familyName, sex, p.uuid,
             strftime('%Y-%m-%d', DATETIME(dateOfBirth, 'unixepoch')) dateOfBirth, medications,
-            hospitalNo, outletCode, o.name AS outlet, facilityCode,
+            unique_id hospitalNo, outletCode, o.name AS outlet, facilityCode,
             strftime('%Y-%m-%d', DATETIME(dateNextRefill, 'unixepoch')) dateNextRefill,
             date FROM Dispense
           JOIN Patient p ON patientId = p.uuid JOIN Outlet o ON o.code = p.outletCode
           ORDER BY givenName, familyName, sex
+        ),
+        Next_VL AS ( 
+          SELECT pid, next_Appointment FROM (
+            SELECT patient_Id pid, next_Appointment, ROW_NUMBER() OVER (PARTITION BY patient_Id 
+            ORDER BY next_Appointment DESC) rn FROM Viral_Load
+          ) r WHERE rn = 1
         )
-        SELECT *, strftime('%Y-%m-%d', DATETIME(date, 'unixepoch')) date FROM DispenseInfo 
+        SELECT *, strftime('%Y-%m-%d', DATETIME(date, 'unixepoch')) date,
+          strftime('%Y-%m-%d', DATETIME(next_appointment, 'unixepoch')) nextAppointment FROM DispenseInfo 
+          LEFT JOIN Next_VL v ON v.pid = uuid
         WHERE (outletCode = ? OR facilityCode = ?) AND date BETWEEN ? AND ? ORDER BY givenName, familyName
     ''', variables: [
       Variable.withString(code),
@@ -277,7 +289,8 @@ class DispenseDao extends DatabaseAccessor<Database> with _$DispenseDaoMixin {
             DateTime.parse(row.data['dateNextRefill']),
             DateTime.parse(row.data['dateOfBirth']),
             row.data['sex'],
-            row.data['hospitalNo']),
+            row.data['hospitalNo'],
+            DateTime.tryParse(row.data['nextAppointment'] ?? '')),
     ];
   }
 }
@@ -416,11 +429,18 @@ class PatientDao extends DatabaseAccessor<Database> with _$PatientDaoMixin {
             ORDER BY date DESC) rn FROM Dispense
           ) r WHERE rn = 1
       ),
+      Next_VL AS ( 
+          SELECT pid, next_Appointment FROM (
+            SELECT patient_Id pid, next_Appointment, ROW_NUMBER() OVER (PARTITION BY patient_Id 
+            ORDER BY next_Appointment DESC) rn FROM Viral_Load
+          ) r WHERE rn = 1
+      ),
       DATA AS(
-        SELECT outletCode, o.name outlet, facilityCode, given_Name givenName, family_Name familyName, hospitalNo, sex,
-          strftime('%Y-%m-%d', DATETIME(dateOfBirth, 'unixepoch')) dateOfBirth, date, dateNextRefill 
+        SELECT outletCode, o.name outlet, facilityCode, given_Name givenName, family_Name familyName, unique_id hospitalNo, sex,
+          strftime('%Y-%m-%d', DATETIME(dateOfBirth, 'unixepoch')) dateOfBirth, date, dateNextRefill,
+          strftime('%Y-%m-%d', DATETIME(next_appointment, 'unixepoch')) nextAppointment
         FROM last_Dispense JOIN patient p ON patientId = p.uuid JOIN Outlet o ON o.code = outletCode 
-          ORDER BY givenName, familyName
+          LEFT JOIN Next_VL v ON v.pid = p.uuid ORDER BY givenName, familyName
       )
       SELECT *, strftime('%Y-%m-%d', DATETIME(date, 'unixepoch')) date,
         strftime('%Y-%m-%d', DATETIME(dateNextRefill, 'unixepoch')) dateNextRefill  FROM 
@@ -444,7 +464,8 @@ class PatientDao extends DatabaseAccessor<Database> with _$PatientDaoMixin {
             DateTime.parse(row.data['dateOfBirth']),
             DateTime.parse(row.data['date']),
             DateTime.parse(row.data['dateNextRefill']),
-            row.data['hospitalNo']),
+            row.data['hospitalNo'],
+            DateTime.parse(row.data['nextAppointment'])),
     ];
   }
 }

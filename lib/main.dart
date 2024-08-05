@@ -12,7 +12,7 @@ import 'flutter_flow/flutter_flow_theme.dart';
 //import 'flutter_flow/flutter_flow_util.dart';
 import 'package:sqlite3/open.dart';
 
-String currentVersion = '2023.1 13-10-2023';
+String currentVersion = '2024.1 30-07-2024';
 String databaseName = 'ddd.db';
 
 void setupSqlCipher() {

@@ -192,13 +192,15 @@
         },
         "PATIENT": "Patient",
         "HOSPITAL_NO": "N° de l'hôpital",
+        "UNIQUE_ID": "Identifiant unique",
         "DATE_OF_BIRTH": "Date de naissance",
         "SEX": "Sexe",
         "LAST_REFILL": "Dernière recharge",
         "APPOINTMENT_DATE": "Date de rendez-vous",
         "REGIMEN": "Régime",
         "DURATION": "Durée",
-        "OUTLET": "Sortie"
+        "OUTLET": "Sortie",
+        "NEXT_APPOINTMENT": "Prochain rendez-vous (CV)"
     },
     "FIELD_REQUIRED": "Champ requis",
     "CANCEL": "Annuler",

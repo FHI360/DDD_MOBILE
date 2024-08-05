@@ -192,13 +192,15 @@
         },
         "PATIENT": "Patient",
         "HOSPITAL_NO": "Hospital No.",
+        "UNIQUE_ID": "Unique ID",
         "DATE_OF_BIRTH": "Date Of Birth",
         "SEX": "Sex",
         "LAST_REFILL": "Last refill",
         "APPOINTMENT_DATE": "Appointment Date",
         "REGIMEN": "Regimen",
         "DURATION": "Duration",
-        "OUTLET": "Outlet"
+        "OUTLET": "Outlet",
+        "NEXT_APPOINTMENT": "Next appointment (VL)"
     },
     "FIELD_REQUIRED": "Field is required",
     "CANCEL": "Cancel",
