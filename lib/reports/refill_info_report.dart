@@ -34,7 +34,7 @@ Future<String> refillInfoPdf(BuildContext context, DateTime start, DateTime end)
         <tr>
             <th scope="col" colspan="1" class="text-center">#</th>
             <th scope="col" colspan="4" class="text-center">${'REPORTS.PATIENT'.tr()}</th>
-            <th scope="col" colspan="3" class="text-center">${'REPORTS.HOSPITAL_NO'.tr()}</th>
+            <th scope="col" colspan="3" class="text-center">${'REPORTS.UNIQUE_ID'.tr()}</th>
             <th scope="col" colspan="2" class="text-center">${'REPORTS.DATE_OF_BIRTH'.tr()}</th>
             <th scope="col" class="text-center">${'REPORTS.SEX'.tr()}</th>
   ''';
@@ -48,6 +48,7 @@ Future<String> refillInfoPdf(BuildContext context, DateTime start, DateTime end)
             <th scope="col" class="text-center">${'REPORTS.DURATION'.tr()}</th>
             <th scope="col" colspan="2" class="text-center">${'REPORTS.LAST_REFILL'.tr()}</th>
             <th scope="col" colspan="2" class="text-center">${'REPORTS.APPOINTMENT_DATE'.tr()}</th>
+            <th scope="col" colspan="2" class="text-center">${'REPORTS.NEXT_APPOINTMENT'.tr()}</th>
         </tr>
         </thead>   
         <tbody>
@@ -76,6 +77,7 @@ Future<String> refillInfoPdf(BuildContext context, DateTime start, DateTime end)
     )}</td>
         <td class="justify-content-start" colspan="2">${dateTimeFormat('yMMMd', e.date, locale: context.locale.languageCode)}</td>
         <td class="justify-content-start" colspan="2">${dateTimeFormat('yMMMd', e.dateNextRefill, locale: context.locale.languageCode)}</td>
+        <td class="justify-content-start" colspan="2">${dateTimeFormat('yMMMd', e.nextAppointment, locale: context.locale.languageCode)}</td>
       </tr>
     ''';
   });

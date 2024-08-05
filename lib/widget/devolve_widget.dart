@@ -48,6 +48,7 @@ class _DevolveWidgetWidgetState extends State<DevolveWidget> {
     setState(() {
       _model.devolve = devolve;
       _model.outlet = currentOutlet.isNotEmpty ? currentOutlet.first : null;
+      _model.outletValue = _model.outlet;
       _model.initialized = true;
     });
   }

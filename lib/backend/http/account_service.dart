@@ -99,6 +99,15 @@ class AccountService {
       await ClinicDao(database).insertRecord(ClinicData.fromJson(r));
     });
 
+    final viralLoads = data['viralLoads'];
+    await ViralLoadDao(database).deleteAll();
+    viralLoads.forEach((r) async {
+      r['uuid'] = r['id'];
+      r['id'] = id++;
+      r['synced'] = true;
+      await ViralLoadDao(database).insertRecord(ViralLoadData.fromJson(r));
+    });
+
     showToast(
       'Data from server successfully processed',
       duration: Duration(seconds: 10),
