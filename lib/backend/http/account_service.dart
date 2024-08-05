@@ -99,9 +99,9 @@ class AccountService {
       await ClinicDao(database).insertRecord(ClinicData.fromJson(r));
     });
 
-    final vls = data['viralLoads'];
+    final viralLoads = data['viralLoads'];
     await ViralLoadDao(database).deleteAll();
-    devolves.forEach((r) async {
+    viralLoads.forEach((r) async {
       r['uuid'] = r['id'];
       r['id'] = id++;
       r['synced'] = true;
